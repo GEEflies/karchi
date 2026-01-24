@@ -1,0 +1,386 @@
+# tactiq.io free youtube transcript
+# No title found
+# https://www.youtube.com/watch/HzL65tTeANs
+
+00:00:00.000 No text
+00:00:00.400 A couple days ago, this Lando Norris
+00:00:02.399 website dropped and everybody is
+00:00:04.400 freaking out about it. It's just got
+00:00:06.160 this really cool 3D animation which is
+00:00:08.320 like eight layers deep, some really cool
+00:00:10.240 scroll effects on it. Uh when you hover
+00:00:12.880 over everything, the divs are
+00:00:14.559 non-standard shapes. The more time you
+00:00:17.440 spend on this website, the more you
+00:00:18.960 realize there's just so many nifty
+00:00:21.279 little parts. So, of course, I
+00:00:23.119 downloaded all 75,000 lines of code and
+00:00:27.279 dug through it, and I found so many neat
+00:00:30.560 approaches. So, I'm going to break down
+00:00:32.238 how they did it, what technology they
+00:00:34.399 used, and and ideally how you can build
+00:00:36.719 something like this yourself. All right,
+00:00:38.000 No text
+00:00:38.640 let's start with this like scene right
+00:00:40.160 here. So, this is 3JS 3D canvas. And the
+00:00:43.280 more I looked into the code, the more I
+00:00:44.800 realized like there's seven or eight
+00:00:46.320 different layers here at play. So, let's
+00:00:49.120 break it down. So, at the very basic,
+00:00:51.520 there is just an image of Lando, right?
+00:00:54.399 And as you move your cursor around,
+00:00:56.879 you'll see he's kind of moving around
+00:00:58.559 just a little bit. Um, and it gives a
+00:01:00.879 subtle 3D effect, and that's using
+00:01:02.879 something called depth maps. Um, so
+00:01:04.959 depth maps are pretty cool. You can
+00:01:06.320 generate them with like a special
+00:01:07.680 camera, but AI is also really good at
+00:01:09.840 it. So, here I I built a little demo,
+00:01:12.560 and it will take this image and try to
+00:01:15.439 estimate what is of depth. So here here
+00:01:18.640 look at this thing. The white stuff is
+00:01:20.560 closer whereas the darker stuff is
+00:01:23.119 further away. And then you can throw
+00:01:25.040 that into a 3D canvas and like you can
+00:01:27.759 really exaggerate it. Like it can it can
+00:01:29.920 be pretty crazy here, right? Um but
+00:01:33.360 normally what you do, and this is what
+00:01:34.799 they're doing at Lando, is you just give
+00:01:36.560 it a little bit of a subtle thing to it
+00:01:40.400 and then you move it around like that.
+00:01:42.560 And that's a really cool um effect. And
+00:01:45.840 it actually works like pretty well. like
+00:01:47.600 even if you go to the things in the
+00:01:49.040 background, um it can find like the
+00:01:51.840 leaves on the tree.
+00:01:54.079 So that's a depth map that they have
+00:01:56.960 over top of him. Um but there's also an
+00:01:59.360 alpha map which is just for punching out
+00:02:01.840 the photo of him. And then there is a
+00:02:03.920 roughness map. And a roughness map is
+00:02:06.640 when light hits it, uh how does it
+00:02:09.598 reflect, you know? So, the white is
+00:02:11.520 going to be uh absorb the colors really
+00:02:13.840 well and then the darker colors are
+00:02:15.520 going to reflect the light a little
+00:02:17.360 well. And you can hardly see it as you
+00:02:19.680 move around, but it's just very subtle.
+00:02:22.560 And of course, on top of that, they are
+00:02:24.640 rendering out the helmet. They're
+00:02:26.400 rendering out the 3D view of this
+00:02:28.400 helmet. And they actually have a second
+00:02:30.400 image of him with a slightly darker um
+00:02:34.640 let me show you. I think it's called
+00:02:36.160 like shadow.
+00:02:38.560 There we go. There's a slightly darker
+00:02:40.640 shadow underneath here to make it look
+00:02:42.560 like when he has the the helmet on. On
+00:02:44.000 No text
+00:02:45.360 top of that, they are rendering out the
+00:02:47.040 helmet and then deciding what they show.
+00:02:49.519 It's just being masked on and off via
+00:02:52.000 custom shaders. And it's using some sort
+00:02:55.360 of custom shader that makes these blobs.
+00:02:58.000 Um not explicitly sure if it's this one
+00:03:00.400 or not, but this is kind of the idea. Um
+00:03:02.879 where it's like a fluid cursor. as you
+00:03:04.720 move it, depending on how fast you move
+00:03:06.319 it and and what angle you move it, it
+00:03:08.640 will generate these blobs. Um, and then
+00:03:10.800 you can mask out the different parts
+00:03:12.800 while showing it. So, pretty nifty thing
+00:03:14.959 on the 3D. But let's go a little bit
+00:03:17.280 further and look on the on track page
+00:03:19.280 here. Um, and they have this custom
+00:03:21.519 rendering of this helmet. This is really
+00:03:23.760 cool. So, the helmet is also done in
+00:03:26.959 3JS, which is rendered out in 3D. Um,
+00:03:29.840 and this is this is what the helmet is.
+00:03:31.519 I downloaded it. It's a what a glTF
+00:03:35.440 file. Um, and it's just this just a
+00:03:37.920 blank model that you have here. And you
+00:03:39.840 can kind of spin it around. Then each of
+00:03:41.000 No text
+00:03:41.840 the helmets that he has, cuz there's
+00:03:43.360 several different helmets, all have
+00:03:45.200 their designs um up as a map. So you see
+00:03:48.720 here's like one of the ones with the
+00:03:50.400 monster energy design on top of it. Uh
+00:03:53.360 here's another one. It's actually kind
+00:03:55.280 of cool to to see this. So it's all
+00:03:57.439 designed in flat. Um, and then 3JS will
+00:04:00.879 apply that to the model. But that's not
+00:04:04.080 it. That's just that's just one part of
+00:04:06.319 it, right? There's also this base color
+00:04:08.879 on here. So, all of them have this
+00:04:10.400 little McLaren um and Android on the
+00:04:13.200 visor. There also is maps for which
+00:04:17.199 parts of the helmet are metallic. Um,
+00:04:20.079 there's a normal map. And this one is
+00:04:21.918 really cool. So, as you scroll, you're
+00:04:24.000 going to see how the light hits this
+00:04:26.000 black part of the visor right here. And
+00:04:28.960 it obviously the buttons don't the
+00:04:31.040 buttons reflect differently than the
+00:04:32.720 actual visor. And that's because of this
+00:04:34.560 map right here, the roughness map. So
+00:04:37.360 something that is black in the roughness
+00:04:39.520 map, this is the visor, is going to
+00:04:42.720 reflect light quite a bit. And things
+00:04:44.960 that are gray and and and more towards
+00:04:47.680 the white side are not going to reflect
+00:04:49.520 light very much. So you can see that
+00:04:51.919 they're reflecting light a little
+00:04:53.600 different. There's then the buttons are
+00:04:56.800 you're saying which parts are metallic
+00:04:58.800 and how they reflect light. There's just
+00:05:01.520 so much to it and then as you scroll the
+00:05:04.160 whole thing kind of spins around. I
+00:05:06.720 thought this was really cool cuz like
+00:05:08.160 the Apple website does a lot of stuff
+00:05:10.240 like this but often Apple will just
+00:05:12.320 render out a video and and they'll just
+00:05:15.520 scrub that video back and forth as
+00:05:17.280 you're scrolling. No, no. This is this
+00:05:19.120 is an actually like a 3D model that is
+00:05:21.840 spinning around and having seven or
+00:05:24.160 eight different maps and mats applied to
+00:05:25.919 it. Scrolling on this website is
+00:05:27.000 No text
+00:05:28.080 entirely implemented in JavaScript. So,
+00:05:30.479 normally I'm a scrolljacking hater
+00:05:32.240 because it's so frustrating to visit a
+00:05:34.639 website that takes over your scroll. But
+00:05:36.800 this one's using a library called
+00:05:38.320 leanest which does a pretty good job at
+00:05:41.759 it and it feels fairly natural. and
+00:05:44.800 allows you to do things like like go
+00:05:46.800 sideways or position sticky things when
+00:05:49.120 they come in. There are browser APIs of
+00:05:51.520 scroll driven animations along with
+00:05:53.360 things like position sticky to allow you
+00:05:55.680 to do this. However, they're not it's
+00:05:57.680 not in Firefox yet. And I'm assuming
+00:05:59.360 that's why they didn't use this. So,
+00:06:03.120 that still works. You can still press
+00:06:04.720 spacebar. You can still search for words
+00:06:07.840 on here and it will jump to where they
+00:06:09.520 are on the page. So, it actually feels
+00:06:11.360 pretty good. It uses a library called
+00:06:13.000 No text
+00:06:13.120 Lenus which are simply just updating
+00:06:15.600 inline style values. So it's not using
+00:06:17.759 web animations API or anything like
+00:06:19.600 that. And surprisingly it's actually
+00:06:22.240 using jQuery and a library called tram
+00:06:26.319 which was last updated 9 years ago. And
+00:06:29.520 I don't know what the reason for that
+00:06:31.280 is. I'm assuming they've used it for
+00:06:33.440 probably many websites and they have a
+00:06:35.360 whole bunch of code that's written in
+00:06:37.120 it. that is simply just updating inline
+00:06:40.080 style values and it actually works
+00:06:42.479 pretty well and is pretty butter smooth.
+00:06:44.400 I'll talk about performance in just a
+00:06:46.000 No text
+00:06:46.000 sec. Now, as you scroll down to the
+00:06:47.840 helmet section, they got these really
+00:06:49.280 interesting shapes and then as you hover
+00:06:51.680 over each of the helmets, you see an
+00:06:53.280 actual photo of them wearing it. And if
+00:06:55.360 you scroll all the way to the bottom,
+00:06:57.280 you see this really cool shape. So,
+00:06:59.199 these are doing these are being done
+00:07:02.080 with CSS masking. So, if I were to
+00:07:04.319 inspect element on one of these, you'll
+00:07:06.880 see there's a mask URL, which is just an
+00:07:09.440 SVG of that shape and they go ahead and
+00:07:13.280 make a mask of it. So, if we turn those
+00:07:15.280 off, you see it's just a regular square,
+00:07:17.759 and then by adding it, it just simply
+00:07:20.080 just punches those values out. The
+00:07:22.479 helmets are done in very much the same
+00:07:24.639 way. However, there are several
+00:07:26.720 different masks. And then this little
+00:07:28.560 animation that is done here when you
+00:07:31.120 hover over top of it uses a clip path
+00:07:34.400 mask instead of an explicit SVG file
+00:07:37.840 mask. So here we go. Clip path ellipse.
+00:07:40.400 And then you hover over top of it and
+00:07:42.000 the ellipse will simply just grow and
+00:07:44.560 mask off the image that's on top of it.
+00:07:46.000 No text
+00:07:46.639 For text effects, there's this really
+00:07:48.080 cool effect when you hover over top of
+00:07:49.840 these elements and the text will go up
+00:07:53.280 and down. This is just a regular CSS
+00:07:55.919 transition where the each single letter
+00:07:59.440 is wrapped in a span and they animate
+00:08:01.759 up. In fact, we did coming up on the
+00:08:03.599 syntax YouTube channel. Make sure you
+00:08:05.120 subscribe um implement our own version
+00:08:07.520 of this. So basically we just wrap every
+00:08:09.360 single letter in a span and then we
+00:08:12.879 transition the uh or so we transition
+00:08:15.919 the transform value up 100% and then we
+00:08:19.280 put a transition delay on every single
+00:08:21.440 letter that increases by I don't know
+00:08:23.919 0.1 milliseconds or something like that
+00:08:26.160 every single time you hover over top of
+00:08:27.840 it. Pretty cool little effect. I love
+00:08:30.000 seeing that on websites. Transitioning
+00:08:31.000 No text
+00:08:32.399 from page to page is actually really
+00:08:34.719 cool. So when I click on one of these,
+00:08:36.080 you'll see
+00:08:38.559 let's let me show you that again. That's
+00:08:40.159 really cool. So it just throws up this
+00:08:41.919 whole screen loader and then in the
+00:08:44.320 background it loads the page and then it
+00:08:47.680 will mask out that loader on its way out
+00:08:50.959 so you can see the new page in there. I
+00:08:52.880 love that effect. I think we're going to
+00:08:54.080 have to build that one as well. Um,
+00:08:56.480 unfortunately, this is not using the
+00:08:58.080 page transition API and it's simply just
+00:09:02.399 when you click on a link, it's going to
+00:09:04.640 load everything in the background and
+00:09:06.560 it's going to swap out as it puts up
+00:09:08.880 that curtain, it's swapping out the
+00:09:11.120 document um, HTML and then once it's
+00:09:14.000 done, it will animate itself back on
+00:09:16.320 out. And you can see in the dev tools
+00:09:18.080 here, page uh, page start, page
+00:09:21.040 transition, and it shows how long it
+00:09:22.720 takes to transition from page to page.
+00:09:24.720 I'm assuming there's some sort of
+00:09:26.240 timeout in there as well should it take
+00:09:28.480 too long. But there's no React
+00:09:30.560 framework, nothing like that in here.
+00:09:32.160 It's simply just a bunch of vanilla
+00:09:33.760 JavaScript and what we saw earlier, a
+00:09:36.080 little bit of jQuery for that animation.
+00:09:38.000 No text
+00:09:38.160 When we head over to this on the track
+00:09:39.839 page here, you'll see that there's these
+00:09:42.959 like little cool every single race that
+00:09:44.720 he has, there's a track and it's just
+00:09:46.959 being highlighted over and over again.
+00:09:48.959 So, I was like looking like how are they
+00:09:50.640 how are they doing that? You know, is
+00:09:51.760 that a video file? It's actually done in
+00:09:55.279 3D canvas, but it was designed with a
+00:09:58.320 tool called Rive. Um, and I guess Rive
+00:10:02.320 is I'm not familiar with this, but Rive
+00:10:04.480 is a 3D design tool that will allow you
+00:10:09.040 to export your designs and interactions
+00:10:12.399 to multiple platforms. One of those
+00:10:14.800 platforms being done in Wom um, which
+00:10:18.480 can then be piped into a 3D canvas. So I
+00:10:22.399 downloaded the riv binaries. So they
+00:10:25.440 compile to these binaries and I ran them
+00:10:28.399 on this riv. website and you can see
+00:10:31.680 that like this is this is one circuits.
+00:10:35.040 Or circuits.
+00:10:37.040 And you can just change between all the
+00:10:39.440 different tracks but then there's also
+00:10:41.200 like these different states. Hover off,
+00:10:43.920 hover on, you can change Miami.
+00:10:47.760 Um, there's some pretty cool stuff in
+00:10:49.760 here. And all the nifty animations on
+00:10:53.760 here, like this one as well. These
+00:10:55.279 little I don't know what you call these.
+00:10:57.040 These little flowers that pop up over
+00:10:59.040 the NASCAR helmet. They are also done in
+00:11:02.880 this this riv format. So, it's just like
+00:11:06.160 I guess a way to design in a 3D program
+00:11:09.200 and get them onto your website. On the
+00:11:11.000 No text
+00:11:11.760 homepage, his signature is also done
+00:11:14.160 like that as well. So I'm normally I
+00:11:17.120 would do this with like an SVG and then
+00:11:20.160 you will do like an offset path on the
+00:11:23.040 SVG but in this case they are simply
+00:11:26.240 just painting it in depending on how far
+00:11:28.560 in you are scrolled and you can kind of
+00:11:31.600 scrub it back and forth with your scroll
+00:11:33.000 No text
+00:11:33.440 wheel. Now let's talk about performance.
+00:11:36.640 Normally websites like these are a
+00:11:39.360 little bit chuggy. And normally, I'm
+00:11:42.079 sure there's a bunch of people in the
+00:11:43.440 comments right now being like, "What a
+00:11:45.040 waste of CPU space. I can hardly it
+00:11:48.160 freezes my Android from 40 years ago."
+00:11:51.440 These kind types of websites are
+00:11:53.120 generally pretty aggressive on using
+00:11:56.399 system resources. So, I was like, "This
+00:11:59.519 actually feels kind of buttery. Pretty
+00:12:01.839 feels pretty good." It's maybe one of
+00:12:03.279 the best feeling websites I've seen that
+00:12:05.920 are just so over the top like this. So,
+00:12:08.240 if you go into your dev tools and you
+00:12:10.000 open up and you type FPS, you can open
+00:12:12.320 up a frames per second meter and then
+00:12:14.720 you just scroll the website and it will
+00:12:17.200 tell you how many frames a second you're
+00:12:18.800 getting. This thing is getting it's
+00:12:21.600 almost impossible to get it to drop a
+00:12:23.839 frame. You know, maybe if we do
+00:12:25.600 something like like switch the pages,
+00:12:28.079 you'll see a couple There we go. You see
+00:12:29.600 a couple drop frames as it was doing
+00:12:31.120 that initial render. That's usually
+00:12:33.120 pretty normal. But like this whole
+00:12:35.519 thing, I'm just crazy scrolling all over
+00:12:38.000 it and I'm unable to get it to drop a
+00:12:40.639 frame. Granted, I have a pretty fast M1
+00:12:43.680 Mac computer, but that's pretty rare for
+00:12:46.959 me to see a website like this that does
+00:12:48.720 not drop frames like that and and
+00:12:50.639 maintains to be so buttery. Now, how did
+00:12:53.040 they do this, right? I think it's it's a
+00:12:55.519 couple reason. First of all, there's no
+00:12:57.440 drop shadows on anything. I used to
+00:13:00.240 throw drop shadows on everything and
+00:13:02.320 that it overlaps things and it it gets
+00:13:04.560 expensive to calculate those because you
+00:13:06.959 have to calculate what is behind it.
+00:13:08.480 This is a very flat design. Um there's
+00:13:10.880 not a lot of filters, not a lot of
+00:13:12.639 blurring, not a lot of gradients, not a
+00:13:14.720 lot of position absolute. They try to
+00:13:17.519 stay away from a lot of that. Most of
+00:13:19.360 the animations that I see them do are
+00:13:22.079 done with just straight up transform,
+00:13:24.320 which is the best thing you can do for
+00:13:25.920 performance when you're doing
+00:13:26.880 animations. if you're animating like a
+00:13:29.040 font size or you're trying to animate
+00:13:31.360 like top left, bottom right, those
+00:13:34.000 things can start getting a little bit
+00:13:35.920 chuggy. So, if you can keep everything
+00:13:37.600 to just using straight up transforms,
+00:13:40.480 you're usually going to be in pretty
+00:13:42.320 good shape. And this is a very good
+00:13:43.760 example of that. Now, Easter eggs,
+00:13:44.000 No text
+00:13:46.560 couple cool things. First of all, dev
+00:13:49.519 tools, look at the console log. Get
+00:13:51.360 ready for it. Get ready for it. Boom.
+00:13:54.399 Lando Norris in the console log. You can
+00:13:57.519 actually color your console logs if you
+00:13:59.680 want to. You just click through to that.
+00:14:01.040 You can see in here the console log, you
+00:14:04.959 do percent C and then everywhere you
+00:14:07.600 want to color change and then you pass
+00:14:09.440 the color as the second argument along
+00:14:11.839 with the the actual font and font
+00:14:14.480 weight. I thought that was a pretty neat
+00:14:16.480 Easter egg. The loader itself says load
+00:14:19.600 Norris, which I thought was a nice
+00:14:21.199 little hat tip. It's obviously the
+00:14:22.800 designers of this spent quite a bit of
+00:14:24.560 time. Lastly, the very coolest thing, go
+00:14:26.959 to the website and hit your F1

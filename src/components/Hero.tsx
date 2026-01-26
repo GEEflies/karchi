@@ -1,12 +1,27 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion, useMotionValue, useInView, animate, AnimatePresence } from "framer-motion";
+import { motion, useMotionValue, useInView, animate, AnimatePresence, useTransform } from "framer-motion";
 import { ArrowDown } from "lucide-react";
+
+const CountUp = ({ to, delay, className }: { to: number, delay: number, className?: string }) => {
+    const value = useMotionValue(0);
+    const rounded = useTransform(value, (latest) => Math.round(latest));
+
+    useEffect(() => {
+        animate(value, to, { duration: 2, delay, ease: "easeOut" });
+    }, [to, delay, value]);
+
+    return <motion.span className={className}>{rounded}</motion.span>;
+};
+
+// Global flag to prevent re-triggering across remounts (e.g. scroll up/down)
+let hasGlobalHeroSequencePlayed = false;
 
 export default function Hero() {
     const sectionRef = useRef<HTMLElement>(null);
-    const isInView = useInView(sectionRef, { amount: 0.5 });
+    const imageRef = useRef<HTMLImageElement>(null);
+    const isInView = useInView(sectionRef, { amount: 0.5 }); // Keep for scroll loop optimization
 
     // Mouse tracking
     const mouseX = useMotionValue(0);
@@ -47,17 +62,63 @@ export default function Hero() {
 
     // Ninja Cut Sequence
     useEffect(() => {
+        // If already played globally, just unlock interaction and skip
+        if (hasGlobalHeroSequencePlayed) {
+            isSequenceFinished.current = true;
+            return;
+        }
+
         if (!hasMounted || !isInView) return;
 
+        hasGlobalHeroSequencePlayed = true;
+
         const runSequence = async () => {
-            // Only run once per mount if desired, but user said "even if I reload"
             // Wait for entrance animations (1.5s)
             await new Promise(r => setTimeout(r, 1500));
 
             isAutoSequence.current = true;
             isSequenceFinished.current = false; // Ensure blocked
-            const w = window.innerWidth;
+
             const h = window.innerHeight;
+            let startX = 0;
+            let endX = window.innerWidth;
+
+            // Calculate actual image width inside object-contain
+            if (imageRef.current && sectionRef.current) {
+                const img = imageRef.current;
+
+                // Ensure image is loaded for dimensions
+                if (!img.complete || img.naturalWidth === 0) {
+                    await new Promise<void>(resolve => {
+                        if (img.complete && img.naturalWidth > 0) return resolve();
+                        img.onload = () => resolve();
+                        // Timeout fallback
+                        setTimeout(resolve, 1000);
+                    });
+                }
+
+                const rect = img.getBoundingClientRect();
+                const secRect = sectionRef.current.getBoundingClientRect();
+
+                if (img.naturalWidth) {
+                    const ratio = img.naturalWidth / img.naturalHeight;
+                    const boxRatio = rect.width / rect.height;
+
+                    let actualW = rect.width;
+                    if (ratio < boxRatio) {
+                        actualW = rect.height * ratio;
+                    }
+
+                    const offsetX = (rect.width - actualW) / 2;
+                    // Relative to section
+                    startX = (rect.left + offsetX) - secRect.left;
+                    endX = startX + actualW;
+
+                    // Constrain slightly further to ensure we are inside (10px buffer)
+                    startX += 20;
+                    endX -= 20;
+                }
+            }
 
             // Helper to perform a swipe
             const swipe = async (fromX: number, toX: number, y: number) => {
@@ -80,16 +141,16 @@ export default function Hero() {
             };
 
             // 1. Left to Right (Top - Forehead)
-            await swipe(0, w, h * 0.25);
+            await swipe(startX, endX, h * 0.20);
 
             // 2. Right to Left (Eyes)
-            await swipe(w, 0, h * 0.35);
+            await swipe(endX, startX, h * 0.36);
 
             // 3. Left to Right (Nose/Mouth)
-            await swipe(0, w, h * 0.45);
+            await swipe(startX, endX, h * 0.52);
 
             // 4. Right to Left (Chin)
-            await swipe(w, 0, h * 0.55);
+            await swipe(endX, startX, h * 0.68);
 
             isAutoSequence.current = false;
             isSequenceFinished.current = true; // Unlock manual interaction
@@ -222,6 +283,7 @@ export default function Hero() {
                 {/* 1. Base Image: Helmet */}
                 <div className="absolute inset-0 z-0 pointer-events-none">
                     <img
+                        ref={imageRef}
                         loading="eager"
                         src="/images/hero-final-fr.png"
                         alt="Hero Helmet"
@@ -340,7 +402,9 @@ export default function Hero() {
                             transition={{ delay: 1, duration: 0.8 }}
                             className="text-right"
                         >
-                            <span className="block text-5xl font-black mb-1">1+</span>
+                            <span className="block text-5xl font-black mb-1">
+                                <CountUp to={1} delay={1.0} />+
+                            </span>
                             <span className="text-xs uppercase tracking-widest font-bold opacity-60">Rok Skúseností</span>
                         </motion.div>
 
@@ -350,7 +414,9 @@ export default function Hero() {
                             transition={{ delay: 1.1, duration: 0.8 }}
                             className="text-right"
                         >
-                            <span className="block text-5xl font-black mb-1">8+</span>
+                            <span className="block text-5xl font-black mb-1">
+                                <CountUp to={8} delay={1.5} />+
+                            </span>
                             <span className="text-xs uppercase tracking-widest font-bold opacity-60">Projektov</span>
                         </motion.div>
 
@@ -360,7 +426,9 @@ export default function Hero() {
                             transition={{ delay: 1.2, duration: 0.8 }}
                             className="text-right"
                         >
-                            <span className="block text-5xl font-black mb-1">10+</span>
+                            <span className="block text-5xl font-black mb-1">
+                                <CountUp to={10} delay={2.0} />+
+                            </span>
                             <span className="text-xs uppercase tracking-widest font-bold opacity-60">Spokojných Klientov</span>
                         </motion.div>
                     </div>

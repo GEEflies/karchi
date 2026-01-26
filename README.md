@@ -34,3 +34,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+Make the image the highest quality possible. Now, it doesn't look that quality, and also, you can't even view it as a hero. It's the one I'm sending you in the second picture attached.
+
+Hey, I would like to completely change the hero section of this whole thing. It will be hard to understand it, but basically I love the website of Lando Norris. 

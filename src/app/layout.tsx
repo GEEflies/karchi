@@ -4,6 +4,7 @@ import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import CursorProvider from "@/components/ui/Cursor";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -29,14 +30,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sk">
-      <body className={`${inter.variable} ${instrumentSerif.variable} antialiased`}>
-        <SmoothScroll>
-          <Header />
-          <main className="min-h-screen">
-            {children}
-          </main>
-          <Footer />
-        </SmoothScroll>
+      <body className={`${inter.variable} ${instrumentSerif.variable} antialiased`} suppressHydrationWarning>
+        <CursorProvider>
+          <SmoothScroll>
+            <Header />
+            <main className="min-h-screen">
+              {children}
+            </main>
+            <Footer />
+          </SmoothScroll>
+        </CursorProvider>
       </body>
 
     </html>

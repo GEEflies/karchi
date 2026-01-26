@@ -7,7 +7,7 @@ export default function Footer() {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="bg-foreground text-background py-20 overflow-hidden relative">
+        <footer id="footer" className="bg-foreground text-background py-20 overflow-hidden relative">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent-blue via-accent-purple to-accent-pink" />
 
             <div className="mb-20">

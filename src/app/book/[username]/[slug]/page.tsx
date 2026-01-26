@@ -198,14 +198,7 @@ export default function BookingPage() {
             {/* LEFT PANEL: Event Details */}
             <div className="w-full md:w-1/3 bg-surface-off-white p-8 border-b md:border-b-0 md:border-r border-black/5 flex flex-col md:min-h-screen">
                 <div className="mb-8">
-                    {step !== "date" && (
-                        <button
-                            onClick={() => setStep("date")}
-                            className="p-2 -ml-2 rounded-full hover:bg-black/5 transition-colors mb-4 inline-flex"
-                        >
-                            <ArrowLeft size={20} />
-                        </button>
-                    )}
+
                     <div className="relative w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-lg mb-6 bg-gray-200">
                         {user.avatar_url && (
                             <Image
@@ -274,9 +267,10 @@ export default function BookingPage() {
                         >
                             <button
                                 onClick={() => setStep("date")}
-                                className="md:hidden mb-4 text-sm text-gray-400 flex items-center gap-1"
+                                className="mb-4 text-sm text-gray-400 hover:text-black transition-colors flex items-center gap-1 w-fit"
                             >
-                                ← Späť na kalendár
+                                <ArrowLeft size={16} />
+                                Späť na kalendár
                             </button>
                             <div className="flex-1">
                                 <TimeSlots

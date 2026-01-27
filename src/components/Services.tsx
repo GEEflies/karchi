@@ -75,7 +75,7 @@ export default function Services() {
 
                             <div className="relative z-10 mt-auto">
                                 <div className="text-5xl font-black mb-6">{service.price}</div>
-                                <Link href="/book/karchigod/consultation" className="w-full py-4 bg-white/20 backdrop-blur-md rounded-full font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors flex items-center justify-center gap-2">
+                                <Link href="/book/karchigod/intro" className="w-full py-4 bg-white/20 backdrop-blur-md rounded-full font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors flex items-center justify-center gap-2">
                                     Vybrať Balík <ArrowUpRight size={18} />
                                 </Link>
                             </div>

@@ -127,30 +127,91 @@ export async function bookMeeting(formData: {
 
         // 4. Send Email to Guest
         await resend.emails.send({
-            from: "Karchi Bookings <onboarding@resend.dev>",
+            from: "Karchi <onboarding@resend.dev>",
             to: formData.guestEmail,
             subject: `Potvrdené: ${formData.eventTitle} s Karchim`,
             html: `
-                <h1>Potvrdené!</h1>
-                <p>Ahoj ${formData.guestName},</p>
-                <p>Tvoja <strong>${formData.eventTitle}</strong> s <strong>${formData.hostName}</strong> je úspešne naplánovaná.</p>
-                
-                <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0; color: #000;">
-                    <p style="margin: 0; font-size: 16px;"><strong>📅 Kedy:</strong> ${dateFormatted}</p>
-                    <p style="margin: 10px 0 0 0; font-size: 16px;"><strong>🌍 Časové pásmo:</strong> ${formData.timezone}</p>
-                    ${meetLink ? `
-                        <p style="margin: 20px 0 0 0;">
-                            <a href="${meetLink}" style="background-color: #000; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
-                                Pripojiť sa cez Google Meet
-                            </a>
-                        </p>
-                    ` : ""}
-                </div>
-
-                ${formData.notes ? `<p><strong>Tvoje poznámky:</strong><br>${formData.notes}</p>` : ""}
-
-                <p style="color: #666; font-size: 14px;">Pozvánka do kalendára ti bola odoslaná automaticky.</p>
-                <p>Teším sa na naše stretnutie!</p>
+                <!DOCTYPE html>
+                <html lang="sk">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Potvrdenie rezervácie</title>
+                </head>
+                <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
+                    <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;">
+                        <tr>
+                            <td style="padding: 40px 20px;">
+                                <table role="presentation" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);">
+                                    
+                                    <!-- Header with gradient -->
+                                    <tr>
+                                        <td style="background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%); padding: 40px 40px 30px; text-align: center;">
+                                            <div style="background-color: rgba(255, 255, 255, 0.1); display: inline-block; padding: 12px 24px; border-radius: 50px; margin-bottom: 20px;">
+                                                <span style="color: #ffffff; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;">Karchi</span>
+                                            </div>
+                                            <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 800; letter-spacing: -0.5px;">Potvrdené!</h1>
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Content -->
+                                    <tr>
+                                        <td style="padding: 40px;">
+                                            <p style="margin: 0 0 24px; color: #1a1a1a; font-size: 16px; line-height: 1.6;">
+                                                Ahoj <strong>${formData.guestName}</strong>,
+                                            </p>
+                                            <p style="margin: 0 0 32px; color: #4a4a4a; font-size: 16px; line-height: 1.6;">
+                                                Tvoja <strong>${formData.eventTitle}</strong> s <strong>${formData.hostName}</strong> je úspešne naplánovaná.
+                                            </p>
+                                            
+                                            <!-- Details Card -->
+                                            <div style="background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%); border-radius: 12px; padding: 28px; margin-bottom: 32px; border: 1px solid #e5e5e5;">
+                                                <div style="margin-bottom: 20px;">
+                                                    <div style="color: #666; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">📅 Kedy</div>
+                                                    <div style="color: #1a1a1a; font-size: 18px; font-weight: 700;">${dateFormatted}</div>
+                                                </div>
+                                                <div style="margin-bottom: ${meetLink ? '24px' : '0'};">
+                                                    <div style="color: #666; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">🌍 Časové pásmo</div>
+                                                    <div style="color: #1a1a1a; font-size: 16px; font-weight: 600;">${formData.timezone}</div>
+                                                </div>
+                                                ${meetLink ? `
+                                                    <div style="padding-top: 24px; border-top: 1px solid #e0e0e0;">
+                                                        <a href="${meetLink}" style="display: block; background-color: #000000; color: #ffffff; text-align: center; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 15px; letter-spacing: 0.3px; transition: background-color 0.2s;">
+                                                            Pripojiť sa cez Google Meet →
+                                                        </a>
+                                                    </div>
+                                                ` : ''}
+                                            </div>
+                                            
+                                            ${formData.notes ? `
+                                                <div style="background-color: #fafafa; border-left: 3px solid #000; padding: 16px 20px; margin-bottom: 32px; border-radius: 4px;">
+                                                    <div style="color: #666; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Tvoje poznámky</div>
+                                                    <div style="color: #1a1a1a; font-size: 15px; line-height: 1.6;">${formData.notes}</div>
+                                                </div>
+                                            ` : ''}
+                                            
+                                            <p style="margin: 0 0 8px; color: #1a1a1a; font-size: 16px; line-height: 1.6;">
+                                                Teším sa na naše stretnutie!
+                                            </p>
+                                            <p style="margin: 0; color: #888; font-size: 14px; line-height: 1.6;">
+                                                Pozvánka do kalendára ti bola odoslaná automaticky.
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Footer -->
+                                    <tr>
+                                        <td style="background-color: #fafafa; padding: 32px 40px; text-align: center; border-top: 1px solid #e5e5e5;">
+                                            <p style="margin: 0 0 8px; color: #1a1a1a; font-size: 14px; font-weight: 600;">Karchi</p>
+                                            <p style="margin: 0; color: #888; font-size: 13px;">Digitálny Dizajn & Art Direction</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+                </html>
             `,
         });
 

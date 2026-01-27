@@ -87,9 +87,9 @@ BEGIN
   -- Insert Event Types
   INSERT INTO event_types (user_id, title, slug, duration_minutes, description)
   VALUES 
-  (karchi_id, 'Intro Call', 'intro', 30, 'A quick 30-minute chat to discuss your project ideas and see if we are a good fit.'),
-  (karchi_id, 'Consultation', 'consultation', 60, 'Deep dive into your technical strategy, architecture, or design needs.'),
-  (karchi_id, 'Project Kickoff', 'kickoff', 45, 'Let''s get the ball rolling on your new project.');
+  (karchi_id, 'Úvodný hovor', 'intro', 30, 'Rýchly 30-minútový rozhovor o tvojich projektových nápadoch a či sme dobrá voľba.'),
+  (karchi_id, 'Konzultácia', 'consultation', 60, 'Hlbší ponor do tvojej technickej stratégie, architektúry alebo dizajnových potrieb.'),
+  (karchi_id, 'Štart projektu', 'kickoff', 45, 'Poďme rozbehať tvoj nový projekt.');
 
   -- Insert Default Availability (Mon-Fri, 9am-5pm)
   INSERT INTO availability (user_id, day_of_week, start_time, end_time, timezone)

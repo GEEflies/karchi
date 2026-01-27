@@ -63,6 +63,7 @@ export default function Footer() {
                         href="/book/karchigod/intro"
                         className="w-full h-32 bg-white text-black rounded-3xl flex items-center justify-between px-10 group overflow-hidden relative"
                         liquidColor={null} // Disable liquid for this one
+                        isMagnetic={false}
                     >
                         <div className="relative z-10 flex flex-col items-start gap-1 h-32 justify-center">
                              <span className="text-sm font-bold uppercase tracking-widest opacity-50">Začať spoluprácu</span>
@@ -128,7 +129,19 @@ export default function Footer() {
     );
 }
 
-function MagneticButton({ children, className, href, liquidColor = "rgba(255,255,255,0.1)" }: { children: React.ReactNode, className?: string, href: string, liquidColor?: string | null }) {
+function MagneticButton({ 
+    children, 
+    className, 
+    href, 
+    liquidColor = "rgba(255,255,255,0.1)",
+    isMagnetic = true
+}: { 
+    children: React.ReactNode, 
+    className?: string, 
+    href: string, 
+    liquidColor?: string | null,
+    isMagnetic?: boolean
+}) {
     const ref = useRef<HTMLAnchorElement>(null);
     const liquidRef = useRef<HTMLDivElement>(null);
     
@@ -138,8 +151,13 @@ function MagneticButton({ children, className, href, liquidColor = "rgba(255,255
         if (!element) return;
 
         // Button Magnetic Animation
-        const xTo = gsap.quickTo(element, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
-        const yTo = gsap.quickTo(element, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
+        let xTo: ((value: number) => void) | null = null;
+        let yTo: ((value: number) => void) | null = null;
+
+        if (isMagnetic) {
+            xTo = gsap.quickTo(element, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
+            yTo = gsap.quickTo(element, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
+        }
 
         // Liquid Follow Animation (Only if liquidRef exists)
         let xLiquid: ((value: number) => void) | null = null;
@@ -155,10 +173,12 @@ function MagneticButton({ children, className, href, liquidColor = "rgba(255,255
             const { height, width, left, top } = element.getBoundingClientRect();
             
             // Magnetic Move
-            const x = clientX - (left + width / 2);
-            const y = clientY - (top + height / 2);
-            xTo(x * 0.35);
-            yTo(y * 0.35);
+            if (isMagnetic && xTo && yTo) {
+                const x = clientX - (left + width / 2);
+                const y = clientY - (top + height / 2);
+                xTo(x * 0.35);
+                yTo(y * 0.35);
+            }
 
             // Liquid Follow
             if (xLiquid && yLiquid) {
@@ -174,8 +194,10 @@ function MagneticButton({ children, className, href, liquidColor = "rgba(255,255
         };
 
         const mouseLeave = () => {
-            xTo(0);
-            yTo(0);
+            if (isMagnetic && xTo && yTo) {
+                xTo(0);
+                yTo(0);
+            }
              if (liquid) gsap.to(liquid, { scale: 0, duration: 0.6, ease: "power2.out" });
         };
 

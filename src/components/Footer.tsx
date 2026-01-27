@@ -62,15 +62,15 @@ export default function Footer() {
                     <MagneticButton
                         href="/book/karchigod/intro"
                         className="w-full h-32 bg-white text-black rounded-3xl flex items-center justify-between px-10 group overflow-hidden relative"
+                        liquidColor="#F3F4F6"
                     >
                         <div className="relative z-10 flex flex-col items-start gap-1">
                              <span className="text-sm font-bold uppercase tracking-widest opacity-50">Začať spoluprácu</span>
                              <span className="text-4xl font-black tracking-tight group-hover:translate-x-2 transition-transform duration-500">Povedzte mi o tom</span>
                         </div>
-                        <div className="relative z-10 w-16 h-16 bg-black rounded-full flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-45 transition-all duration-500">
+                        <div className="relative z-10 w-16 h-16 bg-black rounded-full flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-45 transition-all duration-500 shadow-xl">
                             <ArrowUpRight size={28} />
                         </div>
-                        <div className="absolute inset-0 bg-gray-100 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-0" />
                     </MagneticButton>
                 </div>
             </div>
@@ -95,17 +95,23 @@ export default function Footer() {
                 <div className="flex flex-wrap gap-4">
                     <MagneticButton 
                         href="mailto:karol.jr@billik.sk" 
-                        className="px-8 py-4 rounded-full border border-white/20 hover:border-white text-white font-bold transition-all duration-300 flex items-center gap-3 bg-white/5 backdrop-blur-sm hover:bg-white hover:text-black group"
+                        className="px-8 py-4 rounded-full border border-white/20 text-white font-bold transition-all duration-300 flex items-center gap-3 bg-white/5 backdrop-blur-sm overflow-hidden relative group"
+                        liquidColor="#ffffff"
                     >
-                         <Mail size={18} className="group-hover:scale-110 transition-transform" />
-                        <span className="tracking-wide">KAROL.JR@BILLIK.SK</span>
+                        <div className="relative z-10 flex items-center gap-3 group-hover:text-black transition-colors duration-300">
+                             <Mail size={18} className="group-hover:scale-110 transition-transform" />
+                            <span className="tracking-wide">KAROL.JR@BILLIK.SK</span>
+                        </div>
                     </MagneticButton>
                     <MagneticButton 
                         href="tel:+421907758852" 
-                        className="px-8 py-4 rounded-full border border-white/20 hover:border-white text-white font-bold transition-all duration-300 flex items-center gap-3 bg-white/5 backdrop-blur-sm hover:bg-white hover:text-black group"
+                        className="px-8 py-4 rounded-full border border-white/20 text-white font-bold transition-all duration-300 flex items-center gap-3 bg-white/5 backdrop-blur-sm overflow-hidden relative group"
+                        liquidColor="#ffffff"
                     >
-                         <Phone size={18} className="group-hover:scale-110 transition-transform" />
-                        <span className="tracking-wide">+421 907 758 852</span>
+                        <div className="relative z-10 flex items-center gap-3 group-hover:text-black transition-colors duration-300">
+                             <Phone size={18} className="group-hover:scale-110 transition-transform" />
+                            <span className="tracking-wide">+421 907 758 852</span>
+                        </div>
                     </MagneticButton>
                 </div>
             </div>
@@ -119,39 +125,71 @@ export default function Footer() {
     );
 }
 
-function MagneticButton({ children, className, href }: { children: React.ReactNode, className?: string, href: string }) {
+function MagneticButton({ children, className, href, liquidColor = "rgba(255,255,255,0.1)" }: { children: React.ReactNode, className?: string, href: string, liquidColor?: string }) {
     const ref = useRef<HTMLAnchorElement>(null);
+    const liquidRef = useRef<HTMLDivElement>(null);
     
     useEffect(() => {
         const element = ref.current;
-        if (!element) return;
+        const liquid = liquidRef.current;
+        if (!element || !liquid) return;
 
+        // Button Magnetic Animation
         const xTo = gsap.quickTo(element, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
         const yTo = gsap.quickTo(element, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
+
+        // Liquid Follow Animation
+        const xLiquid = gsap.quickTo(liquid, "left", { duration: 0.8, ease: "power3.out" });
+        const yLiquid = gsap.quickTo(liquid, "top", { duration: 0.8, ease: "power3.out" });
 
         const mouseMove = (e: MouseEvent) => {
             const { clientX, clientY } = e;
             const { height, width, left, top } = element.getBoundingClientRect();
+            
+            // Magnetic Move
             const x = clientX - (left + width / 2);
             const y = clientY - (top + height / 2);
-            
             xTo(x * 0.35);
             yTo(y * 0.35);
+
+            // Liquid Follow - Position circle center at mouse position relative to button
+            const relX = clientX - left;
+            const relY = clientY - top;
+            xLiquid(relX);
+            yLiquid(relY);
+        };
+
+        const mouseEnter = () => {
+            gsap.to(liquid, { scale: 2.5, duration: 0.6, ease: "power1.in" });
         };
 
         const mouseLeave = () => {
             xTo(0);
             yTo(0);
+            gsap.to(liquid, { scale: 0, duration: 0.6, ease: "power2.out" });
         };
 
         element.addEventListener("mousemove", mouseMove);
+        element.addEventListener("mouseenter", mouseEnter);
         element.addEventListener("mouseleave", mouseLeave);
 
         return () => {
             element.removeEventListener("mousemove", mouseMove);
+            element.removeEventListener("mouseenter", mouseEnter);
             element.removeEventListener("mouseleave", mouseLeave);
         };
     }, []);
+
+    const content = (
+        <>
+            <div 
+                ref={liquidRef} 
+                className="absolute w-48 h-48 rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2 scale-0"
+                style={{ backgroundColor: liquidColor }}
+            />
+            {children}
+        </>
+    );
 
     // Helper to determine if it's an external link or internal
     const isExternal = href.startsWith('http') || href.startsWith('mailto') || href.startsWith('tel');
@@ -159,14 +197,14 @@ function MagneticButton({ children, className, href }: { children: React.ReactNo
     if (isExternal) {
         return (
             <a ref={ref} href={href} className={className} target={href.startsWith('http') ? "_blank" : undefined} rel={href.startsWith('http') ? "noopener noreferrer" : undefined}>
-                {children}
+                {content}
             </a>
         );
     }
 
     return (
         <Link ref={ref} href={href} className={className}>
-            {children}
+            {content}
         </Link>
     );
 }

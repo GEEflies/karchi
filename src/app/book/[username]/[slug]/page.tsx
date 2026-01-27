@@ -247,7 +247,7 @@ export default function BookingPage() {
                                     <div className="w-12 h-12 rounded-2xl bg-white border border-gray-200 p-0.5 shadow-sm overflow-hidden flex-shrink-0">
                                         <div className="w-full h-full rounded-xl bg-gray-100 relative overflow-hidden flex items-center justify-center">
                                             {user.avatar_url ? (
-                                                <Image src={user.avatar_url} alt={user.name} fill className="object-cover" />
+                                                <Image src={user.avatar_url} alt={user.name} fill sizes="48px" className="object-cover" />
                                             ) : (
                                                 <span className="font-bold text-gray-400">{user.name.charAt(0)}</span>
                                             )}
@@ -322,6 +322,7 @@ export default function BookingPage() {
                                 src={user.avatar_url}
                                 alt={user.name}
                                 fill
+                                sizes="(max-width: 640px) 56px, 64px"
                                 className="object-cover"
                             />
                         ) : (

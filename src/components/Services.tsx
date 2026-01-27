@@ -10,25 +10,34 @@ const services = [
         title: "Landing Page",
         price: "200€+",
         description: "Ideálne pre uvedenie produktu alebo osobné portfólio. Jednostránkový web s vysokým dopadom.",
-        features: ["Responzívny Dizajn", "SEO Optimalizácia", "Rýchle Načítanie"],
-        color: "bg-accent-blue",
-        textColor: "text-white"
+        features: ["Responzívny", "SEO Optimalizácia", "Rýchle Načítanie"],
+        colors: {
+            main: "text-accent-blue",
+            bg: "bg-accent-blue",
+            shadow: "shadow-[0_0_8px_var(--color-accent-blue)]"
+        }
     },
     {
         title: "Firemný Web",
         price: "400€+",
         description: "Kompletné riešenie pre firmy zamerané na rast a konverzie.",
         features: ["CMS Integrácia", "5+ Podstránok", "Blog Funkcionalita"],
-        color: "bg-accent-purple",
-        textColor: "text-white"
+        colors: {
+            main: "text-accent-purple",
+            bg: "bg-accent-purple",
+            shadow: "shadow-[0_0_8px_var(--color-accent-purple)]"
+        }
     },
     {
         title: "E-Shop",
         price: "600€+",
         description: "Profesionálny internetový obchod postavený na predaj a spoľahlivosť.",
         features: ["Platobná Brána", "Správa Skladu", "Zákaznícke Účty"],
-        color: "bg-accent-yellow",
-        textColor: "text-black"
+        colors: {
+            main: "text-accent-yellow",
+            bg: "bg-accent-yellow",
+            shadow: "shadow-[0_0_8px_var(--color-accent-yellow)]"
+        }
     },
 ];
 
@@ -58,43 +67,47 @@ export default function Services() {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: index * 0.1 }}
                             whileHover={{ y: -10 }}
-                            className={`relative p-10 rounded-[3rem] ${service.color} ${service.textColor} flex flex-col justify-between min-h-[500px] overflow-hidden group`}
+                            className="relative p-10 rounded-[3rem] bg-black text-white flex flex-col justify-between min-h-[600px] overflow-hidden group shadow-2xl"
                         >
                             <div className="relative z-10">
-                                <h3 className="text-3xl font-bold mb-4">{service.title}</h3>
-                                <p className="text-lg opacity-80 mb-8 font-medium leading-relaxed">
+                                <h3 className="text-3xl font-black mb-2 text-white">{service.title}</h3>
+                                <div className="font-serif italic text-4xl text-gray-400 mb-6">{service.price}</div>
+                                
+                                <p className="text-gray-400 text-base mb-8 font-medium leading-relaxed">
                                     {service.description}
                                 </p>
-                                <ul className="space-y-2 mb-8 opacity-80">
-                                    {service.features.map((feature, i) => (
-                                        <li key={i} className="flex items-center gap-2 border-b border-white/20 pb-2">
-                                            {feature}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-
-                            <div className="relative z-10 mt-auto flex flex-col gap-4">
-                                <div className="text-5xl font-black mb-2">{service.price}</div>
                                 
-                                <div className="flex flex-col gap-3">
-                                    <Link href="/book/karchigod/intro" className={`w-full py-4 bg-white/20 backdrop-blur-md rounded-full font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors flex items-center justify-center gap-2 text-center`}>
-                                        Vybrať Balík <ArrowUpRight size={18} />
-                                    </Link>
-                                    
-                                    <button 
-                                        className="w-full py-3 bg-black/20 backdrop-blur-md rounded-full font-bold text-sm tracking-wide hover:bg-black/40 transition-colors border border-white/10 flex items-center justify-center gap-2"
-                                        onClick={async () => {
-                                            await createCheckoutSession(service.title);
-                                        }}
-                                    >
-                                        <span className="opacity-90">Ušetriť 10% (zaplatiť vopred)</span>
-                                    </button>
+                                <div className="flex flex-wrap gap-2 mb-8">
+                                    {service.features.map((feature, i) => (
+                                        <div key={i} className="px-3 py-1.5 rounded-md bg-white/5 border border-white/5 text-xs font-medium text-gray-300 flex items-center gap-2">
+                                            <div className={`w-1.5 h-1.5 rounded-full ${service.colors.bg} ${service.colors.shadow}`} />
+                                            {feature}
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
 
-                            {/* Decorative Circle */}
-                            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
+                            <div className="relative z-10 mt-auto flex flex-col gap-3">
+                                <Link href="/book/karchigod/intro" className="group relative w-full py-4 bg-white text-black rounded-xl font-bold overflow-hidden transition-transform active:scale-95">
+                                    <span className="relative z-10 flex items-center justify-center gap-2">
+                                        Vybrať Balík <ArrowUpRight size={18} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                    </span>
+                                    <div className={`absolute inset-0 ${service.colors.bg} translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out`} />
+                                </Link>
+                                
+                                <button 
+                                    className="w-full py-3 bg-white/5 backdrop-blur-md rounded-xl font-bold text-sm tracking-wide hover:bg-white/10 transition-colors border border-white/10 flex items-center justify-center gap-2 text-gray-300"
+                                    onClick={async () => {
+                                        await createCheckoutSession(service.title);
+                                    }}
+                                >
+                                    <span>Ušetriť 10% (zaplatiť vopred)</span>
+                                </button>
+                            </div>
+
+                            {/* Decorative Blur */}
+                            <div className={`absolute top-0 right-0 w-[300px] h-[300px] ${service.colors.bg} opacity-20 rounded-full blur-[80px] pointer-events-none translate-x-1/2 -translate-y-1/2 group-hover:opacity-30 transition-opacity duration-500`} />
+                            <div className="absolute bottom-0 left-0 w-[200px] h-[200px] bg-white/5 rounded-full blur-[60px] pointer-events-none -translate-x-1/2 translate-y-1/2" />
                         </motion.div>
                     ))}
                 </div>

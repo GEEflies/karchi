@@ -152,22 +152,24 @@ export default function BookingPage() {
 
     if (step === "success") {
         return (
-            <div className="min-h-screen bg-[#FDFDFD] flex items-center justify-center p-4">
+            <div className="min-h-screen bg-[#FDFDFD]">
                 <Confetti isActive={true} />
                 
                 {/* Background Blobs */}
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="fixed inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/5 rounded-full blur-[120px]" />
                     <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/5 rounded-full blur-[120px]" />
                 </div>
 
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 0.6, type: "spring", bounce: 0.25 }}
-                    className="relative z-10 w-full max-w-4xl bg-white rounded-[32px] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.08)] overflow-hidden border border-gray-100 flex flex-col md:flex-row"
-                >
-                    {/* LEFT PANEL: Success State */}
+                {/* Main Content pushed up for PC */}
+                <div className="relative z-10 min-h-screen flex items-center justify-center p-4 lg:items-start lg:pt-20">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        transition={{ duration: 0.6, type: "spring", bounce: 0.25 }}
+                        className="w-full max-w-4xl bg-white rounded-[32px] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.08)] overflow-hidden border border-gray-100 flex flex-col md:flex-row"
+                    >
+                        {/* LEFT PANEL: Success State */}
                     <div className="p-8 md:p-12 flex-1 flex flex-col items-start justify-center relative">
                         <motion.div
                             initial={{ scale: 0, rotate: -15 }}

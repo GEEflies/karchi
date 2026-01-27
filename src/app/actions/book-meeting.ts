@@ -125,9 +125,12 @@ export async function bookMeeting(formData: {
         const dateFormatted = format(new Date(formData.startTime), "EEEE, d. MMMM yyyy 'o' H:mm", { locale: sk });
         const meetLink = calendarResult.link;
 
-        // 4. Send Email to Guest
-        await resend.emails.send({
-            from: "Karchi <onboarding@resend.dev>",
+        // 4. Send Emails (in parallel and resilient to individual failures)
+        const hostEmail = "billikkarol3@gmail.com";
+        const emailFrom = "Karchi <onboarding@resend.dev>";
+
+        const guestEmailPromise = resend.emails.send({
+            from: emailFrom,
             to: formData.guestEmail,
             subject: `Potvrdené: ${formData.eventTitle} s Karchim`,
             html: `
@@ -245,10 +248,7 @@ export async function bookMeeting(formData: {
             `,
         });
 
-        // 5. Send Email to Host (billikkarol3@gmail.com)
-        const hostEmail = "billikkarol3@gmail.com";
-
-        await resend.emails.send({
+        const hostEmailPromise = resend.emails.send({
             from: "Karchi Bookings <onboarding@resend.dev>",
             to: hostEmail,
             subject: `🎉 Nová Rezervácia: ${formData.guestName} - ${formData.eventTitle}`,
@@ -343,6 +343,15 @@ export async function bookMeeting(formData: {
                 </body>
                 </html>
             `,
+        });
+
+        // Wait for both emails to be sent (or fail)
+        const results = await Promise.allSettled([guestEmailPromise, hostEmailPromise]);
+        
+        results.forEach((result, index) => {
+            if (result.status === "rejected") {
+                console.error(`Email ${index === 0 ? 'Guest' : 'Host'} failed:`, result.reason);
+            }
         });
 
         return { success: true };

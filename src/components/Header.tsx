@@ -49,7 +49,7 @@ export default function Header() {
         >
             <nav
                 className={cn(
-                    "pointer-events-auto flex items-center justify-between gap-12 rounded-full px-6 py-3 transition-all duration-500 ease-out border border-transparent",
+                    "pointer-events-auto flex items-center justify-between gap-4 md:gap-12 rounded-full px-4 md:px-6 py-2 md:py-3 transition-all duration-500 ease-out border border-transparent",
                     scrolled
                         ? "bg-white/5 backdrop-blur-xl border-white/10 shadow-lg supports-[backdrop-filter]:bg-white/5"
                         : "bg-transparent border-transparent"
@@ -58,7 +58,7 @@ export default function Header() {
                 <Link
                     href="/"
                     className={cn(
-                        "text-3xl font-bold tracking-tighter transition-colors duration-300 mr-4",
+                        "text-3xl font-bold tracking-tighter transition-colors duration-300 md:mr-4",
                         isDarkSection ? "text-white" : "text-foreground"
                     )}
                 >

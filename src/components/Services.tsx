@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useMotionTemplate } from "framer-motion";
+import { useRef } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Check } from "lucide-react";
 import { createCheckoutSession } from "@/app/actions/stripe";
@@ -33,6 +34,18 @@ const services = [
 ];
 
 export default function Services() {
+    const textRef = useRef<HTMLDivElement>(null);
+    const mouseX = useMotionValue(0);
+    const maskImage = useMotionTemplate`linear-gradient(to right, black 0%, black ${mouseX}%, transparent calc(${mouseX}% + 30%))`;
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!textRef.current) return;
+        const rect = textRef.current.getBoundingClientRect();
+        const relativeX = e.clientX - rect.left;
+        const percentage = (relativeX / rect.width) * 100;
+        mouseX.set(percentage);
+    };
+
     return (
         <section id="services" className="py-32 px-4 md:px-8 bg-surface-off-white">
             <div className="max-w-7xl mx-auto">
@@ -129,9 +142,46 @@ export default function Services() {
                         
                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 lg:gap-8 pt-8 lg:pt-0 lg:pl-12 border-t lg:border-t-0 lg:border-l border-white/10 mt-8 lg:mt-0 lg:ml-8">
                             <div className="text-left sm:text-right">
-                                <span className="font-serif italic text-3xl lg:text-4xl text-gray-400 block whitespace-nowrap">
-                                    individuálna cena
-                                </span>
+                                <div 
+                                    ref={textRef}
+                                    onMouseMove={handleMouseMove}
+                                    className="relative inline-block group/price cursor-default py-2"
+                                >
+                                    {/* Base Text (Darker) */}
+                                    <span className="relative z-10 font-serif italic text-3xl lg:text-4xl text-gray-500 block whitespace-nowrap transition-colors duration-300">
+                                        individuálna cena
+                                    </span>
+
+                                    {/* Revealed Text (White) - Optional, helps visibility 
+                                    <span className="absolute inset-0 z-20 font-serif italic text-3xl lg:text-4xl text-white block whitespace-nowrap pointer-events-none opacity-0 group-hover/price:opacity-100 transition-opacity duration-300">
+                                        individuálna cena
+                                    </span>
+                                    */}
+                                    
+                                    {/* Apple Intelligence Style Glow */}
+                                    <motion.div 
+                                        style={{ maskImage, WebkitMaskImage: maskImage }}
+                                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250%] h-[400%] opacity-0 group-hover/price:opacity-100 transition-opacity duration-700 pointer-events-none z-0"
+                                    >
+                                         <div className="absolute inset-0 bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)] blur-[80px] opacity-70 animate-[spin_4s_linear_infinite] mix-blend-screen rounded-full" />
+                                         <div className="absolute inset-0 bg-[conic-gradient(from_270deg_at_50%_50%,#FF0080_0%,#7928CA_50%,#FF0080_100%)] blur-[80px] opacity-60 animate-[spin_3s_linear_infinite_reverse] mix-blend-screen rounded-full" />
+                                         
+                                         {/* Bright Core for text readability enhancement */}
+                                         <div className="absolute inset-0 bg-white/10 blur-[50px] rounded-full" />
+                                    </motion.div>
+
+                                    {/* Overlay Text to be lit up by the glow (blend mode trick) 
+                                        We duplicate the text on top of the glow, but restrict it to the mask as well 
+                                        Currently the glow is BEHIND the gray text.
+                                        To make the text "turn white" or glow itself inside the mask, we can add a white text layer that uses the same mask.
+                                    */}
+                                    <motion.span 
+                                        style={{ maskImage, WebkitMaskImage: maskImage }}
+                                        className="absolute inset-0 z-10 font-serif italic text-3xl lg:text-4xl text-white block whitespace-nowrap pointer-events-none select-none py-2 top-0"
+                                    >
+                                        individuálna cena
+                                    </motion.span>
+                                </div>
                             </div>
                          
                             <Link href="/book/karchigod/intro" className="group relative px-8 py-4 bg-white text-black hover:text-white rounded-xl font-bold overflow-hidden transition-all duration-300 active:scale-95 whitespace-nowrap">

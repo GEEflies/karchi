@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Check } from "lucide-react";
 import { createCheckoutSession } from "@/app/actions/stripe";
 
 const services = [
@@ -98,6 +98,51 @@ export default function Services() {
                         </motion.div>
                     ))}
                 </div>
+
+                {/* Custom Project Card */}
+                <motion.div 
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    className="mt-8 relative w-full bg-black text-white rounded-[3rem] p-10 md:p-14 overflow-hidden group shadow-2xl"
+                >
+                    <div className="flex flex-col lg:flex-row justify-between lg:items-center relative z-10 gap-10">
+                        <div className="flex-1">
+                             <h3 className="text-3xl lg:text-4xl font-black mb-4 text-accent-green">Vlastný Projekt</h3>
+                             <p className="text-gray-400 text-lg mb-10 max-w-2xl leading-relaxed">
+                                Potrebujete komplexnú webovú aplikáciu, API integráciu alebo AI riešenie? 
+                                Vyviniem software presne podľa vašich špecifických požiadaviek. 
+                                Bez kompromisov.
+                             </p>
+                             
+                             <div className="flex flex-wrap gap-6 md:gap-10">
+                                 {["Web App", "API Vývoj", "AI Integrácia", "SaaS"].map((tech) => (
+                                     <div key={tech} className="flex items-center gap-3 font-bold text-sm md:text-base uppercase tracking-widest text-white">
+                                        <div className="w-6 h-6 rounded-full bg-accent-green text-black flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.5)]">
+                                            <Check size={14} strokeWidth={4} />
+                                        </div>
+                                        {tech}
+                                     </div>
+                                 ))}
+                             </div>
+                        </div>
+                        
+                        <div className="flex flex-col lg:items-end gap-8 min-w-[240px]">
+                             <div className="lg:text-right">
+                                <span className="text-5xl lg:text-6xl font-black block tracking-tighter text-white">Na Mieru</span>
+                                <span className="text-gray-500 text-base font-medium mt-2 block uppercase tracking-wider">Individuálna cenová ponuka</span>
+                             </div>
+                             
+                             <Link href="/book/karchigod/intro" className="w-full lg:w-auto bg-white text-black px-10 py-5 rounded-full font-bold hover:scale-105 active:scale-95 transition-all duration-300 inline-flex items-center justify-center gap-2 text-lg shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]">
+                                Konzultovať <ArrowUpRight size={22} />
+                             </Link>
+                        </div>
+                    </div>
+                    
+                    {/* Decorative Elements */}
+                    <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-accent-green/10 rounded-full blur-[120px] pointer-events-none translate-x-1/2 -translate-y-1/2" />
+                    <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent-blue/10 rounded-full blur-[100px] pointer-events-none -translate-x-1/2 translate-y-1/2" />
+                </motion.div>
             </div>
 
             <style jsx>{`

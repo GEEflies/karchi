@@ -215,24 +215,104 @@ export async function bookMeeting(formData: {
             `,
         });
 
-        // 5. Send Email to Host
-        const hostEmail = "karchigod@gmail.com";
+        // 5. Send Email to Host (billikkarol3@gmail.com)
+        const hostEmail = "billikkarol3@gmail.com";
 
         await resend.emails.send({
             from: "Karchi Bookings <onboarding@resend.dev>",
             to: hostEmail,
-            subject: `Nová Rezervácia: ${formData.guestName} - ${formData.eventTitle}`,
+            subject: `🎉 Nová Rezervácia: ${formData.guestName} - ${formData.eventTitle}`,
             html: `
-                 <h1>Nová rezervácia prijatá</h1>
-                 <p><strong>${formData.guestName}</strong> si naplánoval/a ${formData.eventTitle}.</p>
-                 
-                 <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0; color: #000;">
-                     <p><strong>📅 Kedy:</strong> ${dateFormatted}</p>
-                     <p><strong>📧 Email:</strong> ${formData.guestEmail}</p>
-                     <p><strong>📝 Poznámky:</strong> ${formData.notes || "Žiadne"}</p>
-                     ${meetLink ? `<p><strong>🔗 Meet Link:</strong> <a href="${meetLink}">${meetLink}</a></p>` : ""}
-                 </div>
-             `,
+                <!DOCTYPE html>
+                <html lang="sk">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                </head>
+                <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5;">
+                    <table role="presentation" style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 40px 20px;">
+                                <table role="presentation" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+                                    
+                                    <!-- Header -->
+                                    <tr>
+                                        <td style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); padding: 40px; text-align: center;">
+                                            <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 800;">🎉 Nová Rezervácia!</h1>
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Content -->
+                                    <tr>
+                                        <td style="padding: 40px;">
+                                            <p style="margin: 0 0 24px; color: #1a1a1a; font-size: 18px; font-weight: 600;">
+                                                Zákazník <strong style="color: #6366f1;">${formData.guestName}</strong> si práve rezervoval stretnutie.
+                                            </p>
+                                            
+                                            <!-- Meeting Details Card -->
+                                            <div style="background: linear-gradient(135deg, #f8f9ff 0%, #f3f4f6 100%); border-radius: 12px; padding: 28px; margin-bottom: 32px; border-left: 4px solid #6366f1;">
+                                                <div style="margin-bottom: 20px;">
+                                                    <div style="color: #6b7280; font-size: 13px; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">📅 Typ stretnutia</div>
+                                                    <div style="color: #1a1a1a; font-size: 18px; font-weight: 700;">${formData.eventTitle}</div>
+                                                </div>
+                                                
+                                                <div style="margin-bottom: 20px;">
+                                                    <div style="color: #6b7280; font-size: 13px; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">🕐 Čas</div>
+                                                    <div style="color: #1a1a1a; font-size: 16px; font-weight: 600;">${dateFormatted}</div>
+                                                    <div style="color: #6b7280; font-size: 14px; margin-top: 4px;">${formData.timezone}</div>
+                                                </div>
+                                                
+                                                <div style="margin-bottom: 20px;">
+                                                    <div style="color: #6b7280; font-size: 13px; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">👤 Kontakt</div>
+                                                    <div style="color: #1a1a1a; font-size: 16px; font-weight: 600;">${formData.guestName}</div>
+                                                    <div style="color: #6366f1; font-size: 14px; margin-top: 4px;">
+                                                        <a href="mailto:${formData.guestEmail}" style="color: #6366f1; text-decoration: none;">${formData.guestEmail}</a>
+                                                    </div>
+                                                </div>
+                                                
+                                                ${formData.notes ? `
+                                                    <div style="margin-bottom: 20px;">
+                                                        <div style="color: #6b7280; font-size: 13px; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">📝 Poznámky zákazníka</div>
+                                                        <div style="color: #1a1a1a; font-size: 15px; line-height: 1.6; background-color: #ffffff; padding: 16px; border-radius: 8px; border: 1px solid #e5e7eb;">${formData.notes}</div>
+                                                    </div>
+                                                ` : ''}
+                                                
+                                                ${meetLink ? `
+                                                    <div style="padding-top: 24px; border-top: 2px solid #e5e7eb; margin-top: 24px;">
+                                                        <div style="color: #6b7280; font-size: 13px; font-weight: 600; text-transform: uppercase; margin-bottom: 12px;">🔗 Google Meet Link</div>
+                                                        <a href="${meetLink}" style="display: inline-block; background-color: #6366f1; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 15px;">
+                                                            Pripojiť sa na Meet →
+                                                        </a>
+                                                        <div style="margin-top: 12px;">
+                                                            <a href="${meetLink}" style="color: #6366f1; font-size: 13px; text-decoration: none; word-break: break-all;">${meetLink}</a>
+                                                        </div>
+                                                    </div>
+                                                ` : ''}
+                                            </div>
+                                            
+                                            <div style="background-color: #fef3c7; border-left: 3px solid #f59e0b; padding: 16px; border-radius: 8px; margin-top: 24px;">
+                                                <p style="margin: 0; color: #92400e; font-size: 14px; line-height: 1.6;">
+                                                    <strong>💡 Tip:</strong> Udalosť bola automaticky pridaná do tvojho Google Kalendára s Meet linkom.
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Footer -->
+                                    <tr>
+                                        <td style="background-color: #f9fafb; padding: 24px; text-align: center; border-top: 1px solid #e5e7eb;">
+                                            <p style="margin: 0; color: #6b7280; font-size: 13px;">
+                                                Automatická notifikácia z Karchi Booking System
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+                </html>
+            `,
         });
 
         return { success: true };

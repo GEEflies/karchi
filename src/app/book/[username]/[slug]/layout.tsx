@@ -28,12 +28,8 @@ export default function BookingLayout({
                     </Link>
                 </div>
                 
-                {/* Main Content */}
-                <div className="flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8">
-                    <div className="w-full max-w-5xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-black/5">
-                        {children}
-                    </div>
-                </div>
+                {/* Main Content - Wrapper removed to allow page-specific control */}
+                {children}
             </div>
         </>
     );

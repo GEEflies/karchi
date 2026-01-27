@@ -152,7 +152,7 @@ export default function BookingPage() {
 
     if (step === "success") {
         return (
-            <div className="min-h-screen bg-[#FDFDFD]">
+            <div className="flex-1 w-full relative bg-[#FDFDFD]">
                 <Confetti isActive={true} />
                 
                 {/* Background Blobs */}
@@ -311,7 +311,9 @@ export default function BookingPage() {
     }
 
     return (
-        <div className="flex flex-col lg:flex-row">
+        <div className="flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8">
+            <div className="w-full max-w-5xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-black/5">
+                <div className="flex flex-col lg:flex-row">
             {/* LEFT PANEL: Event Details */}
             <div className="w-full lg:w-[380px] xl:w-[420px] bg-gradient-to-br from-gray-50 to-gray-100 p-6 sm:p-8 lg:p-10 border-b lg:border-b-0 lg:border-r border-black/5 flex flex-col">
                 {/* Profile Section */}
@@ -434,6 +436,8 @@ export default function BookingPage() {
                         </motion.div>
                     )}
                 </AnimatePresence>
+            </div>
+                </div>
             </div>
         </div>
     );

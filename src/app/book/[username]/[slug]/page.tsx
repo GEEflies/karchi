@@ -154,135 +154,127 @@ export default function BookingPage() {
         return (
             <>
                 <Confetti isActive={true} />
-                <div className="min-h-[600px] flex flex-col items-center justify-center py-12 px-4 sm:px-8 relative overflow-hidden">
+                <div className="min-h-[500px] flex items-center justify-center py-8 px-4 sm:px-6 relative overflow-hidden bg-white">
                     {/* Background decoration */}
                     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                        <div className="absolute top-0 left-1/4 w-64 h-64 bg-accent-green/10 rounded-full blur-3xl" />
-                        <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-accent-blue/10 rounded-full blur-3xl" />
+                        <div className="absolute top-0 left-1/4 w-64 h-64 bg-accent-green/5 rounded-full blur-3xl" />
+                        <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-accent-blue/5 rounded-full blur-3xl opacity-50" />
                     </div>
 
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
+                        initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.5, type: "spring", bounce: 0.4 }}
-                        className="relative z-10 text-center max-w-lg mx-auto"
+                        transition={{ duration: 0.5, type: "spring", bounce: 0.3 }}
+                        className="relative z-10 w-full max-w-5xl mx-auto"
                     >
-                        {/* Success Icon */}
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ delay: 0.2, type: "spring", bounce: 0.5 }}
-                            className="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-accent-green to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-xl shadow-accent-green/30"
-                        >
-                            <CheckCircle2 className="text-white" size={48} strokeWidth={2.5} />
-                        </motion.div>
+                        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 lg:gap-20">
+                            
+                            {/* LEFT SIDE: Success Message (Centered on Mobile, Right aligned text on Desktop potentially? Or just standard left) */}
+                            <div className="text-center md:text-left flex-1 max-w-md">
+                                <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ delay: 0.2, type: "spring", bounce: 0.5 }}
+                                    className="w-20 h-20 bg-gradient-to-br from-accent-green to-emerald-500 rounded-full flex items-center justify-center mx-auto md:mx-0 mb-6 shadow-xl shadow-accent-green/20"
+                                >
+                                    <CheckCircle2 className="text-white" size={40} strokeWidth={3} />
+                                </motion.div>
 
-                        {/* Title */}
-                        <motion.h2
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 }}
-                            className="text-3xl sm:text-4xl font-black mb-3 tracking-tight"
-                        >
-                            Máte rezervované!
-                        </motion.h2>
+                                <motion.h2
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.3 }}
+                                    className="text-3xl md:text-4xl font-black mb-3 tracking-tight text-foreground"
+                                >
+                                    Máte rezervované!
+                                </motion.h2>
 
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4 }}
-                            className="text-gray-500 mb-10 text-base sm:text-lg"
-                        >
-                            Pozvánka do kalendára bola odoslaná na váš email
-                        </motion.p>
+                                <motion.p
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.4 }}
+                                    className="text-gray-500 mb-8 text-base md:text-lg leading-relaxed"
+                                >
+                                    Pozvánka do kalendára bola odoslaná na váš email.
+                                </motion.p>
 
-                        {/* Meeting Card */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.5 }}
-                            className="bg-white border border-black/5 rounded-2xl p-6 sm:p-8 shadow-xl shadow-black/5 text-left mb-8"
-                        >
-                            {/* Event Type Badge */}
-                            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent-blue/10 text-accent-blue rounded-full text-sm font-semibold mb-4">
-                                <Video size={14} />
-                                Video hovor
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.5 }}
+                                    className="flex flex-col gap-4 items-center md:items-start"
+                                >
+                                    <Link
+                                        href="/"
+                                        className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-foreground text-white rounded-full font-bold hover:bg-black/80 transition-all cursor-pointer active:scale-95 shadow-lg hover:shadow-xl w-full sm:w-auto"
+                                    >
+                                        Späť na portfólio
+                                    </Link>
+                                    
+                                    <div className="flex items-center gap-2 text-xs text-gray-400">
+                                        <Mail size={14} />
+                                        <span>Skontrolujte si aj spam priečinok</span>
+                                    </div>
+                                </motion.div>
                             </div>
 
-                            <h3 className="font-bold text-xl mb-6">{eventType.title}</h3>
-
-                            <div className="space-y-4">
-                                {/* Host */}
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center font-bold text-lg relative overflow-hidden flex-shrink-0 border-2 border-white shadow-md">
-                                        {user.avatar_url ? (
-                                            <Image src={user.avatar_url} alt={user.name} fill className="object-cover" />
-                                        ) : (
-                                            <span className="text-gray-600">{user.name.charAt(0)}</span>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500">Host</p>
-                                        <p className="font-semibold">{user.name}</p>
-                                    </div>
-                                </div>
-
-                                {/* Divider */}
-                                <div className="border-t border-dashed border-gray-200" />
-
-                                {/* Date & Time */}
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-full bg-accent-green/10 flex items-center justify-center flex-shrink-0">
-                                        <CalendarCheck size={22} className="text-accent-green" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500">Dátum & čas</p>
-                                        {selectedDateTime && (
-                                            <p className="font-semibold">
-                                                {format(selectedDateTime, "EEEE, d. MMMM yyyy", { locale: sk })}
-                                                <span className="text-accent-green"> o {format(selectedDateTime, "H:mm")}</span>
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Duration */}
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-full bg-accent-purple/10 flex items-center justify-center flex-shrink-0">
-                                        <Clock size={22} className="text-accent-purple" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500">Trvanie</p>
-                                        <p className="font-semibold">{eventType.duration_minutes} minút</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
-
-                        {/* Info text */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.7 }}
-                            className="flex items-center justify-center gap-2 text-sm text-gray-400 mb-8"
-                        >
-                            <Mail size={16} />
-                            <span>Skontrolujte si aj spam priečinok</span>
-                        </motion.div>
-
-                        {/* CTA Button */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.8 }}
-                        >
-                            <Link
-                                href="/"
-                                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-foreground text-white rounded-full font-bold hover:bg-black/80 transition-all cursor-pointer active:scale-95 shadow-lg hover:shadow-xl"
+                            {/* RIGHT SIDE: Meeting Details Card */}
+                            <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.6 }}
+                                className="w-full max-w-sm"
                             >
-                                Späť na portfólio
-                            </Link>
-                        </motion.div>
+                                <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
+                                     <div className="absolute top-0 right-0 p-4 opacity-5">
+                                        <Globe size={120} />
+                                     </div>
+
+                                    <div className="relative z-10">
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent-blue/10 text-accent-blue rounded-full text-xs font-bold mb-5 uppercase tracking-wide">
+                                            <Video size={12} />
+                                            Google Meet
+                                        </div>
+
+                                        <h3 className="font-bold text-xl mb-6 pr-8 text-foreground leading-tight">{eventType.title}</h3>
+
+                                        <div className="space-y-5">
+                                            {/* Host */}
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-full bg-gray-100 relative overflow-hidden flex-shrink-0 border border-white shadow-sm">
+                                                    {user.avatar_url ? (
+                                                        <Image src={user.avatar_url} alt={user.name} fill className="object-cover" />
+                                                    ) : (
+                                                        <div className="flex items-center justify-center w-full h-full font-bold text-gray-400">{user.name.charAt(0)}</div>
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-0.5">Host</p>
+                                                    <p className="font-semibold text-sm">{user.name}</p>
+                                                </div>
+                                            </div>
+
+                                            {/* Date */}
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-full bg-accent-green/10 flex items-center justify-center flex-shrink-0 text-accent-green">
+                                                    <CalendarCheck size={18} />
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-0.5">Kedy</p>
+                                                    {selectedDateTime && (
+                                                        <div className="font-semibold text-sm">
+                                                            <div className="capitalize">{format(selectedDateTime, "EEEE, d. MMMM", { locale: sk })}</div>
+                                                            <div className="text-gray-500 font-normal">{format(selectedDateTime, "H:mm")} ({eventType.duration_minutes} min)</div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+
+                        </div>
                     </motion.div>
                 </div>
             </>

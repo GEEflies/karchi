@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useMotionValue, useMotionTemplate } from "framer-motion";
-import { useRef } from "react";
+import { motion, useMotionValue, useMotionTemplate, useInView, animate } from "framer-motion";
+import { useRef, useEffect } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Check } from "lucide-react";
 import { createCheckoutSession } from "@/app/actions/stripe";
@@ -35,7 +35,10 @@ const services = [
 
 export default function Services() {
     const textRef = useRef<HTMLDivElement>(null);
+    const sectionRef = useRef<HTMLDivElement>(null);
     const mouseX = useMotionValue(0);
+    const isInView = useInView(sectionRef, { once: false, amount: 0.3 });
+    
     // Create a moving "window" of visibility (Mexican wave style - on then off)
     const maskImage = useMotionTemplate`linear-gradient(90deg, 
         transparent calc(${mouseX}% - 25%), 
@@ -44,19 +47,18 @@ export default function Services() {
         transparent calc(${mouseX}% + 25%)
     )`;
 
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!textRef.current) return;
-        const rect = textRef.current.getBoundingClientRect();
-        const relativeX = e.clientX - rect.left;
-        const percentage = (relativeX / rect.width) * 100;
-        mouseX.set(percentage);
-    };
+    // Auto-animate the glow from left to right and back when in view
+    useEffect(() => {
+        if (!isInView) return;
 
-    const handleMouseLeave = () => {
-        // Reset or fade out? User asked for "smoothly disappear"
-        // We can just animate opacity to 0 via group-hover, so existing logic covers the "disappear" on leave.
-        // But to make it "fade out" nicely inside the mask while hovering? The gradients handle the soft edges.
-    };
+        const controls = animate(mouseX, [0, 100, 0], {
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+        });
+
+        return () => controls.stop();
+    }, [isInView, mouseX]);
 
     return (
         <section id="services" className="py-32 px-4 md:px-8 bg-surface-off-white">
@@ -126,6 +128,7 @@ export default function Services() {
 
                 {/* Custom Project Card */}
                 <motion.div 
+                    ref={sectionRef}
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
@@ -156,7 +159,6 @@ export default function Services() {
                             <div className="text-left sm:text-right">
                                 <div 
                                     ref={textRef}
-                                    onMouseMove={handleMouseMove}
                                     className="relative inline-block group/price cursor-default py-2"
                                 >
                                     {/* Base Text (Darker) */}
@@ -174,6 +176,8 @@ export default function Services() {
                                     <motion.div 
                                         style={{ maskImage, WebkitMaskImage: maskImage }}
                                         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[70%] opacity-0 group-hover/price:opacity-100 transition-opacity duration-500 pointer-events-none z-[5]"
+                                        animate={{ opacity: isInView ? 1 : 0 }}
+                                        transition={{ duration: 0.5 }}
                                     >
                                          <div className="absolute inset-0 bg-gradient-to-t from-indigo-500 via-purple-500 to-transparent blur-2xl opacity-40 mix-blend-screen" />
                                          <div className="absolute inset-0 bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)] blur-3xl opacity-25 animate-[spin_4s_linear_infinite] mix-blend-screen" />

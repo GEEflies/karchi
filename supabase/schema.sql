@@ -81,9 +81,9 @@ BEGIN
   -- Vloženie typov stretnutí
   INSERT INTO event_types (user_id, title, slug, duration_minutes, description)
   VALUES 
-  (karchi_id, 'Úvodný hovor', 'intro', 30, 'Krátky 30-minútový rozhovor o tvojich nápadoch a či si sadneme.'),
-  (karchi_id, 'Konzultácia', 'consultation', 60, 'Detailný rozbor tvojej stratégie, architektúry alebo dizajnu.'),
-  (karchi_id, 'Štart projektu', 'kickoff', 45, 'Rozbehnutie tvojho nového projektu.');
+  (karchi_id, 'Úvodný hovor', 'intro', 30, 'Krátky 30-minútový rozhovor o Vašich nápadoch. Tu zistíme, či si sadneme.'),
+  (karchi_id, 'Konzultácia', 'consultation', 60, 'Detailný rozbor Vašej stratégie alebo dizajnu.'),
+  (karchi_id, 'Štart projektu', 'kickoff', 45, 'Rozbehnutie Vášho nového projektu.');
 
   -- Vloženie predvolenej dostupnosti (Po-Pia, 9:00-17:00)
   INSERT INTO availability (user_id, day_of_week, start_time, end_time, timezone)

@@ -113,7 +113,7 @@ export default function Services() {
                                             await createCheckoutSession(service.title);
                                         }}
                                     >
-                                        <span className="opacity-90">Ušetriť 10% (zaplatiť vopred)</span>
+                                        <span className="opacity-90">Ušetri 10% (zaplať vopred)</span>
                                     </button>
                                 </div>
                             </div>
@@ -173,10 +173,10 @@ export default function Services() {
                                     {/* Apple Intelligence Style Glow */}
                                     <motion.div 
                                         style={{ maskImage, WebkitMaskImage: maskImage }}
-                                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[200%] opacity-0 group-hover/price:opacity-100 transition-opacity duration-500 pointer-events-none z-0"
+                                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[120%] opacity-0 group-hover/price:opacity-100 transition-opacity duration-500 pointer-events-none z-0"
                                     >
-                                         <div className="absolute inset-0 bg-gradient-to-t from-indigo-500 via-purple-500 to-pink-500 blur-xl opacity-80" />
-                                         <div className="absolute inset-0 bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)] blur-2xl opacity-50 animate-[spin_4s_linear_infinite] mix-blend-screen" />
+                                         <div className="absolute inset-0 bg-gradient-to-t from-indigo-500 via-purple-500 to-pink-500 blur-md opacity-30" />
+                                         <div className="absolute inset-0 bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)] blur-lg opacity-20 animate-[spin_4s_linear_infinite] mix-blend-screen" />
                                     </motion.div>
 
                                     {/* Overlay Text to be lit up by the glow (blend mode trick) 

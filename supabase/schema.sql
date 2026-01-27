@@ -15,7 +15,7 @@ CREATE TABLE users (
 CREATE TABLE availability (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-  day_of_week INTEGER NOT NULL, -- 0=Sunday, 6=Saturday
+  day_of_week INTEGER NOT NULL, -- 0=Nedeľa, 6=Sobota
   start_time TIME NOT NULL,
   end_time TIME NOT NULL,
   timezone TEXT NOT NULL DEFAULT 'UTC'
@@ -59,10 +59,7 @@ ALTER TABLE availability ENABLE ROW LEVEL SECURITY;
 ALTER TABLE event_types ENABLE ROW LEVEL SECURITY;
 ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
 
--- Public READ access policies (simplification for this portfolio demo)
--- in a real app, you might want strict controls, but for a public booking page, 
--- anyone needs to read the host's availability and event types.
-
+-- Public READ access policies
 CREATE POLICY "Public read access for users" ON users FOR SELECT USING (true);
 CREATE POLICY "Public read access for availability" ON availability FOR SELECT USING (true);
 CREATE POLICY "Public read access for event_types" ON event_types FOR SELECT USING (true);
@@ -70,34 +67,31 @@ CREATE POLICY "Public read access for event_types" ON event_types FOR SELECT USI
 -- Allow anyone to INSERT a booking (guests don't need to be logged in)
 CREATE POLICY "Public insert access for bookings" ON bookings FOR INSERT WITH CHECK (true);
 
--- Only allow reading bookings if you are the owner (omitted for simplicity as we don't have auth context in this snippet)
-
-
--- SEED DATA (So the app works immediately for 'karchigod')
+-- SEED DATA (Aby appka fungovala hneď pre 'karchigod')
 INSERT INTO users (username, name, email, avatar_url)
 VALUES ('karchigod', 'Karchi', 'contact@karchi.com', '/images/booking-profile.jpg');
 
--- Get the ID of the user we just created to insert related data
+-- Získame ID používateľa na vloženie súvisiacich dát
 DO $$
 DECLARE
   karchi_id UUID;
 BEGIN
   SELECT id INTO karchi_id FROM users WHERE username = 'karchigod' LIMIT 1;
 
-  -- Insert Event Types
+  -- Vloženie typov stretnutí
   INSERT INTO event_types (user_id, title, slug, duration_minutes, description)
   VALUES 
-  (karchi_id, 'Úvodný hovor', 'intro', 30, 'Rýchly 30-minútový rozhovor o tvojich projektových nápadoch a či sme dobrá voľba.'),
-  (karchi_id, 'Konzultácia', 'consultation', 60, 'Hlbší ponor do tvojej technickej stratégie, architektúry alebo dizajnových potrieb.'),
-  (karchi_id, 'Štart projektu', 'kickoff', 45, 'Poďme rozbehať tvoj nový projekt.');
+  (karchi_id, 'Úvodný hovor', 'intro', 30, 'Krátky 30-minútový rozhovor o tvojich nápadoch a či si sadneme.'),
+  (karchi_id, 'Konzultácia', 'consultation', 60, 'Detailný rozbor tvojej stratégie, architektúry alebo dizajnu.'),
+  (karchi_id, 'Štart projektu', 'kickoff', 45, 'Rozbehnutie tvojho nového projektu.');
 
-  -- Insert Default Availability (Mon-Fri, 9am-5pm)
+  -- Vloženie predvolenej dostupnosti (Po-Pia, 9:00-17:00)
   INSERT INTO availability (user_id, day_of_week, start_time, end_time, timezone)
   VALUES
-  (karchi_id, 1, '09:00', '17:00', 'Europe/Bratislava'), -- Monday
-  (karchi_id, 2, '09:00', '17:00', 'Europe/Bratislava'), -- Tuesday
-  (karchi_id, 3, '09:00', '17:00', 'Europe/Bratislava'), -- Wednesday
-  (karchi_id, 4, '09:00', '17:00', 'Europe/Bratislava'), -- Thursday
-  (karchi_id, 5, '09:00', '15:00', 'Europe/Bratislava'); -- Friday (Early finish)
+  (karchi_id, 1, '09:00', '17:00', 'Europe/Bratislava'), -- Pondelok
+  (karchi_id, 2, '09:00', '17:00', 'Europe/Bratislava'), -- Utorok
+  (karchi_id, 3, '09:00', '17:00', 'Europe/Bratislava'), -- Streda
+  (karchi_id, 4, '09:00', '17:00', 'Europe/Bratislava'), -- Štvrtok
+  (karchi_id, 5, '09:00', '15:00', 'Europe/Bratislava'); -- Piatok (skorší koniec)
   
 END $$;

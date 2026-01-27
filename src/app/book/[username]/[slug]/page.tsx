@@ -225,48 +225,59 @@ export default function BookingPage() {
                                 transition={{ delay: 0.6 }}
                                 className="w-full max-w-sm"
                             >
-                                <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
-                                     <div className="absolute top-0 right-0 p-4 opacity-5">
-                                        <Globe size={120} />
-                                     </div>
-
+                                <div className="bg-white border border-black/5 rounded-2xl p-6 sm:p-8 shadow-xl shadow-black/5 relative overflow-hidden">
+                                     
                                     <div className="relative z-10">
-                                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent-blue/10 text-accent-blue rounded-full text-xs font-bold mb-5 uppercase tracking-wide">
-                                            <Video size={12} />
-                                            Google Meet
+                                        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent-blue/10 text-accent-blue rounded-full text-sm font-semibold mb-4">
+                                            <Video size={14} />
+                                            Video hovor
                                         </div>
 
-                                        <h3 className="font-bold text-xl mb-6 pr-8 text-foreground leading-tight">{eventType.title}</h3>
+                                        <h3 className="font-bold text-xl mb-6 text-foreground">{eventType.title}</h3>
 
-                                        <div className="space-y-5">
+                                        <div className="space-y-4">
                                             {/* Host */}
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-gray-100 relative overflow-hidden flex-shrink-0 border border-white shadow-sm">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center font-bold text-lg relative overflow-hidden flex-shrink-0 border-2 border-white shadow-md">
                                                     {user.avatar_url ? (
                                                         <Image src={user.avatar_url} alt={user.name} fill className="object-cover" />
                                                     ) : (
-                                                        <div className="flex items-center justify-center w-full h-full font-bold text-gray-400">{user.name.charAt(0)}</div>
+                                                        <span className="text-gray-600">{user.name.charAt(0)}</span>
                                                     )}
                                                 </div>
                                                 <div>
-                                                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-0.5">Host</p>
-                                                    <p className="font-semibold text-sm">{user.name}</p>
+                                                    <p className="text-sm text-gray-500">Host</p>
+                                                    <p className="font-semibold">{user.name}</p>
                                                 </div>
                                             </div>
 
-                                            {/* Date */}
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-accent-green/10 flex items-center justify-center flex-shrink-0 text-accent-green">
-                                                    <CalendarCheck size={18} />
+                                            {/* Divider */}
+                                            <div className="border-t border-dashed border-gray-200" />
+
+                                            {/* Date & Time */}
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 rounded-full bg-accent-green/10 flex items-center justify-center flex-shrink-0">
+                                                    <CalendarCheck size={22} className="text-accent-green" />
                                                 </div>
                                                 <div>
-                                                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-0.5">Kedy</p>
+                                                    <p className="text-sm text-gray-500">Dátum & čas</p>
                                                     {selectedDateTime && (
-                                                        <div className="font-semibold text-sm">
-                                                            <div className="capitalize">{format(selectedDateTime, "EEEE, d. MMMM", { locale: sk })}</div>
-                                                            <div className="text-gray-500 font-normal">{format(selectedDateTime, "H:mm")} ({eventType.duration_minutes} min)</div>
-                                                        </div>
+                                                        <p className="font-semibold">
+                                                            {format(selectedDateTime, "EEEE, d. MMMM yyyy", { locale: sk })}
+                                                            <span className="text-accent-green"> o {format(selectedDateTime, "H:mm")}</span>
+                                                        </p>
                                                     )}
+                                                </div>
+                                            </div>
+                                            
+                                            {/* Duration */}
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 rounded-full bg-accent-purple/10 flex items-center justify-center flex-shrink-0">
+                                                    <Clock size={22} className="text-accent-purple" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm text-gray-500">Trvanie</p>
+                                                    <p className="font-semibold">{eventType.duration_minutes} minút</p>
                                                 </div>
                                             </div>
                                         </div>

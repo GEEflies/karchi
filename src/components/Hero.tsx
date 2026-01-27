@@ -287,7 +287,7 @@ export default function Hero() {
                         loading="eager"
                         src="/images/hero-final-fr.png"
                         alt="Hero Helmet"
-                        className="w-full h-full object-contain object-top translate-x-38 translate-y-[calc(8rem-5px)] scale-[0.90] origin-top"
+                        className="w-full h-full object-contain object-top translate-x-[13%] translate-y-[15vh] scale-[0.90] origin-top"
                     />
                 </div>
 
@@ -304,7 +304,7 @@ export default function Hero() {
                         src="/images/me-fr.png"
                         alt="Hero Face"
                         style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain object-top translate-x-36 translate-y-32 scale-[0.89] origin-top"
+                        className="w-full h-full object-contain object-top translate-x-[12.5%] translate-y-[15vh] scale-[0.89] origin-top"
                     />
                 </div>
 
@@ -348,18 +348,18 @@ export default function Hero() {
                 <div className="flex flex-col md:flex-row justify-between items-start w-full">
 
                     {/* Left: Headline */}
-                    <div className="pointer-events-auto pt-12 md:pt-20">
+                    <div className="pointer-events-auto pt-12 md:pt-[10vh] max-w-[65vw] md:max-w-[42vw]">
                         <motion.h1
                             initial={{ opacity: 0, y: 50 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 1.2, ease: "circOut" }}
-                            className="text-5xl md:text-8xl font-black uppercase tracking-tighter leading-[1.1] mb-8 mix-blend-hard-light"
+                            className="text-[clamp(2.5rem,7vw,6rem)] font-black uppercase tracking-tighter leading-[1.1] mb-[4vh]"
                         >
                             TVORÍM
                             <br />
                             STRÁNKY,
                             <br />
-                            KTORÉ{' '}
+                            <span className="whitespace-nowrap">KTORÉ{' '}
                             <span className="inline-grid grid-cols-1 grid-rows-1 h-[1.3em] align-top overflow-hidden">
                                 <AnimatePresence mode="popLayout" initial={false}>
                                     <motion.span
@@ -377,35 +377,36 @@ export default function Hero() {
                                     {rotatingPhrases.sort((a, b) => b.length - a.length)[0]}
                                 </span>
                             </span>
+                            </span>
                         </motion.h1>
 
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.8, duration: 1 }}
-                            className="flex flex-col gap-2"
+                            className="flex flex-col gap-[1vh]"
                         >
-                            <p className="text-xl font-bold uppercase tracking-wide">
+                            <p className="text-[4vw] md:text-[1.5vw] font-bold uppercase tracking-wide leading-tight">
                                 Freelance webdesigner a developer aplikácií
                             </p>
-                            <p className="text-sm uppercase tracking-widest opacity-60">
+                            <p className="text-[2.5vw] md:text-[0.9vw] uppercase tracking-widest opacity-60">
                                 Sídliaci v Nitre, dostupný celosvetovo.
                             </p>
                         </motion.div>
                     </div>
 
                     {/* Right: Stats */}
-                    <div className="hidden md:flex flex-col items-end gap-8 pointer-events-auto pt-20">
+                    <div className="hidden md:flex flex-col items-end gap-[4vh] pointer-events-auto pt-[10vh]">
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 1, duration: 0.8 }}
                             className="text-right"
                         >
-                            <span className="block text-5xl font-black mb-1">
+                            <span className="block text-[3.5vw] font-black leading-none mb-1">
                                 <CountUp to={1} delay={1.0} />+
                             </span>
-                            <span className="text-xs uppercase tracking-widest font-bold opacity-60">Rok Skúseností</span>
+                            <span className="text-[0.7vw] uppercase tracking-widest font-bold opacity-60">Rok Skúseností</span>
                         </motion.div>
 
                         <motion.div
@@ -414,10 +415,10 @@ export default function Hero() {
                             transition={{ delay: 1.1, duration: 0.8 }}
                             className="text-right"
                         >
-                            <span className="block text-5xl font-black mb-1">
+                            <span className="block text-[3.5vw] font-black leading-none mb-1">
                                 <CountUp to={8} delay={1.5} />+
                             </span>
-                            <span className="text-xs uppercase tracking-widest font-bold opacity-60">Projektov</span>
+                            <span className="text-[0.7vw] uppercase tracking-widest font-bold opacity-60">Projektov</span>
                         </motion.div>
 
                         <motion.div
@@ -426,10 +427,10 @@ export default function Hero() {
                             transition={{ delay: 1.2, duration: 0.8 }}
                             className="text-right"
                         >
-                            <span className="block text-5xl font-black mb-1">
+                            <span className="block text-[3.5vw] font-black leading-none mb-1">
                                 <CountUp to={99} delay={2.0} />%
                             </span>
-                            <span className="text-xs uppercase tracking-widest font-bold opacity-60">Spokojnosť</span>
+                            <span className="text-[0.7vw] uppercase tracking-widest font-bold opacity-60">Spokojnosť</span>
                         </motion.div>
                     </div>
                 </div>

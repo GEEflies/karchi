@@ -33,9 +33,14 @@ export default function Footer() {
                                 niečo
                             </span>
                         </div>
-                        <span className="text-5xl md:text-7xl lg:text-8xl uppercase leading-[0.9]">
-                            na mysli?
-                        </span>
+                        <div className="flex flex-wrap items-baseline gap-3 md:gap-6">
+                            <span className="font-serif italic font-normal text-5xl md:text-7xl lg:text-8xl text-accent-blue leading-[0.9]">
+                                na
+                            </span>
+                            <span className="text-5xl md:text-7xl lg:text-8xl leading-[0.9]">
+                                mysli?
+                            </span>
+                        </div>
                     </h2>
                 </div>
 

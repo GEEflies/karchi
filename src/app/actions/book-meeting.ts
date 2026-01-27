@@ -3,10 +3,12 @@
 import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
 import { format } from "date-fns";
+import { sk } from "date-fns/locale";
+import { google } from "googleapis";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Create a Supabase client with the Service Role Key for admin privileges (bypassing RLS if needed, or just for secure context)
+// Create a Supabase client with the Service Role Key for admin privileges
 const supabaseAdmin = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -17,6 +19,59 @@ interface BookingState {
     error?: string;
 }
 
+// Helper to create Google Calendar Event
+async function createGoogleCalendarEvent(
+    booking: {
+        guestName: string;
+        guestEmail: string;
+        startTime: string;
+        endTime: string;
+        title: string;
+        description?: string;
+    }
+) {
+    try {
+        const oauth2Client = new google.auth.OAuth2(
+            process.env.GOOGLE_CLIENT_ID,
+            process.env.GOOGLE_CLIENT_SECRET,
+            "https://developers.google.com/oauthplayground" // Redirect URI we used
+        );
+
+        oauth2Client.setCredentials({
+            refresh_token: process.env.GOOGLE_REFRESH_TOKEN
+        });
+
+        const calendar = google.calendar({ version: "v3", auth: oauth2Client });
+
+        const event = await calendar.events.insert({
+            calendarId: "primary",
+            conferenceDataVersion: 1, // Required for Meet link
+            requestBody: {
+                summary: booking.title,
+                description: booking.description,
+                start: { dateTime: booking.startTime },
+                end: { dateTime: booking.endTime },
+                attendees: [{ email: booking.guestEmail }],
+                conferenceData: {
+                    createRequest: {
+                        requestId: Math.random().toString(36).substring(7),
+                        conferenceSolutionKey: { type: "hangoutsMeet" },
+                    },
+                },
+            },
+        });
+
+        return {
+            link: event.data.hangoutLink,
+            eventId: event.data.id
+        };
+
+    } catch (error) {
+        console.error("Google Calendar API Error:", error);
+        return { link: null, eventId: null }; // Fail gracefully
+    }
+}
+
 export async function bookMeeting(formData: {
     eventTypeId: string;
     guestName: string;
@@ -25,8 +80,8 @@ export async function bookMeeting(formData: {
     endTime: string;   // ISO string
     notes?: string;
     timezone: string;
-    hostName: string; // Passed for email context
-    hostEmail?: string; // We can lookup, or just hardcode for MVP if not in DB yet
+    hostName: string;
+    hostEmail?: string;
     eventTitle: string;
 }): Promise<BookingState> {
     try {
@@ -56,48 +111,65 @@ export async function bookMeeting(formData: {
             return { error: "Failed to schedule the meeting. Please try again." };
         }
 
-        // 2. Prepare Email Content
-        const dateFormatted = format(new Date(formData.startTime), "EEEE, MMMM d, yyyy 'at' h:mm a");
+        // 2. Create Google Calendar Event (with Meet Link)
+        const calendarResult = await createGoogleCalendarEvent({
+            guestName: formData.guestName,
+            guestEmail: formData.guestEmail,
+            startTime: formData.startTime,
+            endTime: formData.endTime,
+            title: `${formData.eventTitle} s Karchim: ${formData.guestName}`,
+            description: `Rezervované cez portfólio.\n\nPoznámky: ${formData.notes || "Žiadne"}`
+        });
 
-        // 3. Send Email to Guest
+        // 3. Prepare Email Content
+        const dateFormatted = format(new Date(formData.startTime), "EEEE, d. MMMM yyyy 'o' H:mm", { locale: sk });
+        const meetLink = calendarResult.link;
+
+        // 4. Send Email to Guest
         await resend.emails.send({
-            from: "Karchi Bookings <onboarding@resend.dev>", // Default Resend testing domain
+            from: "Karchi Bookings <onboarding@resend.dev>",
             to: formData.guestEmail,
-            subject: `Confirmed: ${formData.eventTitle} with ${formData.hostName}`,
+            subject: `Potvrdené: ${formData.eventTitle} s Karchim`,
             html: `
-                <h1>Meeting Confirmed!</h1>
-                <p>Hi ${formData.guestName},</p>
-                <p>Your <strong>${formData.eventTitle}</strong> with <strong>${formData.hostName}</strong> has been scheduled.</p>
+                <h1>Potvrdené!</h1>
+                <p>Ahoj ${formData.guestName},</p>
+                <p>Tvoja <strong>${formData.eventTitle}</strong> s <strong>${formData.hostName}</strong> je úspešne naplánovaná.</p>
                 
-                <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                    <p style="margin: 0; font-size: 16px;"><strong>📅 When:</strong> ${dateFormatted}</p>
-                    <p style="margin: 10px 0 0 0; font-size: 16px;"><strong>🌍 Timezone:</strong> ${formData.timezone}</p>
+                <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0; color: #000;">
+                    <p style="margin: 0; font-size: 16px;"><strong>📅 Kedy:</strong> ${dateFormatted}</p>
+                    <p style="margin: 10px 0 0 0; font-size: 16px;"><strong>🌍 Časové pásmo:</strong> ${formData.timezone}</p>
+                    ${meetLink ? `
+                        <p style="margin: 20px 0 0 0;">
+                            <a href="${meetLink}" style="background-color: #000; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+                                Pripojiť sa cez Google Meet
+                            </a>
+                        </p>
+                    ` : ""}
                 </div>
 
-                ${formData.notes ? `<p><strong>Your Notes:</strong><br>${formData.notes}</p>` : ""}
+                ${formData.notes ? `<p><strong>Tvoje poznámky:</strong><br>${formData.notes}</p>` : ""}
 
-                <p>A calendar invitation should be arriving separately (if configured).</p>
-                <p>Look forward to speaking with you!</p>
+                <p style="color: #666; font-size: 14px;">Pozvánka do kalendára ti bola odoslaná automaticky.</p>
+                <p>Teším sa na naše stretnutie!</p>
             `,
         });
 
-        // 4. Send Email to Host (You)
-        // Hardcoded email for MVP or fetch from DB user profile
-        // For security, we'll verify the email sending
-        const hostEmail = "karchigod@gmail.com"; // TODO: Retrieve from DB user record
+        // 5. Send Email to Host
+        const hostEmail = "karchigod@gmail.com";
 
         await resend.emails.send({
             from: "Karchi Bookings <onboarding@resend.dev>",
             to: hostEmail,
-            subject: `New Booking: ${formData.guestName} - ${formData.eventTitle}`,
+            subject: `Nová Rezervácia: ${formData.guestName} - ${formData.eventTitle}`,
             html: `
-                 <h1>New Booking Received</h1>
-                 <p><strong>${formData.guestName}</strong> has scheduled a ${formData.eventTitle}.</p>
+                 <h1>Nová rezervácia prijatá</h1>
+                 <p><strong>${formData.guestName}</strong> si naplánoval/a ${formData.eventTitle}.</p>
                  
-                 <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                     <p><strong>📅 Time:</strong> ${dateFormatted}</p>
+                 <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0; color: #000;">
+                     <p><strong>📅 Kedy:</strong> ${dateFormatted}</p>
                      <p><strong>📧 Email:</strong> ${formData.guestEmail}</p>
-                     <p><strong>📝 Notes:</strong> ${formData.notes || "None"}</p>
+                     <p><strong>📝 Poznámky:</strong> ${formData.notes || "Žiadne"}</p>
+                     ${meetLink ? `<p><strong>🔗 Meet Link:</strong> <a href="${meetLink}">${meetLink}</a></p>` : ""}
                  </div>
              `,
         });

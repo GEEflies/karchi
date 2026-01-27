@@ -24,14 +24,14 @@ export default function Footer() {
 
             <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 mb-24">
                 <div className="lg:col-span-7 flex flex-col justify-between">
-                    <h2 className="flex flex-col gap-2 font-black leading-[0.85] tracking-tighter text-white">
-                        <span className="text-7xl md:text-9xl uppercase block">
+                    <h2 className="flex flex-col gap-[-0.5rem] font-black leading-[0.8] tracking-tighter text-white">
+                        <span className="text-6xl md:text-8xl xl:text-9xl uppercase block">
                             Máte
                         </span>
-                        <span className="font-serif italic font-normal text-6xl md:text-8xl text-accent-blue block pl-12 md:pl-32 -mt-2 opacity-80">
+                        <span className="font-serif italic font-normal text-5xl md:text-7xl xl:text-8xl text-accent-blue block pl-8 md:pl-24 -my-2 md:-my-4">
                             niečo
                         </span>
-                        <span className="text-7xl md:text-9xl uppercase block text-right">
+                        <span className="text-6xl md:text-8xl xl:text-9xl uppercase block text-right whitespace-nowrap">
                             na mysli?
                         </span>
                     </h2>

@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import Marquee from "./Marquee";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Mail, Phone } from "lucide-react";
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -48,7 +50,7 @@ export default function Footer() {
                             <a href="https://wa.me/421907758852" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between group border-b border-white/10 pb-4 hover:border-accent-green transition-colors">
                                 <div className="flex items-center gap-4">
                                     <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 group-hover:text-accent-green transition-colors">
-                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                                     </svg>
                                     <span className="font-bold text-2xl group-hover:text-accent-green transition-colors">WHATSAPP</span>
                                 </div>
@@ -57,15 +59,19 @@ export default function Footer() {
                         </div>
                     </div>
 
-                    <Link
+                    <MagneticButton
                         href="/book/karchigod/intro"
-                        className="w-full bg-gradient-to-r from-accent-purple to-accent-blue text-white px-8 py-8 rounded-[2rem] text-xl font-bold hover:opacity-90 transition-all duration-300 flex items-center justify-between group shadow-lg shadow-accent-purple/20"
+                        className="w-full h-32 bg-white text-black rounded-3xl flex items-center justify-between px-10 group overflow-hidden relative"
                     >
-                        <span className="text-2xl tracking-tight">Povedzte mi o tom</span>
-                         <div className="bg-white/20 p-2 rounded-full group-hover:bg-white/30 transition-colors">
-                            <ArrowUpRight className="w-6 h-6 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                         </div>
-                    </Link>
+                        <div className="relative z-10 flex flex-col items-start gap-1">
+                             <span className="text-sm font-bold uppercase tracking-widest opacity-50">Začať spoluprácu</span>
+                             <span className="text-4xl font-black tracking-tight group-hover:translate-x-2 transition-transform duration-500">Povedzte mi o tom</span>
+                        </div>
+                        <div className="relative z-10 w-16 h-16 bg-black rounded-full flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-45 transition-all duration-500">
+                            <ArrowUpRight size={28} />
+                        </div>
+                        <div className="absolute inset-0 bg-gray-100 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-0" />
+                    </MagneticButton>
                 </div>
             </div>
 
@@ -87,18 +93,20 @@ export default function Footer() {
                 </div>
 
                 <div className="flex flex-wrap gap-4">
-                    <a 
+                    <MagneticButton 
                         href="mailto:karol.jr@billik.sk" 
-                        className="px-6 py-3 rounded-full bg-white text-black font-bold hover:bg-gray-200 transition-all duration-300 shadow-lg text-sm md:text-base tracking-wide"
+                        className="px-8 py-4 rounded-full border border-white/20 hover:border-white text-white font-bold transition-all duration-300 flex items-center gap-3 bg-white/5 backdrop-blur-sm hover:bg-white hover:text-black group"
                     >
-                        KAROL.JR@BILLIK.SK
-                    </a>
-                    <a 
+                         <Mail size={18} className="group-hover:scale-110 transition-transform" />
+                        <span className="tracking-wide">KAROL.JR@BILLIK.SK</span>
+                    </MagneticButton>
+                    <MagneticButton 
                         href="tel:+421907758852" 
-                        className="px-6 py-3 rounded-full bg-white text-black font-bold hover:bg-gray-200 transition-all duration-300 shadow-lg text-sm md:text-base tracking-wide"
+                        className="px-8 py-4 rounded-full border border-white/20 hover:border-white text-white font-bold transition-all duration-300 flex items-center gap-3 bg-white/5 backdrop-blur-sm hover:bg-white hover:text-black group"
                     >
-                        +421 907 758 852
-                    </a>
+                         <Phone size={18} className="group-hover:scale-110 transition-transform" />
+                        <span className="tracking-wide">+421 907 758 852</span>
+                    </MagneticButton>
                 </div>
             </div>
 
@@ -108,5 +116,57 @@ export default function Footer() {
                 }
             `}</style>
         </footer>
+    );
+}
+
+function MagneticButton({ children, className, href }: { children: React.ReactNode, className?: string, href: string }) {
+    const ref = useRef<HTMLAnchorElement>(null);
+    
+    useEffect(() => {
+        const element = ref.current;
+        if (!element) return;
+
+        const xTo = gsap.quickTo(element, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
+        const yTo = gsap.quickTo(element, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
+
+        const mouseMove = (e: MouseEvent) => {
+            const { clientX, clientY } = e;
+            const { height, width, left, top } = element.getBoundingClientRect();
+            const x = clientX - (left + width / 2);
+            const y = clientY - (top + height / 2);
+            
+            xTo(x * 0.35);
+            yTo(y * 0.35);
+        };
+
+        const mouseLeave = () => {
+            xTo(0);
+            yTo(0);
+        };
+
+        element.addEventListener("mousemove", mouseMove);
+        element.addEventListener("mouseleave", mouseLeave);
+
+        return () => {
+            element.removeEventListener("mousemove", mouseMove);
+            element.removeEventListener("mouseleave", mouseLeave);
+        };
+    }, []);
+
+    // Helper to determine if it's an external link or internal
+    const isExternal = href.startsWith('http') || href.startsWith('mailto') || href.startsWith('tel');
+
+    if (isExternal) {
+        return (
+            <a ref={ref} href={href} className={className} target={href.startsWith('http') ? "_blank" : undefined} rel={href.startsWith('http') ? "noopener noreferrer" : undefined}>
+                {children}
+            </a>
+        );
+    }
+
+    return (
+        <Link ref={ref} href={href} className={className}>
+            {children}
+        </Link>
     );
 }

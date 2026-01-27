@@ -308,6 +308,7 @@ export default function BookingPage() {
                     </div>
                 </motion.div>
             </div>
+            </div>
         );
     }
 

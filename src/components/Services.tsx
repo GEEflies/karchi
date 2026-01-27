@@ -107,36 +107,44 @@ export default function Services() {
                     className="mt-8 relative w-full bg-black text-white rounded-[3rem] p-10 md:p-14 overflow-hidden group shadow-2xl"
                 >
                     <div className="flex flex-col lg:flex-row justify-between lg:items-center relative z-10 gap-10">
-                        <div className="flex-1">
-                             <h3 className="text-3xl lg:text-4xl font-black mb-4 text-accent-green">Vlastný Projekt</h3>
-                             <p className="text-gray-400 text-lg mb-0 lg:mb-10 max-w-2xl leading-relaxed">
-                                Potrebujete komplexnú webovú aplikáciu, API integráciu alebo AI riešenie? 
-                                Vyviniem software presne podľa vašich špecifických požiadaviek.
+                        <div className="flex-1 min-w-[300px]">
+                             <div className="flex items-center gap-4 mb-4">
+                                <h3 className="text-3xl lg:text-4xl font-black text-white">Vlastný Projekt</h3>
+                                <span className="px-3 py-1 rounded-full bg-accent-green/20 text-accent-green text-[10px] font-bold uppercase tracking-widest border border-accent-green/20">Enterprise</span>
+                             </div>
+                             <p className="text-gray-400 text-base lg:text-lg mb-8 max-w-xl leading-relaxed">
+                                Komplexné webové aplikácie, API integrácie a AI riešenia.
+                                Software vyvinutý presne podľa vašich špecifických požiadaviek.
                              </p>
+                             
+                             <div className="flex flex-wrap gap-2">
+                                 {["Web App", "API Vývoj", "AI Integrácia", "SaaS"].map((tech) => (
+                                     <div key={tech} className="px-3 py-1.5 rounded-md bg-white/5 border border-white/5 text-xs font-medium text-gray-300 flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-accent-green shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
+                                        {tech}
+                                     </div>
+                                 ))}
+                             </div>
                         </div>
                         
-                        <div className="lg:text-right shrink-0">
-                            <span className="text-4xl lg:text-5xl font-black block tracking-tighter text-white">Na Mieru</span>
-                            <span className="text-gray-500 text-xs lg:text-sm font-bold mt-1 block uppercase tracking-widest">Individuálna Cenová Ponuka</span>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 lg:gap-8 pt-8 lg:pt-0 lg:pl-12 border-t lg:border-t-0 lg:border-l border-white/10 mt-8 lg:mt-0 lg:ml-8">
+                            <div className="text-left sm:text-right">
+                                <span className="font-serif italic text-3xl lg:text-4xl text-gray-400 block whitespace-nowrap">
+                                    individuálna cena
+                                </span>
+                            </div>
+                         
+                            <Link href="/book/karchigod/intro" className="group relative px-8 py-4 bg-white text-black rounded-xl font-bold overflow-hidden transition-transform active:scale-95 whitespace-nowrap">
+                                <span className="relative z-10 flex items-center gap-2">
+                                    Konzultovať <ArrowUpRight size={18} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                </span>
+                                <div className="absolute inset-0 bg-accent-green translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                            </Link>
                         </div>
                     </div>
 
-                    <div className="flex flex-col lg:flex-row justify-between lg:items-center relative z-10 gap-8 lg:gap-10 mt-10 lg:mt-0">
-                         <div className="flex flex-wrap gap-4 lg:gap-6">
-                             {["Web App", "API Vývoj", "AI Integrácia", "SaaS"].map((tech) => (
-                                 <div key={tech} className="flex items-center gap-2 lg:gap-3 font-bold text-xs lg:text-sm uppercase tracking-wider text-white bg-white/5 px-4 py-2 rounded-full border border-white/5">
-                                    <div className="w-4 h-4 rounded-full bg-accent-green text-black flex items-center justify-center shadow-[0_0_10px_rgba(34,197,94,0.5)]">
-                                        <Check size={10} strokeWidth={4} />
-                                    </div>
-                                    {tech}
-                                 </div>
-                             ))}
-                         </div>
-                         
-                         <Link href="/book/karchigod/intro" className="w-full lg:w-auto bg-white text-black px-8 py-4 rounded-full font-bold hover:scale-105 active:scale-95 transition-all duration-300 inline-flex items-center justify-center gap-2 text-base lg:text-lg shadow-[0_0_30px_-5px_rgba(255,255,255,0.3)] shrink-0">
-                            Konzultovať <ArrowUpRight size={20} />
-                         </Link>
-                    </div>
+                    {/* Decorative Elements */}
+                    <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-white/5 rounded-full blur-[120px] pointer-events-none translate-x-1/2 -translate-y-1/2 mix-blend-overlay" />
                     
                     {/* Decorative Elements */}
                     <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-accent-green/10 rounded-full blur-[120px] pointer-events-none translate-x-1/2 -translate-y-1/2" />

@@ -162,13 +162,12 @@ export default function BookingPage() {
                 </div>
 
                 {/* Main Content pushed up for PC */}
-                <div className="relative z-10 min-h-screen flex items-center justify-center p-4 lg:items-start lg:pt-20">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        transition={{ duration: 0.6, type: "spring", bounce: 0.25 }}
-                        className="w-full max-w-4xl bg-white rounded-[32px] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.08)] overflow-hidden border border-gray-100 flex flex-col md:flex-row"
-                    >
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ duration: 0.6, type: "spring", bounce: 0.25 }}
+                    className="relative z-10 w-full max-w-4xl mx-auto bg-white rounded-[32px] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.08)] overflow-hidden border border-gray-100 flex flex-col md:flex-row lg:mt-20"
+                >
                         {/* LEFT PANEL: Success State */}
                     <div className="p-8 md:p-12 flex-1 flex flex-col items-start justify-center relative">
                         <motion.div
@@ -307,7 +306,6 @@ export default function BookingPage() {
                         </motion.div>
                     </div>
                 </motion.div>
-            </div>
             </div>
         );
     }

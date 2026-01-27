@@ -83,6 +83,24 @@ body {
   background: var(--foreground);
 }
 
+/* Thin Scrollbar for nested containers */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
 ::selection {
   background: var(--accent-purple);
   color: white;

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 const navItems = [
     { name: "Portfólio", href: "#projects" },
     { name: "Služby", href: "#services" },
-    { name: "O nás", href: "#about" },
+    { name: "O mne", href: "/o-mne" },
 ];
 
 export default function Header() {
@@ -83,7 +83,7 @@ export default function Header() {
                 </div>
 
                 <Link
-                    href="#contact"
+                    href="/book/karchigod/intro"
                     className={cn(
                         "hidden md:flex items-center justify-center px-5 py-2 text-sm font-semibold rounded-full hover:scale-105 active:scale-95 transition-all duration-300",
                         isDarkSection

@@ -29,32 +29,37 @@ export default function TimeSlots({
 
     return (
         <div className="h-full flex flex-col">
-            <h3 className="text-lg font-bold mb-6">
+            <h3 className="text-lg font-bold mb-4 flex-shrink-0">
                 {format(selectedDate, "EEEE, d. MMMM", { locale: sk })}
             </h3>
 
-            <div className="flex-1 space-y-3">
+            <div className="flex-1 min-h-0">
                 {availableSlots.length === 0 ? (
                     <p className="text-gray-500 text-sm">Žiadne voľné termíny pre tento dátum.</p>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {availableSlots.map((time, index) => (
-                            <motion.button
-                                key={time}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.05 }}
-                                onClick={() => {
-                                    const [hours, minutes] = time.split(':').map(Number);
-                                    const dateTime = new Date(selectedDate);
-                                    dateTime.setHours(hours, minutes);
-                                    onSelectTime(time, dateTime);
-                                }}
-                                className="w-full flex items-center justify-center py-4 border border-black/10 rounded-xl hover:border-black/50 hover:bg-surface-off-white text-foreground font-bold transition-all group"
-                            >
-                                {time}
-                            </motion.button>
-                        ))}
+                    <div 
+                        className="overflow-y-auto pr-2 scrollbar-thin max-h-[350px] sm:max-h-[400px] lg:max-h-[480px]"
+                        data-lenis-prevent
+                    >
+                        <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                            {availableSlots.map((time, index) => (
+                                <motion.button
+                                    key={time}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.03 }}
+                                    onClick={() => {
+                                        const [hours, minutes] = time.split(':').map(Number);
+                                        const dateTime = new Date(selectedDate);
+                                        dateTime.setHours(hours, minutes);
+                                        onSelectTime(time, dateTime);
+                                    }}
+                                    className="w-full flex items-center justify-center py-3 border border-black/10 rounded-xl hover:border-black hover:bg-gray-50 text-foreground font-semibold transition-all cursor-pointer active:scale-95"
+                                >
+                                    {time}
+                                </motion.button>
+                            ))}
+                        </div>
                     </div>
                 )}
             </div>

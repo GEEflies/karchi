@@ -27,28 +27,31 @@ export default function BookingForm({ selectedDateTime, onBack, onSubmit, isSubm
 
     return (
         <div className="h-full flex flex-col">
-            <div className="mb-6">
+            <div className="mb-8">
                 <button
                     onClick={onBack}
-                    className="text-sm text-gray-400 hover:text-black mb-2 transition-colors flex items-center gap-1"
+                    className="text-sm text-gray-400 hover:text-black mb-4 transition-colors flex items-center gap-1 cursor-pointer"
                 >
                     ← Späť
                 </button>
-                <h3 className="text-xl font-bold">
+                <h3 className="text-2xl font-bold mb-2">
                     Potvrďte detaily
                 </h3>
-                <p className="text-gray-500 mt-1">
-                    {format(selectedDateTime, "EEEE, d. MMMM yyyy 'o' H:mm", { locale: sk })}
-                </p>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-full">
+                    <div className="w-2 h-2 rounded-full bg-accent-green" />
+                    <p className="text-gray-600 text-sm font-medium">
+                        {format(selectedDateTime, "EEEE, d. MMMM yyyy 'o' H:mm", { locale: sk })}
+                    </p>
+                </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex-1 space-y-4">
+            <form onSubmit={handleSubmit} className="flex-1 space-y-5">
                 <div>
-                    <label className="block text-sm font-bold mb-2">Meno *</label>
+                    <label className="block text-sm font-bold mb-2 text-gray-700">Meno *</label>
                     <input
                         type="text"
                         required
-                        className="w-full p-3 rounded-lg border border-gray-200 focus:border-black focus:ring-0 outline-none transition-colors bg-white"
+                        className="w-full p-3.5 rounded-xl border border-gray-200 focus:border-black focus:ring-0 outline-none transition-colors bg-gray-50 focus:bg-white"
                         placeholder="Ján Novák"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -56,11 +59,11 @@ export default function BookingForm({ selectedDateTime, onBack, onSubmit, isSubm
                 </div>
 
                 <div>
-                    <label className="block text-sm font-bold mb-2">Email *</label>
+                    <label className="block text-sm font-bold mb-2 text-gray-700">Email *</label>
                     <input
                         type="email"
                         required
-                        className="w-full p-3 rounded-lg border border-gray-200 focus:border-black focus:ring-0 outline-none transition-colors bg-white"
+                        className="w-full p-3.5 rounded-xl border border-gray-200 focus:border-black focus:ring-0 outline-none transition-colors bg-gray-50 focus:bg-white"
                         placeholder="jan@priklad.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -68,9 +71,9 @@ export default function BookingForm({ selectedDateTime, onBack, onSubmit, isSubm
                 </div>
 
                 <div>
-                    <label className="block text-sm font-bold mb-2">Poznámky</label>
+                    <label className="block text-sm font-bold mb-2 text-gray-700">Poznámky</label>
                     <textarea
-                        className="w-full p-3 rounded-lg border border-gray-200 focus:border-black focus:ring-0 outline-none transition-colors bg-white min-h-[100px] resize-none"
+                        className="w-full p-3.5 rounded-xl border border-gray-200 focus:border-black focus:ring-0 outline-none transition-colors bg-gray-50 focus:bg-white min-h-[100px] resize-none"
                         placeholder="Prosím napíšte čokoľvek, čo pomôže pri príprave na stretnutie..."
                         value={formData.notes}
                         onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
@@ -81,7 +84,7 @@ export default function BookingForm({ selectedDateTime, onBack, onSubmit, isSubm
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full py-4 bg-foreground text-background rounded-full font-bold text-lg hover:bg-black/90 transition-colors disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="w-full py-4 bg-foreground text-background rounded-full font-bold text-lg hover:bg-black/90 transition-all disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2 active:scale-[0.98] shadow-lg hover:shadow-xl"
                     >
                         {isSubmitting ? (
                             <>

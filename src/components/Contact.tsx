@@ -15,25 +15,25 @@ export default function Contact() {
                     transition={{ duration: 0.8 }}
                 >
                     <h2 className="text-6xl md:text-8xl font-black mb-8 tracking-tighter leading-none">
-                        Začnime<br />
-                        <span className="opacity-50">projekt.</span>
+                        Začnime spolu<br />
+                        <span className="opacity-50">pracovať.</span>
                     </h2>
                     <p className="text-xl opacity-80 mb-12 max-w-md font-medium leading-relaxed">
-                        Ste pripravení posunúť vašu digitálnu prezentáciu na vyššiu úroveň? Prijímame nové projekty.
+                        Ste pripravení posunúť vašu digitálnu prezentáciu na vyššiu úroveň? Prijímam nové projekty.
                     </p>
 
                     <div className="space-y-6 text-lg">
-                        <a href="mailto:hello@karchi.com" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
+                        <a href="mailto:karol.jr@billik.sk" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
                             <div className="p-4 bg-white/10 backdrop-blur-md rounded-full">
                                 <Mail size={24} />
                             </div>
-                            <span>hello@karchi.com</span>
+                            <span>karol.jr@billik.sk</span>
                         </a>
                         <div className="flex items-center gap-4">
                             <div className="p-4 bg-white/10 backdrop-blur-md rounded-full">
                                 <Phone size={24} />
                             </div>
-                            <span>+421 900 000 000</span>
+                            <span>+421 907 758 852</span>
                         </div>
                     </div>
                 </motion.div>

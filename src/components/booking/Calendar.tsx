@@ -43,13 +43,13 @@ export default function Calendar({ selectedDate, onSelectDate, availableDays = [
                     <button
                         onClick={prevMonth}
                         disabled={isSameMonth(currentMonth, new Date()) || isBefore(currentMonth, new Date())}
-                        className="p-2 rounded-full hover:bg-black/5 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+                        className="p-2 rounded-full hover:bg-black/5 disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed cursor-pointer transition-colors"
                     >
                         <ChevronLeft size={20} />
                     </button>
                     <button
                         onClick={nextMonth}
-                        className="p-2 rounded-full hover:bg-black/5 transition-colors"
+                        className="p-2 rounded-full hover:bg-black/5 cursor-pointer transition-colors"
                     >
                         <ChevronRight size={20} />
                     </button>
@@ -107,9 +107,9 @@ export default function Calendar({ selectedDate, onSelectDate, availableDays = [
                                 !isSameMonth(day, monthStart) ? "text-gray-300 invisible" : "text-foreground",
                                 isDisabled && isSameMonth(day, monthStart) && "text-gray-300 cursor-not-allowed line-through decoration-transparent",
                                 // Available Style
-                                !isDisabled && !isSelected && "hover:bg-accent-blue/10 hover:text-accent-blue bg-gray-50",
+                                !isDisabled && !isSelected && "hover:bg-accent-blue/10 hover:text-accent-blue bg-gray-50 cursor-pointer",
                                 // Selected Style
-                                isSelected && "bg-black text-white shadow-lg scale-105 font-bold",
+                                isSelected && "bg-black text-white shadow-lg scale-105 font-bold cursor-pointer",
                                 // Today Style
                                 isToday(day) && !isSelected && "ring-1 ring-black/20 font-bold relative after:content-[''] after:absolute after:bottom-2 after:w-1 after:h-1 after:bg-accent-blue after:rounded-full"
                             )}

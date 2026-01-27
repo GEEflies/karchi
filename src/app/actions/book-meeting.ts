@@ -161,7 +161,7 @@ export async function bookMeeting(formData: {
                                                 Ahoj <strong>${formData.guestName}</strong>,
                                             </p>
                                             <p style="margin: 0 0 32px; color: #4a4a4a; font-size: 16px; line-height: 1.6;">
-                                                Tvoja <strong>${formData.eventTitle}</strong> s <strong>${formData.hostName}</strong> je úspešne naplánovaná.
+                                                Tvoj úvodný hovor s <strong>${formData.hostName}m</strong> je úspešne naplánovaný.
                                             </p>
                                             
                                             <!-- Details Card -->

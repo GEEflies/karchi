@@ -427,9 +427,9 @@ export default function Hero() {
                             className="text-right"
                         >
                             <span className="block text-5xl font-black mb-1">
-                                <CountUp to={10} delay={2.0} />+
+                                <CountUp to={99} delay={2.0} />%
                             </span>
-                            <span className="text-xs uppercase tracking-widest font-bold opacity-60">Spokojných Klientov</span>
+                            <span className="text-xs uppercase tracking-widest font-bold opacity-60">Spokojnosť</span>
                         </motion.div>
                     </div>
                 </div>
@@ -457,8 +457,8 @@ export default function Hero() {
                         <span className="text-[10px] uppercase font-bold opacity-60">Projektov</span>
                     </div>
                     <div className="text-center">
-                        <span className="block text-3xl font-black">10+</span>
-                        <span className="text-[10px] uppercase font-bold opacity-60">Klientov</span>
+                        <span className="block text-3xl font-black">99%</span>
+                        <span className="text-[10px] uppercase font-bold opacity-60">Spokojnosť</span>
                     </div>
                 </div>
             </div>

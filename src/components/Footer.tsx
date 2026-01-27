@@ -22,35 +22,33 @@ export default function Footer() {
             <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-16">
                 <div>
                     <h2 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
-                        Máte projekt <br />
-                        <span className="text-accent-blue">v hlave?</span>
+                        Máte niečo <br />
+                        <span className="text-accent-blue">na mysli?</span>
                     </h2>
                     <Link
-                        href="mailto:contact@example.com"
+                        href="/book/karchigod/intro"
                         className="inline-block bg-white text-foreground px-8 py-4 rounded-full text-lg font-bold hover:bg-accent-purple hover:text-white transition-all duration-300"
                     >
-                        Rezervovať Hovor
+                        Povedzte mi o tom
                     </Link>
                 </div>
 
                 <div className="grid grid-cols-2 gap-8 text-lg">
                     <div className="flex flex-col gap-4">
                         <h3 className="font-bold text-accent-green mb-2">Sociálne Siete</h3>
-                        <a href="#" className="hover:text-accent-pink transition-colors">Instagram</a>
-                        <a href="#" className="hover:text-accent-blue transition-colors">LinkedIn</a>
-                        <a href="#" className="hover:text-accent-purple transition-colors">Twitter</a>
+                        <a href="https://x.com/karchiJR" target="_blank" rel="noopener noreferrer" className="hover:text-accent-purple transition-colors">X</a>
                     </div>
                     <div className="flex flex-col gap-4">
                         <h3 className="font-bold text-accent-orange mb-2">Mapa Stránky</h3>
                         <Link href="#projects" className="hover:text-white transition-colors">Projekty</Link>
                         <Link href="#services" className="hover:text-white transition-colors">Služby</Link>
-                        <Link href="#about" className="hover:text-white transition-colors">O nás</Link>
+                        <Link href="/o-mne" className="hover:text-white transition-colors">O mne</Link>
                     </div>
                 </div>
             </div>
 
             <div className="mt-20 pt-8 border-t border-white/10 max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center text-sm text-white/40">
-                <p>© {currentYear} DevPortfolio. Všetky práva vyhradené.</p>
+                <p>© 2026 KARCHI. Všetky práva vyhradené.</p>
                 <div className="flex gap-4 mt-4 md:mt-0">
                     <Link href="/privacy" className="hover:text-white">Ochrana Súkromia</Link>
                     <Link href="/terms" className="hover:text-white">Podmienky</Link>

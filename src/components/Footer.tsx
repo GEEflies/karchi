@@ -23,21 +23,16 @@ export default function Footer() {
             </div>
 
             <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 mb-24">
-                <div className="lg:col-span-7 flex flex-col justify-center">
-                    <h2 className="flex flex-col font-black tracking-tighter text-white">
-                        {/* Top Line: Mixed Fonts */}
-                        <div className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-6">
-                            <span className="text-7xl md:text-8xl lg:text-9xl uppercase leading-[0.8]">
-                                Máte
-                            </span>
-                            <span className="font-serif italic font-normal text-7xl md:text-8xl lg:text-9xl text-accent-blue leading-[0.8]">
-                                niečo
-                            </span>
-                        </div>
-                        
-                        {/* Bottom Line: Massive Anchor */}
-                        <span className="text-7xl md:text-9xl lg:text-[11rem] uppercase leading-[0.75] mt-4 text-left md:text-right w-full block">
-                            na mysli?
+                <div className="lg:col-span-7 flex flex-col justify-center text-left">
+                    <h2 className="flex flex-col items-start font-black tracking-tighter text-white">
+                        <span className="text-[5rem] md:text-[7rem] lg:text-[9rem] uppercase leading-[0.8]">
+                            MÁTE
+                        </span>
+                        <span className="font-serif italic font-normal text-[5rem] md:text-[7rem] lg:text-[9rem] text-accent-blue leading-[0.8] ml-16 md:ml-32 -my-2 relative z-10">
+                            niečo
+                        </span>
+                        <span className="text-[5rem] md:text-[7rem] lg:text-[9rem] uppercase leading-[0.8]">
+                            NA MYSLI?
                         </span>
                     </h2>
                 </div>

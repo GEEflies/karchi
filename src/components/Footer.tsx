@@ -24,9 +24,16 @@ export default function Footer() {
 
             <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 mb-24">
                 <div className="lg:col-span-7 flex flex-col justify-between">
-                    <h2 className="text-6xl md:text-8xl lg:text-[7rem] font-bold leading-[0.9] tracking-tighter">
-                        Máte niečo <br />
-                        <span className="text-accent-blue">na mysli?</span>
+                    <h2 className="flex flex-col gap-2 font-black leading-[0.85] tracking-tighter text-foreground">
+                        <span className="text-7xl md:text-9xl uppercase block">
+                            Máte
+                        </span>
+                        <span className="font-serif italic font-normal text-6xl md:text-8xl text-accent-blue block pl-12 md:pl-32 -mt-2 opacity-80">
+                            niečo
+                        </span>
+                        <span className="text-7xl md:text-9xl uppercase block text-right">
+                            na mysli?
+                        </span>
                     </h2>
                 </div>
 
@@ -68,7 +75,7 @@ export default function Footer() {
                         <div className="relative z-10 flex flex-col items-start gap-1 h-32 justify-center">
                              <span className="text-sm font-bold uppercase tracking-widest opacity-50">Začať spoluprácu</span>
                              <div className="h-10 overflow-hidden relative">
-                                <span className="text-4xl font-black tracking-tight block transition-transform duration-500 group-hover:-translate-y-full">Povedzte mi o tom</span>
+                                <span className="text-4xl font-black tracking-tight block transition-transform duration-500 group-hover:-translate-y-full">Povedzte mi to</span>
                                 <span className="text-4xl font-black tracking-tight block absolute top-full left-0 transition-transform duration-500 group-hover:-translate-y-full text-accent-blue">Poďme na to!</span>
                              </div>
                         </div>

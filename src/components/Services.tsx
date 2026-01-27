@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { createCheckoutSession } from "@/app/actions/stripe";
 
 const services = [
     {
@@ -43,7 +44,7 @@ export default function Services() {
                 >
                     <h2 className="text-7xl md:text-9xl font-black tracking-tighter text-foreground mb-8 uppercase">
                         Služby
-                        <span className="block text-accent-pink stroke-text-black text-transparent">
+                        <span className="block md:inline md:ml-6 text-accent-pink stroke-text-black text-transparent">
                             & Cenník
                         </span>
                     </h2>
@@ -73,11 +74,23 @@ export default function Services() {
                                 </ul>
                             </div>
 
-                            <div className="relative z-10 mt-auto">
-                                <div className="text-5xl font-black mb-6">{service.price}</div>
-                                <Link href="/book/karchigod/intro" className="w-full py-4 bg-white/20 backdrop-blur-md rounded-full font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors flex items-center justify-center gap-2">
-                                    Vybrať Balík <ArrowUpRight size={18} />
-                                </Link>
+                            <div className="relative z-10 mt-auto flex flex-col gap-4">
+                                <div className="text-5xl font-black mb-2">{service.price}</div>
+                                
+                                <div className="flex flex-col gap-3">
+                                    <Link href="/book/karchigod/intro" className={`w-full py-4 bg-white/20 backdrop-blur-md rounded-full font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors flex items-center justify-center gap-2 text-center`}>
+                                        Vybrať Balík <ArrowUpRight size={18} />
+                                    </Link>
+                                    
+                                    <button 
+                                        className="w-full py-3 bg-black/20 backdrop-blur-md rounded-full font-bold text-sm tracking-wide hover:bg-black/40 transition-colors border border-white/10 flex items-center justify-center gap-2"
+                                        onClick={async () => {
+                                            await createCheckoutSession(service.title);
+                                        }}
+                                    >
+                                        <span className="opacity-90">Ušetriť 10% (zaplatiť vopred)</span>
+                                    </button>
+                                </div>
                             </div>
 
                             {/* Decorative Circle */}

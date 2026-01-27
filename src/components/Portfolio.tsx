@@ -97,7 +97,7 @@ export default function Portfolio() {
                     </div>
 
                     <p className="text-xl max-w-md font-medium text-gray-500 mb-2">
-                        Ukážka našich najnovších digitálnych experimentov a komerčných úspechov.
+                        Ukážka mojich najnovších projektov a úspechov.
                     </p>
                 </div>
 

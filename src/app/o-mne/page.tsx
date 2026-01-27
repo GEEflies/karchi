@@ -32,7 +32,7 @@ export default function AboutMePage() {
                             O mne
                         </h1>
                         <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-medium">
-                            Freelance digitálny dizajnér & art director sídliaci v Bratislave
+                            Freelance webdesigner a developer aplikácií sídliaci v Nitre
                         </p>
                     </motion.div>
 
@@ -69,7 +69,7 @@ export default function AboutMePage() {
                         </p>
 
                         <p>
-                            Som samostatný digitálny dizajnér a art director so sídlom v Bratislave, 
+                            Som samostatný webdesigner a developer aplikácií so sídlom v Nitre, 
                             kde spájam kreativitu s technickými zručnosťami na vytváranie jedinečných 
                             digitálnych zážitkov.
                         </p>

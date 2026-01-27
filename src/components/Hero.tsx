@@ -386,10 +386,10 @@ export default function Hero() {
                             className="flex flex-col gap-2"
                         >
                             <p className="text-xl font-bold uppercase tracking-wide">
-                                Freelance Digitálny Dizajnér & Art Director
+                                Freelance webdesigner a developer aplikácií
                             </p>
                             <p className="text-sm uppercase tracking-widest opacity-60">
-                                Sídliaci v Bratislave, dostupný celosvetovo.
+                                Sídliaci v Nitre, dostupný celosvetovo.
                             </p>
                         </motion.div>
                     </div>

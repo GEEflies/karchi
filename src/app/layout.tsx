@@ -35,6 +35,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sk">
+      <head>
+        {/* Preload hero images for faster loading */}
+        <link rel="preload" href="/images/hero-final-fr.png" as="image" />
+        <link rel="preload" href="/images/me-fr.png" as="image" />
+      </head>
       <body className={`${inter.variable} ${instrumentSerif.variable} antialiased`} suppressHydrationWarning>
         <CursorProvider>
           <SmoothScroll>

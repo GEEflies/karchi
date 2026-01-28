@@ -86,7 +86,6 @@ export default function Hero() {
     }, [isLocked]);
 
     const isSequenceFinished = useRef(false);
-    const [mobileCanvasReady, setMobileCanvasReady] = useState(false);
 
     // Mobile Canvas - Initialize and draw helmet image
     useEffect(() => {
@@ -114,7 +113,6 @@ export default function Hero() {
         img.crossOrigin = 'anonymous';
         img.onload = () => {
             mobileHelmetImgRef.current = img;
-            setMobileCanvasReady(true);
         };
         img.src = '/images/hero-final-fr.png';
         
@@ -591,10 +589,11 @@ export default function Hero() {
                     />
                 </div>
 
-                {/* Helmet img - always rendered, hidden when canvas takes over */}
-                <div className={`absolute inset-0 z-10 pointer-events-none transition-opacity duration-300 ${mobileCanvasReady ? 'opacity-0' : 'opacity-100'}`}>
+                {/* Static helmet img - ALWAYS visible, no React state conditions */}
+                <div className="absolute inset-0 z-10 pointer-events-none">
                     <img
                         loading="eager"
+                        fetchPriority="high"
                         src="/images/hero-final-fr.png"
                         alt="Hero Helmet"
                         style={{ filter: 'contrast(1.15) saturate(1.1)' }}
@@ -602,10 +601,10 @@ export default function Hero() {
                     />
                 </div>
 
-                {/* Canvas overlay with helmet - erased to reveal face */}
+                {/* Canvas overlay - z-20 so it covers static helmet when drawing */}
                 <canvas
                     ref={mobileCanvasRef}
-                    className={`absolute inset-0 z-10 pointer-events-none transition-opacity duration-300 ${mobileCanvasReady ? 'opacity-100' : 'opacity-0'}`}
+                    className="absolute inset-0 z-20 pointer-events-none"
                     style={{ width: '100%', height: '100%' }}
                 />
 

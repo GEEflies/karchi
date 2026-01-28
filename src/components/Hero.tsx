@@ -568,7 +568,7 @@ export default function Hero() {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, ease: "circOut" }}
-                            className="text-[2rem] leading-[1.1] md:text-[clamp(2.5rem,7vw,6rem)] font-black uppercase tracking-tighter md:leading-[1.05] mb-3 md:mb-[4vh]"
+                            className="text-[2rem] leading-[1.1] md:text-[clamp(2.5rem,7vw,6rem)] font-black uppercase tracking-tighter md:leading-[1.15] mb-3 md:mb-[4vh]"
                         >
                             {/* Mobile Title Layout */}
                             <span className="md:hidden block mb-1">TVORÍM STRÁNKY,</span>
@@ -577,7 +577,7 @@ export default function Hero() {
                             <span className="hidden md:inline">TVORÍM<br />STRÁNKY,<br /></span>
 
                             <span className="whitespace-nowrap flex md:inline items-baseline justify-center gap-[0.35em] lowercase md:uppercase font-normal md:font-black">KTORÉ
-                                <span className="inline-grid grid-cols-1 grid-rows-1 h-[1.3em] align-top overflow-hidden md:ml-[0.6em]">
+                                <span className="inline-grid grid-cols-1 grid-rows-1 h-[1.3em] md:h-[1.4em] align-top overflow-hidden md:ml-[0.4em]">
                                     <AnimatePresence mode="popLayout" initial={false}>
                                         <motion.span
                                             key={rotatingIndex}
@@ -585,7 +585,7 @@ export default function Hero() {
                                             animate={{ y: 0, opacity: 1 }}
                                             exit={{ y: "-100%", opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }}
                                             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                                            className="row-start-1 col-start-1 block whitespace-nowrap font-serif italic font-bold lowercase tracking-wider text-4xl leading-[1.1] md:text-[clamp(2.5rem,7vw,6rem)] md:leading-[1.05] text-accent-blue md:not-italic md:font-black md:uppercase md:tracking-tighter md:text-transparent md:bg-clip-text md:bg-gradient-to-r md:from-blue-600 md:to-cyan-500 md:font-sans"
+                                            className="row-start-1 col-start-1 block whitespace-nowrap font-serif italic font-bold lowercase tracking-wider text-4xl leading-[1.1] md:text-[clamp(2.5rem,7vw,6rem)] md:leading-[1.15] text-accent-blue md:not-italic md:font-black md:uppercase md:tracking-tighter md:text-transparent md:bg-clip-text md:bg-gradient-to-r md:from-blue-600 md:to-cyan-500 md:font-sans"
                                         >
                                             {rotatingPhrases[rotatingIndex]}
                                         </motion.span>

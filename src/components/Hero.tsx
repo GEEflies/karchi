@@ -45,8 +45,6 @@ export default function Hero() {
     // DOM Refs to bypass React Render Cycle
     const backgroundSnakeRef = useRef<(SVGCircleElement | null)[]>([]);
     const maskSnakeRef = useRef<(SVGCircleElement | null)[]>([]);
-    const mobileCanvasRef = useRef<HTMLCanvasElement | null>(null);
-    const mobileHelmetImgRef = useRef<HTMLImageElement | null>(null);
 
     const lastPosRef = useRef({ x: 0, y: 0 });
     const isFirstMove = useRef(true);
@@ -87,57 +85,7 @@ export default function Hero() {
 
     const isSequenceFinished = useRef(false);
 
-    // Mobile Canvas - Initialize and draw helmet image
-    useEffect(() => {
-        if (!isMobile || !hasMounted) return;
-        
-        const canvas = mobileCanvasRef.current;
-        if (!canvas) return;
-        
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-        
-        // Set canvas size to match viewport with device pixel ratio
-        const dpr = window.devicePixelRatio || 1;
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-        
-        canvas.width = w * dpr;
-        canvas.height = h * dpr;
-        canvas.style.width = `${w}px`;
-        canvas.style.height = `${h}px`;
-        ctx.scale(dpr, dpr);
-        
-        // Load helmet image - set ready when loaded
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
-            mobileHelmetImgRef.current = img;
-        };
-        img.src = '/images/hero-final-fr.png';
-        
-        // Handle resize
-        const handleResize = () => {
-            const canvas = mobileCanvasRef.current;
-            if (!canvas) return;
-            
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return;
-            
-            const dpr = window.devicePixelRatio || 1;
-            const w = window.innerWidth;
-            const h = window.innerHeight;
-            
-            canvas.width = w * dpr;
-            canvas.height = h * dpr;
-            canvas.style.width = `${w}px`;
-            canvas.style.height = `${h}px`;
-            ctx.scale(dpr, dpr);
-        };
-        
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, [isMobile, hasMounted]);
+
 
     // Rotating text animation
     const [rotatingIndex, setRotatingIndex] = useState(0);
@@ -161,7 +109,7 @@ export default function Hero() {
     function handleTouchMove(e: React.TouchEvent) {
         // Only work when locked on mobile to prevent scroll interference
         if (!isLocked && isMobile) return;
-        
+
         // Allow on mobile touch to drive the trail
         const touch = e.touches[0];
         const { left, top } = e.currentTarget.getBoundingClientRect();
@@ -172,7 +120,7 @@ export default function Hero() {
     function handleTouchStart(e: React.TouchEvent) {
         // Only work when locked on mobile to prevent scroll interference
         if (!isLocked && isMobile) return;
-        
+
         const touch = e.touches[0];
         const { left, top } = e.currentTarget.getBoundingClientRect();
         const x = touch.clientX - left;
@@ -193,7 +141,7 @@ export default function Hero() {
             isSequenceFinished.current = true;
             return;
         }
-        
+
         // If already played globally, just unlock interaction and skip
         if (hasGlobalHeroSequencePlayed) {
             isSequenceFinished.current = true;
@@ -365,57 +313,7 @@ export default function Hero() {
             const currentTrail = trailRef.current;
             const len = currentTrail.length;
 
-            // Mobile Canvas - Redraw helmet each frame, then erase where trail is
-            // This creates the "heal back" effect when trail points decay
-            if (isMobile && mobileCanvasRef.current && mobileHelmetImgRef.current) {
-                const canvas = mobileCanvasRef.current;
-                const ctx = canvas.getContext('2d');
-                const img = mobileHelmetImgRef.current;
-                if (ctx && img) {
-                    const w = window.innerWidth;
-                    const h = window.innerHeight;
-                    
-                    // Clear and redraw helmet (matching CSS: object-contain object-top translate-y-[33vh] scale-[1.6])
-                    ctx.clearRect(0, 0, w, h);
-                    
-                    // Calculate to match CSS object-contain behavior
-                    const imgRatio = img.width / img.height;
-                    const containerRatio = w / h;
-                    
-                    let drawW, drawH;
-                    if (imgRatio > containerRatio) {
-                        drawW = w;
-                        drawH = w / imgRatio;
-                    } else {
-                        drawH = h;
-                        drawW = h * imgRatio;
-                    }
-                    
-                    // Apply scale-[1.6]
-                    drawW *= 1.6;
-                    drawH *= 1.6;
-                    
-                    // Center horizontally, translate-y-[33vh]
-                    const drawX = (w - drawW) / 2;
-                    const drawY = h * 0.33;
-                    
-                    ctx.drawImage(img, drawX, drawY, drawW, drawH);
-                    
-                    // Now erase where current trail points are
-                    if (len > 0) {
-                        ctx.globalCompositeOperation = 'destination-out';
-                        for (let j = 0; j < len; j++) {
-                            const p = currentTrail[j];
-                            const pct = j / len;
-                            const rad = 5 + (pct * 50);
-                            ctx.beginPath();
-                            ctx.arc(p.x, p.y, rad, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                        ctx.globalCompositeOperation = 'source-over';
-                    }
-                }
-            }
+
 
             for (let i = 0; i < MAX_POINTS; i++) {
                 // Determine if this index is active
@@ -589,8 +487,14 @@ export default function Hero() {
                     />
                 </div>
 
-                {/* Static helmet img - ALWAYS visible, no React state conditions */}
-                <div className="absolute inset-0 z-10 pointer-events-none">
+                {/* Mobile: Top = Helmet (INVERSE mask) - Visible by default, HIDDEN where you draw */}
+                <div
+                    className="absolute inset-0 z-10 pointer-events-none"
+                    style={{
+                        mask: hasMounted ? "url(#snake-mask-inverse)" : "none",
+                        WebkitMask: hasMounted ? "url(#snake-mask-inverse)" : "none"
+                    }}
+                >
                     <img
                         loading="eager"
                         fetchPriority="high"
@@ -600,13 +504,6 @@ export default function Hero() {
                         className="w-full h-full object-contain object-top translate-y-[33vh] scale-[1.6] origin-top"
                     />
                 </div>
-
-                {/* Canvas overlay - z-20 so it covers static helmet when drawing */}
-                <canvas
-                    ref={mobileCanvasRef}
-                    className="absolute inset-0 z-20 pointer-events-none"
-                    style={{ width: '100%', height: '100%' }}
-                />
 
                 {/* Mobile Lock Button (Overlaid on Image) - Moved lower for better thumb access */}
                 <div className="absolute top-[90%] right-[10%] z-50 pointer-events-auto opacity-100">

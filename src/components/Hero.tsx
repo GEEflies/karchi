@@ -380,7 +380,7 @@ export default function Hero() {
                 transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
                 className="absolute inset-x-0 top-0 bottom-12 pt-12 z-0"
             >
-                {/* 1. Base Image: Helmet */}
+                {/* 1. Base Image: Face (Visible by default - Inverse Mask) */}
                 <div 
                     className="absolute inset-0 z-0 pointer-events-none"
                     style={{
@@ -391,13 +391,14 @@ export default function Hero() {
                     <img
                         ref={imageRef}
                         loading="eager"
-                        src="/images/hero-final-fr.png"
-                        alt="Hero Helmet"
-                        className="w-full h-full object-contain object-top translate-x-0 md:translate-x-[13%] translate-y-[calc(15vh+6rem)] md:translate-y-[15vh] scale-[0.90] origin-top"
+                        src="/images/me-fr.png"
+                        alt="Hero Face"
+                        style={{ filter: 'contrast(1.15) saturate(1.1)' }}
+                        className="w-full h-full object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[calc(15vh+6rem)] md:translate-y-[15vh] scale-[0.89] origin-top"
                     />
                 </div>
 
-                {/* 2. Reveal Image: Face */}
+                {/* 2. Reveal Image: Helmet (Hidden by default - Standard Mask) */}
                 <div
                     className="absolute inset-0 z-10 pointer-events-none"
                     style={{
@@ -407,12 +408,34 @@ export default function Hero() {
                 >
                     <img
                         loading="eager"
-                        src="/images/me-fr.png"
-                        alt="Hero Face"
-                        style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[calc(15vh+6rem)] md:translate-y-[15vh] scale-[0.89] origin-top"
+                        src="/images/hero-final-fr.png"
+                        alt="Hero Helmet"
+                        className="w-full h-full object-contain object-top translate-x-0 md:translate-x-[13%] translate-y-[calc(15vh+6rem)] md:translate-y-[15vh] scale-[0.90] origin-top"
                     />
                 </div>
+
+                {/* Mobile Lock Button (Overlaid on Image) */}
+                <div className="md:hidden absolute top-[52%] right-[15%] z-50 pointer-events-auto mix-blend-multiply opacity-90">
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsLocked(!isLocked);
+                        }}
+                        className={`flex items-center justify-center w-12 h-12 rounded-xl border transition-all duration-300 ${
+                            isLocked 
+                            ? 'bg-black text-white border-black ring-2 ring-offset-2 ring-black/20' 
+                            : 'bg-white/40 backdrop-blur-md border-black/10'
+                        } active:scale-95 shadow-sm`}
+                        aria-label={isLocked ? "Unlock" : "Lock"}
+                    >
+                        {isLocked ? (
+                            <Unlock className="w-5 h-5" />
+                        ) : (
+                            <Lock className="w-5 h-5 opacity-60" />
+                        )}
+                    </button>
+                </div>
+
 
                 {/* Mask Definition */}
                 {hasMounted && (
@@ -563,25 +586,6 @@ export default function Hero() {
                     {/* Lock Button (Bottom Right) & Scroll Indicator */}
                     <div className="flex flex-col items-end gap-4 pointer-events-auto w-full md:w-auto">
                         
-                        {/* Mobile Lock Button */}
-                        <div className="md:hidden absolute top-[65%] right-6 -translate-y-1/2 z-50">
-                            <button
-                                onClick={() => setIsLocked(!isLocked)}
-                                className={`flex items-center justify-center w-12 h-12 rounded-xl border transition-all duration-300 ${
-                                    isLocked 
-                                    ? 'bg-black text-white border-black ring-2 ring-offset-2 ring-black/20' 
-                                    : 'bg-white/50 backdrop-blur-sm border-black/10'
-                                } active:scale-95`}
-                                aria-label={isLocked ? "Unlock" : "Lock"}
-                            >
-                                {isLocked ? (
-                                    <Unlock className="w-5 h-5" />
-                                ) : (
-                                    <Lock className="w-5 h-5 opacity-60" />
-                                )}
-                            </button>
-                        </div>
-
                         {/* Scroll Indicator */}
                         <motion.div
                             initial={{ opacity: 0 }}

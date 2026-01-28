@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Instrument_Serif } from "next/font/google"; // Added import
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -21,6 +21,11 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   title: "Professional Web Developer Portfolio",
   description: "Modern web development services in Slovakia.",
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({

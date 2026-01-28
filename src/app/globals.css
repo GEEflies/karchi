@@ -34,6 +34,12 @@
   --color-surface-off-white: var(--surface-off-white);
   --color-surface-dark: var(--surface-dark);
   --color-surface-gray: var(--surface-gray);
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 640px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
 }
 
 html.lenis,
@@ -64,6 +70,26 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 639px) {
+  /* Reduce motion for performance */
+  .reduce-motion-mobile {
+    animation-duration: 0.3s !important;
+    transition-duration: 0.3s !important;
+  }
+  
+  /* Smoother touch scrolling */
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Hide large decorative blurs on mobile for performance */
+  .mobile-hide-blur {
+    display: none !important;
+  }
 }
 
 /* Custom Scrollbar */
@@ -105,4 +131,10 @@ body {
 ::selection {
   background: var(--accent-purple);
   color: white;
+}
+
+/* Hide default cursor in portfolio section */
+.cursor-none,
+.cursor-none * {
+  cursor: none !important;
 }

@@ -15,6 +15,7 @@ export const useCursor = () => useContext(CursorContext);
 
 export default function CursorProvider({ children }: { children: React.ReactNode }) {
     const [cursorType, setCursorType] = useState<'default' | 'portfolio'>('default');
+    const [isInPortfolio, setIsInPortfolio] = useState(false);
     const cursorRef = useRef<HTMLDivElement>(null);
     const cursorTextRef = useRef<HTMLDivElement>(null);
 
@@ -31,6 +32,16 @@ export default function CursorProvider({ children }: { children: React.ReactNode
         const yTo = gsap.quickTo(cursor, "y", { duration: 0.3, ease: "power3.out" });
 
         const moveCursor = (e: MouseEvent) => {
+            const target = e.target as HTMLElement;
+            const portfolioSection = document.querySelector('#portfolio-home-section');
+            
+            // Check if cursor is inside portfolio section on home page
+            if (portfolioSection && portfolioSection.contains(target)) {
+                setIsInPortfolio(true);
+            } else {
+                setIsInPortfolio(false);
+            }
+            
             xTo(e.clientX);
             yTo(e.clientY);
         };
@@ -48,46 +59,49 @@ export default function CursorProvider({ children }: { children: React.ReactNode
 
         if (!cursor || !cursorText) return;
 
-        if (cursorType === 'portfolio') {
+        const portfolioSection = document.querySelector('#portfolio-home-section');
+
+        if (cursorType === 'portfolio' && isInPortfolio) {
+            // Show custom cursor and hide default cursor only in portfolio section
             gsap.to(cursor, {
                 width: 80,
                 height: 80,
-                backgroundColor: '#ffffff', // White background
+                backgroundColor: '#ffffff',
                 duration: 0.3,
                 ease: "power2.out"
             });
             gsap.to(cursorText, {
                 opacity: 1,
                 scale: 1,
-                color: '#000000', // Black text
+                color: '#000000',
                 duration: 0.3,
                 delay: 0.1
             });
-            // document.documentElement.classList.add('cursor-none'); // Keep system cursor hidden or shown?
-            // Usually we want to hide system cursor if we have a custom one.
-            document.documentElement.classList.add('cursor-none');
+            
+            // Hide default cursor only in portfolio section
+            if (portfolioSection) {
+                portfolioSection.classList.add('cursor-none');
+            }
         } else {
-            // Default state - small dot or hidden if user prefers system cursor usually
-            // but here we keep a small dot or completely hide the custom cursor and show system cursor?
-            // The prompt says "return to normal". Usually "normal" implies system cursor OR a small dot.
-            // Let's go with a small dot to keep the custom feel alive, or just hide it if design allows.
-            // For now: Small customized dot.
+            // Hide custom cursor, show default cursor
             gsap.to(cursor, {
-                width: 12,
-                height: 12,
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                width: 0,
+                height: 0,
                 duration: 0.3,
                 ease: "power2.out"
             });
             gsap.to(cursorText, {
                 opacity: 0,
                 scale: 0.5,
-                color: '#ffffff', // Reset to white
                 duration: 0.2
             });
-            document.documentElement.classList.remove('cursor-none');
+            
+            // Show default cursor everywhere else
+            if (portfolioSection) {
+                portfolioSection.classList.remove('cursor-none');
+            }
         }
-    }, [cursorType]);
+    }, [cursorType, isInPortfolio]);
 
     return (
         <CursorContext.Provider value={{ setCursorType }}>
@@ -95,7 +109,7 @@ export default function CursorProvider({ children }: { children: React.ReactNode
             <div
                 ref={cursorRef}
                 className="fixed top-0 left-0 rounded-full pointer-events-none z-[9999] backdrop-blur-sm flex items-center justify-center overflow-hidden"
-                style={{ width: 12, height: 12, backgroundColor: 'rgba(0,0,0,0.5)' }}
+                style={{ width: 0, height: 0 }}
             >
                 <div
                     ref={cursorTextRef}

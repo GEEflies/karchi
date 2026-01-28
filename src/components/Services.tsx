@@ -61,15 +61,15 @@ export default function Services() {
     }, [isInView, mouseX]);
 
     return (
-        <section id="services" className="py-32 px-4 md:px-8 bg-surface-off-white">
+        <section id="services" className="py-10 md:py-32 px-4 md:px-8 bg-surface-off-white">
             <div className="max-w-7xl mx-auto">
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
-                    className="mb-24"
+                    transition={{ duration: 0.6 }}
+                    className="mb-8 md:mb-24"
                 >
-                    <h2 className="text-7xl md:text-9xl font-black tracking-tighter text-foreground mb-8 uppercase">
+                    <h2 className="text-3xl md:text-7xl lg:text-9xl font-black tracking-tighter text-foreground mb-2 md:mb-8 uppercase">
                         Služby
                         <span className="block md:inline md:ml-6 text-accent-pink stroke-text-black text-transparent">
                             & Cenník
@@ -77,51 +77,51 @@ export default function Services() {
                     </h2>
                 </motion.div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                     {services.map((service, index) => (
                         <motion.div
                             key={index}
-                            initial={{ opacity: 0, y: 50 }}
+                            initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: index * 0.1 }}
+                            transition={{ duration: 0.4, delay: index * 0.1 }}
                             whileHover={{ y: -10 }}
-                            className={`relative p-10 rounded-[3rem] ${service.color} ${service.textColor} flex flex-col justify-between min-h-[500px] overflow-hidden group`}
+                            className={`relative p-5 md:p-10 rounded-[1.5rem] md:rounded-[3rem] ${service.color} ${service.textColor} flex flex-col justify-between min-h-[320px] md:min-h-[500px] overflow-hidden group active:scale-[0.98] transition-transform`}
                         >
                             <div className="relative z-10">
-                                <h3 className="text-3xl font-bold mb-4">{service.title}</h3>
-                                <p className="text-lg opacity-80 mb-8 font-medium leading-relaxed">
+                                <h3 className="text-xl md:text-3xl font-bold mb-2 md:mb-4">{service.title}</h3>
+                                <p className="text-sm md:text-lg opacity-80 mb-4 md:mb-8 font-medium leading-relaxed">
                                     {service.description}
                                 </p>
-                                <ul className="space-y-2 mb-8 opacity-80">
+                                <ul className="space-y-1.5 md:space-y-2 mb-4 md:mb-8 opacity-80">
                                     {service.features.map((feature, i) => (
-                                        <li key={i} className="flex items-center gap-2 border-b border-white/20 pb-2">
+                                        <li key={i} className="flex items-center gap-2 border-b border-white/20 pb-1.5 md:pb-2 text-xs md:text-base">
                                             {feature}
                                         </li>
                                     ))}
                                 </ul>
                             </div>
 
-                            <div className="relative z-10 mt-auto flex flex-col gap-4">
-                                <div className="text-5xl font-black mb-2">{service.price}</div>
+                            <div className="relative z-10 mt-auto flex flex-col gap-2 md:gap-4">
+                                <div className="text-3xl md:text-5xl font-black mb-1 md:mb-2">{service.price}</div>
                                 
-                                <div className="flex flex-col gap-3">
-                                    <Link href="/book/karchigod/intro" className={`w-full py-4 bg-white/20 backdrop-blur-md rounded-full font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors flex items-center justify-center gap-2 text-center`}>
-                                        Vybrať Balík <ArrowUpRight size={18} />
+                                <div className="flex flex-col gap-2 md:gap-3">
+                                    <Link href="/book/karchigod/intro" className={`w-full py-2.5 md:py-4 bg-white/20 backdrop-blur-md rounded-full font-bold uppercase tracking-wider md:tracking-widest hover:bg-white hover:text-black active:scale-95 transition-all flex items-center justify-center gap-2 text-center text-xs md:text-base`}>
+                                        Vybrať Balík <ArrowUpRight size={16} className="md:w-[18px] md:h-[18px]" />
                                     </Link>
                                     
                                     <button 
-                                        className="w-full py-3 bg-black/20 backdrop-blur-md rounded-full font-bold text-sm tracking-wide hover:bg-black/40 transition-colors border border-white/10 flex items-center justify-center gap-2"
+                                        className="w-full py-2 md:py-3 bg-black/20 backdrop-blur-md rounded-full font-bold text-[10px] md:text-sm tracking-wide hover:bg-black/40 active:scale-95 transition-all border border-white/10 flex items-center justify-center gap-2"
                                         onClick={async () => {
                                             await createCheckoutSession(service.title);
                                         }}
                                     >
-                                        <span className="opacity-90">Ušetri 10% (zaplať vopred)</span>
+                                        <span className="opacity-90">Šetri 10% (zaplat vopred)</span>
                                     </button>
                                 </div>
                             </div>
 
-                            {/* Decorative Circle */}
-                            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
+                            {/* Decorative Circle - smaller on mobile */}
+                            <div className="absolute -bottom-12 md:-bottom-20 -right-12 md:-right-20 w-32 md:w-64 h-32 md:h-64 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
                         </motion.div>
                     ))}
                 </div>
@@ -129,26 +129,26 @@ export default function Services() {
                 {/* Custom Project Card */}
                 <motion.div 
                     ref={sectionRef}
-                    initial={{ opacity: 0, y: 50 }}
+                    initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
-                    className="mt-8 relative w-full bg-black text-white rounded-[3rem] p-10 md:p-14 overflow-hidden group shadow-2xl"
+                    transition={{ duration: 0.6 }}
+                    className="mt-4 md:mt-8 relative w-full bg-black text-white rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 lg:p-14 overflow-hidden group shadow-2xl"
                 >
-                    <div className="flex flex-col lg:flex-row justify-between lg:items-center relative z-10 gap-10">
-                        <div className="flex-1 min-w-[300px]">
-                             <div className="flex items-center gap-4 mb-4">
-                                <h3 className="text-3xl lg:text-4xl font-black text-white">Vlastný Projekt</h3>
-                                <span className="px-3 py-1 rounded-full bg-accent-green/20 text-accent-green text-[10px] font-bold uppercase tracking-widest border border-accent-green/20">Enterprise</span>
+                    <div className="flex flex-col lg:flex-row justify-between lg:items-center relative z-10 gap-6 md:gap-10">
+                        <div className="flex-1 min-w-0 md:min-w-[300px]">
+                             <div className="flex flex-wrap items-center gap-3 md:gap-4 mb-3 md:mb-4">
+                                <h3 className="text-2xl md:text-3xl lg:text-4xl font-black text-white">Vlastný Projekt</h3>
+                                <span className="px-2 md:px-3 py-1 rounded-full bg-accent-green/20 text-accent-green text-[9px] md:text-[10px] font-bold uppercase tracking-widest border border-accent-green/20">Enterprise</span>
                              </div>
-                             <p className="text-gray-400 text-base lg:text-lg mb-8 max-w-xl leading-relaxed">
+                             <p className="text-gray-400 text-sm md:text-base lg:text-lg mb-6 md:mb-8 max-w-xl leading-relaxed">
                                 Komplexné webové aplikácie, API integrácie a AI riešenia.
                                 Software vyvinutý presne podľa vašich špecifických požiadaviek.
                              </p>
                              
                              <div className="flex flex-wrap gap-2">
                                  {["Web App", "API Vývoj", "AI Integrácia", "SaaS"].map((tech) => (
-                                     <div key={tech} className="px-3 py-1.5 rounded-md bg-white/5 border border-white/5 text-xs font-medium text-gray-300 flex items-center gap-2">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-accent-green shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
+                                     <div key={tech} className="px-2 md:px-3 py-1 md:py-1.5 rounded-md bg-white/5 border border-white/5 text-[10px] md:text-xs font-medium text-gray-300 flex items-center gap-1.5 md:gap-2">
+                                        <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-accent-green shadow-[0_0_6px_rgba(34,197,94,0.8)] md:shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
                                         {tech}
                                      </div>
                                  ))}
@@ -206,12 +206,12 @@ export default function Services() {
                         </div>
                     </div>
 
-                    {/* Decorative Elements */}
-                    <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-white/5 rounded-full blur-[120px] pointer-events-none translate-x-1/2 -translate-y-1/2 mix-blend-overlay" />
+                    {/* Decorative Elements - Reduced on mobile */}
+                    <div className="hidden md:block absolute top-0 right-0 w-[400px] h-[400px] bg-white/5 rounded-full blur-[120px] pointer-events-none translate-x-1/2 -translate-y-1/2 mix-blend-overlay" />
                     
                     {/* Decorative Elements */}
-                    <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-accent-green/10 rounded-full blur-[120px] pointer-events-none translate-x-1/2 -translate-y-1/2" />
-                    <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent-blue/10 rounded-full blur-[100px] pointer-events-none -translate-x-1/2 translate-y-1/2" />
+                    <div className="absolute top-0 right-0 w-[200px] md:w-[600px] h-[200px] md:h-[600px] bg-accent-green/10 rounded-full blur-[60px] md:blur-[120px] pointer-events-none translate-x-1/2 -translate-y-1/2" />
+                    <div className="absolute bottom-0 left-0 w-[150px] md:w-[400px] h-[150px] md:h-[400px] bg-accent-blue/10 rounded-full blur-[50px] md:blur-[100px] pointer-events-none -translate-x-1/2 translate-y-1/2" />
                 </motion.div>
             </div>
 

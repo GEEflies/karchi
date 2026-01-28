@@ -659,9 +659,20 @@ export default function Hero() {
 
                         {/* Scroll Indicator */}
                         <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 1.5 }}
+                            initial={{ opacity: 0, y: 0 }}
+                            animate={{
+                                opacity: 1,
+                                y: [0, 8, 0]
+                            }}
+                            transition={{
+                                opacity: { delay: 1.5, duration: 1 },
+                                y: {
+                                    delay: 2.5,
+                                    duration: 1.5,
+                                    repeat: Infinity,
+                                    ease: "easeInOut"
+                                }
+                            }}
                             className="hidden md:flex items-center gap-2 text-sm font-bold uppercase tracking-widest"
                         >
                             Scrollovať <ArrowDown className="w-4 h-4" />

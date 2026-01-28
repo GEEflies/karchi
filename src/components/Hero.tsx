@@ -45,6 +45,8 @@ export default function Hero() {
     // DOM Refs to bypass React Render Cycle
     const backgroundSnakeRef = useRef<(SVGCircleElement | null)[]>([]);
     const maskSnakeRef = useRef<(SVGCircleElement | null)[]>([]);
+    const mobileCanvasRef = useRef<HTMLCanvasElement | null>(null);
+    const mobileHelmetImgRef = useRef<HTMLImageElement | null>(null);
 
     const lastPosRef = useRef({ x: 0, y: 0 });
     const isFirstMove = useRef(true);
@@ -84,6 +86,82 @@ export default function Hero() {
     }, [isLocked]);
 
     const isSequenceFinished = useRef(false);
+
+    // Mobile Canvas - Initialize and draw helmet image
+    useEffect(() => {
+        if (!isMobile || !hasMounted) return;
+        
+        const canvas = mobileCanvasRef.current;
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        
+        // Set canvas size to match viewport with device pixel ratio
+        const dpr = window.devicePixelRatio || 1;
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = `${w}px`;
+        canvas.style.height = `${h}px`;
+        ctx.scale(dpr, dpr);
+        
+        // Load helmet image and draw it on canvas
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+            mobileHelmetImgRef.current = img;
+            
+            // Calculate position to match CSS: translate-y-[33vh], scale-[1.6], object-contain object-top
+            const imgRatio = img.width / img.height;
+            const scale = 1.6;
+            const translateY = h * 0.33;
+            
+            // For object-contain object-top: fit by height, center horizontally
+            const drawH = h * scale;
+            const drawW = drawH * imgRatio;
+            const drawX = (w - drawW) / 2;
+            const drawY = translateY;
+            
+            ctx.drawImage(img, drawX, drawY, drawW, drawH);
+        };
+        img.src = '/images/hero-final-fr.png';
+        
+        // Handle resize
+        const handleResize = () => {
+            const canvas = mobileCanvasRef.current;
+            const img = mobileHelmetImgRef.current;
+            if (!canvas || !img) return;
+            
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+            
+            const dpr = window.devicePixelRatio || 1;
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            canvas.style.width = `${w}px`;
+            canvas.style.height = `${h}px`;
+            ctx.scale(dpr, dpr);
+            
+            const imgRatio = img.width / img.height;
+            const scale = 1.6;
+            const translateY = h * 0.33;
+            const drawH = h * scale;
+            const drawW = drawH * imgRatio;
+            const drawX = (w - drawW) / 2;
+            const drawY = translateY;
+            
+            ctx.drawImage(img, drawX, drawY, drawW, drawH);
+        };
+        
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [isMobile, hasMounted]);
 
     // Rotating text animation
     const [rotatingIndex, setRotatingIndex] = useState(0);
@@ -311,6 +389,24 @@ export default function Hero() {
             const currentTrail = trailRef.current;
             const len = currentTrail.length;
 
+            // Mobile Canvas Erase - Use destination-out to reveal face behind
+            if (isMobile && mobileCanvasRef.current && len > 0) {
+                const canvas = mobileCanvasRef.current;
+                const ctx = canvas.getContext('2d');
+                if (ctx) {
+                    ctx.globalCompositeOperation = 'destination-out';
+                    for (let j = 0; j < len; j++) {
+                        const p = currentTrail[j];
+                        const pct = j / len;
+                        const rad = 5 + (pct * 50);
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, rad, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.globalCompositeOperation = 'source-over';
+                }
+            }
+
             for (let i = 0; i < MAX_POINTS; i++) {
                 // Determine if this index is active
                 if (i < len) {
@@ -472,32 +568,23 @@ export default function Hero() {
                     Move RIGHT (translateX).
                 */}
 
-                {/* Mobile: Base = Helmet (visible by default), Masked = Face (revealed where you draw) */}
+                {/* Mobile: Face at bottom, Canvas with helmet on top that gets erased */}
                 <div className="absolute inset-0 z-0 pointer-events-none">
-                    <img
-                        loading="eager"
-                        src="/images/hero-final-fr.png"
-                        alt="Hero Helmet"
-                        style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain object-top translate-x-[0%] translate-y-[33vh] scale-[1.6] origin-top"
-                    />
-                </div>
-
-                <div
-                    className="absolute inset-0 z-10 pointer-events-none"
-                    style={{
-                        mask: hasMounted ? "url(#snake-mask)" : "none",
-                        WebkitMask: hasMounted ? "url(#snake-mask)" : "none"
-                    }}
-                >
                     <img
                         loading="eager"
                         src="/images/me-fr.png"
                         alt="Hero Face"
-                        style={{ filter: 'contrast(1.05) saturate(1.05)' }}
-                        className="w-full h-full object-contain object-top translate-x-[0.9%] translate-y-[30.3vh] scale-[1.7] origin-top"
+                        style={{ filter: 'contrast(1.15) saturate(1.1)' }}
+                        className="w-full h-full object-contain object-top translate-y-[33vh] scale-[1.6] origin-top"
                     />
                 </div>
+
+                {/* Canvas overlay with helmet - erased to reveal face */}
+                <canvas
+                    ref={mobileCanvasRef}
+                    className="absolute inset-0 z-10 pointer-events-none"
+                    style={{ width: '100%', height: '100%' }}
+                />
 
                 {/* Mobile Lock Button (Overlaid on Image) - Moved lower for better thumb access */}
                 <div className="absolute top-[90%] right-[10%] z-50 pointer-events-auto opacity-100">

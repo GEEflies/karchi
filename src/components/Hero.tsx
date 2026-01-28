@@ -544,7 +544,7 @@ export default function Hero() {
                         }}
                         className={`flex items-center justify-center w-12 h-12 rounded-xl border transition-all duration-300 ${isLocked
                             ? 'bg-black text-white border-black ring-2 ring-offset-2 ring-black/20'
-                            : 'bg-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] text-blue-600 border-blue-600/20'
+                            : 'bg-blue-600 text-white border-blue-600 shadow-[0_4px_12px_rgba(37,99,235,0.3)]'
                             } active:scale-95`}
                         aria-label={isLocked ? "Unlock" : "Lock"}
                     >

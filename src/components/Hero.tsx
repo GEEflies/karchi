@@ -472,12 +472,12 @@ export default function Hero() {
                     Move RIGHT (translateX).
                 */}
 
-                {/* Mobile: Base = Face, Reveal = Helmet */}
+                {/* Mobile: Base = Helmet (visible by default), Masked = Face (revealed where you draw) */}
                 <div className="absolute inset-0 z-0 pointer-events-none">
                     <img
                         loading="eager"
-                        src="/images/me-fr.png"
-                        alt="Hero Face"
+                        src="/images/hero-final-fr.png"
+                        alt="Hero Helmet"
                         style={{ filter: 'contrast(1.15) saturate(1.1)' }}
                         className="w-full h-full object-contain object-top translate-x-[0%] translate-y-[33vh] scale-[1.6] origin-top"
                     />
@@ -486,14 +486,14 @@ export default function Hero() {
                 <div
                     className="absolute inset-0 z-10 pointer-events-none"
                     style={{
-                        mask: hasMounted ? "url(#snake-mask-inverse)" : "none",
-                        WebkitMask: hasMounted ? "url(#snake-mask-inverse)" : "none"
+                        mask: hasMounted ? "url(#snake-mask)" : "none",
+                        WebkitMask: hasMounted ? "url(#snake-mask)" : "none"
                     }}
                 >
                     <img
                         loading="eager"
-                        src="/images/hero-final-fr.png"
-                        alt="Hero Helmet"
+                        src="/images/me-fr.png"
+                        alt="Hero Face"
                         style={{ filter: 'contrast(1.05) saturate(1.05)' }}
                         className="w-full h-full object-contain object-top translate-x-[0.9%] translate-y-[30.3vh] scale-[1.7] origin-top"
                     />

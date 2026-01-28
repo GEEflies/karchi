@@ -510,7 +510,7 @@ export default function Hero() {
                 {hasMounted && (
                     <svg className="absolute w-full h-full pointer-events-none top-0 left-0">
                         <defs>
-                            {/* Standard Mask: Reveals top layer (Helmet) */}
+                            {/* Standard Mask: Reveals top layer */}
                             <mask id="snake-mask" maskUnits="userSpaceOnUse">
                                 <rect width="100%" height="100%" fill="black" />
                                 {Array.from({ length: MAX_POINTS }).map((_, index) => (
@@ -526,7 +526,21 @@ export default function Hero() {
                                 ))}
                             </mask>
                             
-                            {/* Inverse Mask Removed for Performance on Mobile */}
+                            {/* Inverse Mask: Restored for Desktop Logic */}
+                            <mask id="snake-mask-inverse" maskUnits="userSpaceOnUse">
+                                <rect width="100%" height="100%" fill="white" />
+                                {Array.from({ length: MAX_POINTS }).map((_, index) => (
+                                    <circle
+                                        key={index}
+                                        ref={(el) => { inverseMaskSnakeRef.current[index] = el; }}
+                                        cx="-100"
+                                        cy="-100"
+                                        r="0"
+                                        fill="black"
+                                        style={{ display: 'none' }}
+                                    />
+                                ))}
+                            </mask>
                         </defs>
                     </svg>
                 )}

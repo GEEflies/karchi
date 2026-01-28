@@ -108,32 +108,18 @@ export default function Hero() {
         canvas.style.height = `${h}px`;
         ctx.scale(dpr, dpr);
         
-        // Load helmet image and draw it on canvas
+        // Load helmet image - drawing happens in animation loop
         const img = new Image();
         img.crossOrigin = 'anonymous';
         img.onload = () => {
             mobileHelmetImgRef.current = img;
-            
-            // Calculate position to match CSS: translate-y-[33vh], scale-[1.6], object-contain object-top
-            const imgRatio = img.width / img.height;
-            const scale = 1.6;
-            const translateY = h * 0.33;
-            
-            // For object-contain object-top: fit by height, center horizontally
-            const drawH = h * scale;
-            const drawW = drawH * imgRatio;
-            const drawX = (w - drawW) / 2;
-            const drawY = translateY;
-            
-            ctx.drawImage(img, drawX, drawY, drawW, drawH);
         };
         img.src = '/images/hero-final-fr.png';
         
         // Handle resize
         const handleResize = () => {
             const canvas = mobileCanvasRef.current;
-            const img = mobileHelmetImgRef.current;
-            if (!canvas || !img) return;
+            if (!canvas) return;
             
             const ctx = canvas.getContext('2d');
             if (!ctx) return;
@@ -147,16 +133,6 @@ export default function Hero() {
             canvas.style.width = `${w}px`;
             canvas.style.height = `${h}px`;
             ctx.scale(dpr, dpr);
-            
-            const imgRatio = img.width / img.height;
-            const scale = 1.6;
-            const translateY = h * 0.33;
-            const drawH = h * scale;
-            const drawW = drawH * imgRatio;
-            const drawX = (w - drawW) / 2;
-            const drawY = translateY;
-            
-            ctx.drawImage(img, drawX, drawY, drawW, drawH);
         };
         
         window.addEventListener('resize', handleResize);
@@ -389,21 +365,55 @@ export default function Hero() {
             const currentTrail = trailRef.current;
             const len = currentTrail.length;
 
-            // Mobile Canvas Erase - Use destination-out to reveal face behind
-            if (isMobile && mobileCanvasRef.current && len > 0) {
+            // Mobile Canvas - Redraw helmet each frame, then erase where trail is
+            // This creates the "heal back" effect when trail points decay
+            if (isMobile && mobileCanvasRef.current && mobileHelmetImgRef.current) {
                 const canvas = mobileCanvasRef.current;
                 const ctx = canvas.getContext('2d');
-                if (ctx) {
-                    ctx.globalCompositeOperation = 'destination-out';
-                    for (let j = 0; j < len; j++) {
-                        const p = currentTrail[j];
-                        const pct = j / len;
-                        const rad = 5 + (pct * 50);
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, rad, 0, Math.PI * 2);
-                        ctx.fill();
+                const img = mobileHelmetImgRef.current;
+                if (ctx && img) {
+                    const w = window.innerWidth;
+                    const h = window.innerHeight;
+                    
+                    // Clear and redraw helmet (matching CSS: object-contain object-top translate-y-[33vh] scale-[1.6])
+                    ctx.clearRect(0, 0, w, h);
+                    
+                    // Calculate to match CSS object-contain behavior
+                    const imgRatio = img.width / img.height;
+                    const containerRatio = w / h;
+                    
+                    let drawW, drawH;
+                    if (imgRatio > containerRatio) {
+                        drawW = w;
+                        drawH = w / imgRatio;
+                    } else {
+                        drawH = h;
+                        drawW = h * imgRatio;
                     }
-                    ctx.globalCompositeOperation = 'source-over';
+                    
+                    // Apply scale-[1.6]
+                    drawW *= 1.6;
+                    drawH *= 1.6;
+                    
+                    // Center horizontally, translate-y-[33vh]
+                    const drawX = (w - drawW) / 2;
+                    const drawY = h * 0.33;
+                    
+                    ctx.drawImage(img, drawX, drawY, drawW, drawH);
+                    
+                    // Now erase where current trail points are
+                    if (len > 0) {
+                        ctx.globalCompositeOperation = 'destination-out';
+                        for (let j = 0; j < len; j++) {
+                            const p = currentTrail[j];
+                            const pct = j / len;
+                            const rad = 5 + (pct * 50);
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, rad, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                        ctx.globalCompositeOperation = 'source-over';
+                    }
                 }
             }
 

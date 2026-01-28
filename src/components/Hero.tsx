@@ -253,14 +253,14 @@ export default function Hero() {
                 const mobileStartX = centerX - halfWidth;
                 const mobileEndX = centerX + halfWidth;
 
-                // Only 2 smooth cuts across the face
+                // Only 2 smooth cuts across the face - more spaced out
                 // 1. First cut (upper face)
-                await swipe(mobileStartX, mobileEndX, h * 0.46);
+                await swipe(mobileStartX, mobileEndX, h * 0.40);
                 // 2. Second cut (lower face)
-                await swipe(mobileEndX, mobileStartX, h * 0.58);
+                await swipe(mobileEndX, mobileStartX, h * 0.64);
 
-                // Pause to let the trail complete smoothly before clearing
-                await new Promise(r => setTimeout(r, 300));
+                // Longer pause to let the trail complete smoothly before clearing
+                await new Promise(r => setTimeout(r, 500));
             } else {
                 // Desktop positions
                 // 1. Left to Right (Top - Forehead)
@@ -362,9 +362,9 @@ export default function Hero() {
                 if (i < len) {
                     const point = currentTrail[i];
                     const percentage = i / len;
-                    // Thicker trail on mobile, even thicker during auto sequence
-                    const baseRadius = isMobile ? (isAutoSequence.current ? 4 : 3) : 5;
-                    const maxRadius = isMobile ? (isAutoSequence.current ? 35 : 25) : 50;
+                    // Thinner trail on mobile during auto sequence
+                    const baseRadius = isMobile ? (isAutoSequence.current ? 3 : 3) : 5;
+                    const maxRadius = isMobile ? (isAutoSequence.current ? 28 : 25) : 50;
                     const radius = baseRadius + (percentage * maxRadius);
 
                     // Optimization: Batch attribute updates? standard setAttribute is fine here.

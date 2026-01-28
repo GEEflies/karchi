@@ -403,20 +403,8 @@ export default function Hero() {
                         src="/images/me-fr.png"
                         alt="Hero Face"
                         style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain md:object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[8vh] md:translate-y-[15vh] scale-[1.0] sm:scale-[1.2] md:scale-[0.89] origin-top md:origin-top"
+                        className="w-full h-full object-contain md:object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[5vh] md:translate-y-[15vh] scale-[1.6] md:scale-[0.89] origin-top md:origin-top"
                     />
-                    {/* Mobile Special: Using scale-100 with bigger container might be safer, 
-                        but let's force a bigger mobile scale. 
-                        Trying 1.6 to really zoom it in. 
-                        And moving translate-y UP to bring face to center.
-                    */}
-                     <style jsx>{`
-                        @media (max-width: 768px) {
-                            img {
-                                transform: scale(1.6) translateY(5vh) !important;
-                            }
-                        }
-                    `}</style>
                 </div>
 
                 {/* 2. Reveal Image: Helmet (Hidden by default - Standard Mask) */}
@@ -432,12 +420,12 @@ export default function Hero() {
                         src="/images/hero-final-fr.png"
                         alt="Hero Helmet"
                         style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain md:object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[8vh] md:translate-y-[15vh] scale-[1.0] sm:scale-[1.2] md:scale-[0.89] origin-top md:origin-top"
+                        className="w-full h-full object-contain md:object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[5vh] md:translate-y-[15vh] scale-[1.6] md:scale-[0.89] origin-top md:origin-top"
                     />
                 </div>
 
                 {/* Mobile Lock Button (Overlaid on Image) - Moved lower for better thumb access */}
-                <div className="md:hidden absolute top-[60%] right-[10%] z-50 pointer-events-auto mix-blend-multiply opacity-90">
+                <div className="md:hidden absolute top-[60%] right-[10%] z-50 pointer-events-auto opacity-90">
                     <button
                         onClick={(e) => {
                             e.stopPropagation();

@@ -113,13 +113,17 @@ export default function Hero() {
     const touchStartedOnImage = useRef(false);
 
     function handleTouchMove(e: React.TouchEvent) {
-        // Allow if locked OR if touch started on image area
-        if (!isLocked && !touchStartedOnImage.current && isMobile) return;
-
-        // Prevent scrolling when drawing on image
-        if (touchStartedOnImage.current || isLocked) {
-            e.preventDefault();
+        // On mobile, always allow touch trail in hero section (no lock required)
+        if (isMobile) {
+            const touch = e.touches[0];
+            const { left, top } = e.currentTarget.getBoundingClientRect();
+            mouseX.set(touch.clientX - left);
+            mouseY.set(touch.clientY - top);
+            return;
         }
+
+        // Desktop: require lock or image area touch
+        if (!isLocked && !touchStartedOnImage.current) return;
 
         const touch = e.touches[0];
         const { left, top } = e.currentTarget.getBoundingClientRect();
@@ -133,22 +137,27 @@ export default function Hero() {
         const x = touch.clientX - left;
         const y = touch.clientY - top;
 
-        // Check if touch is in the image area (below 35vh where blur overlay ends)
+        // On mobile, always allow touch trail (any movement triggers it)
+        if (isMobile) {
+            mouseX.set(x);
+            mouseY.set(y);
+            lastPosRef.current = { x, y };
+            isFirstMove.current = false;
+            return;
+        }
+
+        // Desktop: Check if touch is in the image area
         const imageAreaStart = height * 0.35;
         touchStartedOnImage.current = y > imageAreaStart;
 
-        // Only proceed if locked OR touch is on image area
-        if (!isLocked && !touchStartedOnImage.current && isMobile) return;
+        if (!isLocked && !touchStartedOnImage.current) return;
 
-        // Prevent scrolling when touching image area
         if (touchStartedOnImage.current || isLocked) {
             e.preventDefault();
         }
 
         mouseX.set(x);
         mouseY.set(y);
-
-        // Reset last position to current to avoid "jumping" lines from 0,0
         lastPosRef.current = { x, y };
         isFirstMove.current = false;
     }
@@ -235,17 +244,35 @@ export default function Hero() {
                 });
             };
 
-            // 1. Left to Right (Top - Forehead)
-            await swipe(startX, endX, h * 0.20);
+            // Mobile-specific positions: centered, thinner cuts across the face
+            if (isMobile) {
+                const w = window.innerWidth;
+                // Center the cuts around 50% width with narrower range
+                const centerX = w * 0.5;
+                const halfWidth = w * 0.35; // 35% on each side
+                const mobileStartX = centerX - halfWidth;
+                const mobileEndX = centerX + halfWidth;
 
-            // 2. Right to Left (Eyes)
-            await swipe(endX, startX, h * 0.36);
-
-            // 3. Left to Right (Nose/Mouth)
-            await swipe(startX, endX, h * 0.52);
-
-            // 4. Right to Left (Chin)
-            await swipe(endX, startX, h * 0.68);
+                // Faster, thinner cuts stacked vertically on the face area
+                // 1. Top cut (forehead area)
+                await swipe(mobileStartX, mobileEndX, h * 0.42);
+                // 2. Second cut (eyes)
+                await swipe(mobileEndX, mobileStartX, h * 0.50);
+                // 3. Third cut (nose)
+                await swipe(mobileStartX, mobileEndX, h * 0.58);
+                // 4. Fourth cut (mouth/chin)
+                await swipe(mobileEndX, mobileStartX, h * 0.66);
+            } else {
+                // Desktop positions
+                // 1. Left to Right (Top - Forehead)
+                await swipe(startX, endX, h * 0.20);
+                // 2. Right to Left (Eyes)
+                await swipe(endX, startX, h * 0.36);
+                // 3. Left to Right (Nose/Mouth)
+                await swipe(startX, endX, h * 0.52);
+                // 4. Right to Left (Chin)
+                await swipe(endX, startX, h * 0.68);
+            }
 
             isAutoSequence.current = false;
             isSequenceFinished.current = true; // Unlock manual interaction
@@ -615,7 +642,7 @@ export default function Hero() {
                                             animate={{ y: 0, opacity: 1 }}
                                             exit={{ y: "-100%", opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }}
                                             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                                            className="row-start-1 col-start-1 block whitespace-nowrap font-serif italic font-bold lowercase tracking-wider text-4xl leading-[1.1] md:text-[clamp(2.5rem,7vw,6rem)] md:leading-[1.15] text-accent-blue md:not-italic md:font-black md:uppercase md:tracking-tighter md:text-transparent md:bg-clip-text md:bg-gradient-to-r md:from-blue-600 md:to-cyan-500 md:font-sans"
+                                            className="row-start-1 col-start-1 block whitespace-nowrap font-serif italic font-black lowercase tracking-wider text-4xl leading-[1.1] md:text-[clamp(2.5rem,7vw,6rem)] md:leading-[1.15] text-accent-blue md:not-italic md:font-black md:uppercase md:tracking-tighter md:text-transparent md:bg-clip-text md:bg-gradient-to-r md:from-blue-600 md:to-cyan-500 md:font-sans"
                                         >
                                             {rotatingPhrases[rotatingIndex]}
                                         </motion.span>

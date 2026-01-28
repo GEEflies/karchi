@@ -105,7 +105,10 @@ export default function Hero() {
     }
 
     function handleTouchMove(e: React.TouchEvent) {
-        // Always allow on mobile touch to drive the trail
+        // Only work when locked on mobile to prevent scroll interference
+        if (!isLocked && isMobile) return;
+        
+        // Allow on mobile touch to drive the trail
         const touch = e.touches[0];
         const { left, top } = e.currentTarget.getBoundingClientRect();
         mouseX.set(touch.clientX - left);
@@ -113,6 +116,9 @@ export default function Hero() {
     }
 
     function handleTouchStart(e: React.TouchEvent) {
+        // Only work when locked on mobile to prevent scroll interference
+        if (!isLocked && isMobile) return;
+        
         const touch = e.touches[0];
         const { left, top } = e.currentTarget.getBoundingClientRect();
         const x = touch.clientX - left;
@@ -123,10 +129,17 @@ export default function Hero() {
 
         // Reset last position to current to avoid "jumping" lines from 0,0
         lastPosRef.current = { x, y };
+        isFirstMove.current = false; // Mark as started on mobile touch
     }
 
     // Ninja Cut Sequence
     useEffect(() => {
+        // Skip auto sequence on mobile - mobile uses touch interaction only
+        if (isMobile) {
+            isSequenceFinished.current = true;
+            return;
+        }
+        
         // If already played globally, just unlock interaction and skip
         if (hasGlobalHeroSequencePlayed) {
             isSequenceFinished.current = true;

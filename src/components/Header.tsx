@@ -78,7 +78,7 @@ export default function Header() {
                             scrolled
                                 ? "bg-white/5 backdrop-blur-xl shadow-lg supports-[backdrop-filter]:bg-white/5"
                                 : "bg-transparent",
-                            isDarkSection ? "text-white" : "text-foreground"
+                            isDarkSection || mobileMenuOpen ? "text-white" : "text-foreground"
                         )}
                         aria-label="Toggle menu"
                     >
@@ -147,48 +147,53 @@ export default function Header() {
                         className="fixed inset-0 z-40 md:hidden"
                     >
                         {/* Backdrop */}
-                        <div 
+                        <div
                             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                             onClick={() => setMobileMenuOpen(false)}
                         />
-                        
+
                         {/* Menu Content */}
                         <motion.div
                             initial={{ opacity: 0, x: '100%' }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: '100%' }}
                             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                            className="absolute top-0 right-0 bottom-0 w-[85%] bg-foreground p-6 shadow-2xl"
+                            className="absolute top-0 right-0 bottom-0 w-[90%] md:w-[85%] bg-black/95 backdrop-blur-2xl p-8 shadow-2xl border-l border-white/10"
                         >
-                            <div className="flex flex-col gap-6 pt-20">
-                                {navItems.map((item, index) => (
-                                    <motion.div
-                                        key={item.name}
-                                        initial={{ opacity: 0, x: 20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.1 + index * 0.05 }}
-                                    >
-                                        <Link
-                                            href={item.href}
-                                            onClick={() => setMobileMenuOpen(false)}
-                                            className="block text-2xl font-bold text-white py-3 border-b border-white/10 active:scale-[0.98] transition-transform"
+                            <div className="flex flex-col gap-8 pt-24 h-full">
+                                <div className="flex flex-col gap-6">
+                                    {navItems.map((item, index) => (
+                                        <motion.div
+                                            key={item.name}
+                                            initial={{ opacity: 0, x: 20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: 0.1 + index * 0.05 }}
                                         >
-                                            {item.name}
-                                        </Link>
-                                    </motion.div>
-                                ))}
-                                
+                                            <Link
+                                                href={item.href}
+                                                onClick={() => setMobileMenuOpen(false)}
+                                                className="block text-4xl font-black text-white py-2 tracking-tighter hover:text-white/70 transition-colors"
+                                            >
+                                                {item.name}
+                                                <span className="block h-px w-0 bg-white group-hover:w-full transition-all duration-300" />
+                                            </Link>
+                                        </motion.div>
+                                    ))}
+                                </div>
+
                                 <motion.div
                                     initial={{ opacity: 0, x: 20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: 0.25 }}
+                                    className="mt-auto mb-8"
                                 >
                                     <Link
                                         href="/book/karchigod/intro"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="mt-4 w-full py-4 bg-white text-black rounded-full font-bold text-center block active:scale-[0.98] transition-transform"
+                                        className="relative w-full py-4 rounded-full font-bold text-center block overflow-hidden group bg-white text-black text-lg tracking-wide hover:scale-[1.02] active:scale-[0.98] transition-all"
                                     >
-                                        Spolupráca
+                                        <span className="relative z-10">Spolupráca</span>
+                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/10 to-transparent translate-x-[-150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out" />
                                     </Link>
                                 </motion.div>
                             </div>

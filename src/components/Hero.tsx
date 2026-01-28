@@ -473,19 +473,19 @@ export default function Hero() {
                     {/* Face image - always visible underneath */}
                     <image
                         href="/images/me-fr.png"
-                        x="-15%"
-                        y="38%"
-                        width="130%"
-                        height="130%"
+                        x="-10%"
+                        y="25%"
+                        width="120%"
+                        height="120%"
                         preserveAspectRatio="xMidYMin meet"
                     />
                     {/* Helmet image - masked to hide where trail is drawn */}
                     <image
                         href="/images/hero-final-fr.png"
-                        x="-15%"
-                        y="38%"
-                        width="130%"
-                        height="130%"
+                        x="-10%"
+                        y="25%"
+                        width="120%"
+                        height="120%"
                         preserveAspectRatio="xMidYMin meet"
                         mask={hasMounted ? "url(#mobile-mask-inverse)" : undefined}
                     />

@@ -576,7 +576,7 @@ export default function Hero() {
                             {/* Desktop Title Layout */}
                             <span className="hidden md:inline">TVORÍM<br />STRÁNKY,<br /></span>
 
-                            <span className="whitespace-nowrap flex md:inline items-baseline justify-center gap-[0.35em] lowercase md:uppercase font-normal md:font-black">KTORÉ<span className="hidden md:inline">&nbsp;</span>
+                            <span className="whitespace-nowrap flex md:inline-flex items-baseline justify-center md:justify-start gap-[0.35em] md:gap-[0.5em] lowercase md:uppercase font-normal md:font-black">KTORÉ
                                 <span className="inline-grid grid-cols-1 grid-rows-1 h-[1.3em] align-top overflow-hidden">
                                     <AnimatePresence mode="popLayout" initial={false}>
                                         <motion.span

@@ -244,7 +244,7 @@ export default function Hero() {
                 });
             };
 
-            // Mobile-specific positions: centered, thinner cuts across the face
+            // Mobile-specific positions: only 2 cuts
             if (isMobile) {
                 const w = window.innerWidth;
                 // Center the cuts around 50% width with narrower range
@@ -253,15 +253,14 @@ export default function Hero() {
                 const mobileStartX = centerX - halfWidth;
                 const mobileEndX = centerX + halfWidth;
 
-                // Faster, thinner cuts stacked vertically on the face area
-                // 1. Top cut (forehead area)
-                await swipe(mobileStartX, mobileEndX, h * 0.42);
-                // 2. Second cut (eyes)
-                await swipe(mobileEndX, mobileStartX, h * 0.50);
-                // 3. Third cut (nose)
-                await swipe(mobileStartX, mobileEndX, h * 0.58);
-                // 4. Fourth cut (mouth/chin)
-                await swipe(mobileEndX, mobileStartX, h * 0.66);
+                // Only 2 smooth cuts across the face
+                // 1. First cut (upper face)
+                await swipe(mobileStartX, mobileEndX, h * 0.46);
+                // 2. Second cut (lower face)
+                await swipe(mobileEndX, mobileStartX, h * 0.58);
+
+                // Pause to let the trail complete smoothly before clearing
+                await new Promise(r => setTimeout(r, 300));
             } else {
                 // Desktop positions
                 // 1. Left to Right (Top - Forehead)
@@ -373,13 +372,14 @@ export default function Hero() {
                     const cx = point.x.toFixed(1);
                     const cy = point.y.toFixed(1);
 
-                    // Update Visual Trail
+                    // Update Visual Trail (background)
                     const bgCircle = backgroundSnakeRef.current[i];
                     if (bgCircle) {
                         bgCircle.setAttribute("cx", cx);
                         bgCircle.setAttribute("cy", cy);
                         bgCircle.setAttribute("r", r);
-                        bgCircle.style.opacity = "0.4"; // Visible
+                        // Hide background trail on mobile during auto sequence (no gray outline)
+                        bgCircle.style.opacity = (isMobile && isAutoSequence.current) ? "0" : "0.4";
                     }
 
                     // Update Mask (Face Reveal) - Desktop

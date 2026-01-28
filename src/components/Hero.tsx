@@ -237,9 +237,9 @@ export default function Hero() {
                 // We set it to the start position so interpolation starts fresh
                 lastPosRef.current = { x: fromX, y };
 
-                // Animate - faster on mobile for smoother feel
+                // Animate - slower on mobile for more enjoyable viewing experience
                 await animate(mouseX, toX, {
-                    duration: isMobile ? 0.25 : 0.4,
+                    duration: isMobile ? 0.5 : 0.4,
                     ease: "easeInOut"
                 });
             };
@@ -525,7 +525,7 @@ export default function Hero() {
                     {/* Helmet image - masked to hide where trail is drawn */}
                     <image
                         href="/images/hero-final-fr.png"
-                        x="5.5%"
+                        x="5.6%"
                         y="31%"
                         width="90%"
                         height="90%"
@@ -535,7 +535,7 @@ export default function Hero() {
                 </svg>
 
                 {/* Mobile Lock Button (Overlaid on Image) - Moved lower for better thumb access */}
-                <div className="absolute top-[82%] right-[10%] z-50 pointer-events-auto opacity-100">
+                <div className="absolute top-[75%] right-[10%] z-50 pointer-events-auto opacity-100">
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
@@ -543,14 +543,14 @@ export default function Hero() {
                         }}
                         className={`flex items-center justify-center w-12 h-12 rounded-xl border transition-all duration-300 ${isLocked
                             ? 'bg-black text-white border-black ring-2 ring-offset-2 ring-black/20'
-                            : 'bg-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] text-black border-white/20'
+                            : 'bg-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] text-blue-600 border-blue-600/20'
                             } active:scale-95`}
                         aria-label={isLocked ? "Unlock" : "Lock"}
                     >
                         {isLocked ? (
                             <Unlock className="w-5 h-5" />
                         ) : (
-                            <Lock className="w-5 h-5 opacity-60" />
+                            <Lock className="w-5 h-5" />
                         )}
                     </button>
                 </div>

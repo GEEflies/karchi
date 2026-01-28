@@ -576,7 +576,7 @@ export default function Hero() {
                             {/* Desktop Title Layout */}
                             <span className="hidden md:inline">TVORÍM<br />STRÁNKY,<br /></span>
 
-                            <span className="whitespace-nowrap flex md:inline items-baseline justify-center gap-[0.2em]">KTORÉ
+                            <span className="whitespace-nowrap flex md:inline items-baseline justify-center gap-[0.2em] lowercase md:uppercase">KTORÉ
                                 <span className="inline-grid grid-cols-1 grid-rows-1 h-[1.3em] align-top overflow-hidden">
                                     <AnimatePresence mode="popLayout" initial={false}>
                                         <motion.span
@@ -585,7 +585,7 @@ export default function Hero() {
                                             animate={{ y: 0, opacity: 1 }}
                                             exit={{ y: "-100%", opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }}
                                             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                                            className="row-start-1 col-start-1 block whitespace-nowrap font-serif italic font-bold lowercase tracking-wider text-4xl md:text-inherit text-accent-blue md:not-italic md:font-black md:uppercase md:text-transparent md:bg-clip-text md:bg-gradient-to-r md:from-blue-600 md:to-cyan-500 md:font-sans"
+                                            className="row-start-1 col-start-1 block whitespace-nowrap font-serif italic font-normal lowercase tracking-wider text-4xl md:text-inherit text-accent-blue md:not-italic md:font-black md:uppercase md:text-transparent md:bg-clip-text md:bg-gradient-to-r md:from-blue-600 md:to-cyan-500 md:font-sans"
                                         >
                                             {rotatingPhrases[rotatingIndex]}
                                         </motion.span>

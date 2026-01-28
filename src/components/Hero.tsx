@@ -111,6 +111,19 @@ export default function Hero() {
         mouseY.set(touch.clientY - top);
     }
 
+    function handleTouchStart(e: React.TouchEvent) {
+        const touch = e.touches[0];
+        const { left, top } = e.currentTarget.getBoundingClientRect();
+        const x = touch.clientX - left;
+        const y = touch.clientY - top;
+        
+        mouseX.set(x);
+        mouseY.set(y);
+        
+        // Reset last position to current to avoid "jumping" lines from 0,0
+        lastPosRef.current = { x, y };
+    }
+
     // Ninja Cut Sequence
     useEffect(() => {
         // If already played globally, just unlock interaction and skip
@@ -344,7 +357,7 @@ export default function Hero() {
             ref={sectionRef}
             onMouseMove={handleMouseMove}
             onTouchMove={handleTouchMove}
-            onTouchStart={handleTouchMove}
+            onTouchStart={handleTouchStart}
             className="relative h-screen w-full bg-gradient-to-b from-[#fdfdfb] to-[#e6e4e3] text-black overflow-hidden font-sans"
             style={{
                 touchAction: isLocked ? 'none' : 'auto',
@@ -373,12 +386,12 @@ export default function Hero() {
                 </svg>
             )}
 
-            {/* Images Container */}
+            {/* Images Container - Optimized spacing for mobile */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
-                className="absolute inset-x-0 top-0 bottom-12 pt-12 z-0"
+                className="absolute inset-x-0 top-0 bottom-0 md:bottom-12 md:pt-12 z-0"
             >
                 {/* 1. Base Image: Face (Visible by default - Static Background) */}
                 <div 
@@ -390,8 +403,20 @@ export default function Hero() {
                         src="/images/me-fr.png"
                         alt="Hero Face"
                         style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[10vh] md:translate-y-[15vh] scale-[1.3] md:scale-[0.89] origin-top"
+                        className="w-full h-full object-contain md:object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[8vh] md:translate-y-[15vh] scale-[1.0] sm:scale-[1.2] md:scale-[0.89] origin-top md:origin-top"
                     />
+                    {/* Mobile Special: Using scale-100 with bigger container might be safer, 
+                        but let's force a bigger mobile scale. 
+                        Trying 1.6 to really zoom it in. 
+                        And moving translate-y UP to bring face to center.
+                    */}
+                     <style jsx>{`
+                        @media (max-width: 768px) {
+                            img {
+                                transform: scale(1.6) translateY(5vh) !important;
+                            }
+                        }
+                    `}</style>
                 </div>
 
                 {/* 2. Reveal Image: Helmet (Hidden by default - Standard Mask) */}
@@ -407,7 +432,7 @@ export default function Hero() {
                         src="/images/hero-final-fr.png"
                         alt="Hero Helmet"
                         style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[10vh] md:translate-y-[15vh] scale-[1.3] md:scale-[0.89] origin-top"
+                        className="w-full h-full object-contain md:object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[8vh] md:translate-y-[15vh] scale-[1.0] sm:scale-[1.2] md:scale-[0.89] origin-top md:origin-top"
                     />
                 </div>
 

@@ -221,7 +221,6 @@ export default function Hero() {
             if (document.hidden) {
                 if (trailRef.current.length > 0) {
                     trailRef.current = [];
-                    setTrail([]);
                 }
                 animationId = requestAnimationFrame(updateTrail);
                 return;

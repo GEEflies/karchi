@@ -456,7 +456,7 @@ export default function Hero() {
                         src="/images/me-fr.png"
                         alt="Hero Face"
                         style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain md:object-contain object-top translate-x-12 md:translate-x-[12.5%] translate-y-[12vh] md:translate-y-[15vh] scale-[1.6] md:scale-[0.89] origin-top md:origin-top"
+                        className="w-full h-full object-contain md:object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[15vh] md:translate-y-[15vh] scale-[1.6] md:scale-[0.89] origin-top md:origin-top"
                     />
                 </div>
 
@@ -473,7 +473,7 @@ export default function Hero() {
                         src="/images/hero-final-fr.png"
                         alt="Hero Helmet"
                         style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain md:object-contain object-top translate-x-12 md:translate-x-[12.5%] translate-y-[12vh] md:translate-y-[15vh] scale-[1.6] md:scale-[0.89] origin-top md:origin-top"
+                        className="w-full h-full object-contain md:object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[15vh] md:translate-y-[15vh] scale-[1.6] md:scale-[0.89] origin-top md:origin-top"
                     />
                 </div>
 

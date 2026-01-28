@@ -109,11 +109,18 @@ export default function Hero() {
         mouseY.set(clientY - top);
     }
 
-    function handleTouchMove(e: React.TouchEvent) {
-        // Only work when locked on mobile to prevent scroll interference
-        if (!isLocked && isMobile) return;
+    // Track if touch started on image area (for unlocked touch drawing)
+    const touchStartedOnImage = useRef(false);
 
-        // Allow on mobile touch to drive the trail
+    function handleTouchMove(e: React.TouchEvent) {
+        // Allow if locked OR if touch started on image area
+        if (!isLocked && !touchStartedOnImage.current && isMobile) return;
+
+        // Prevent scrolling when drawing on image
+        if (touchStartedOnImage.current || isLocked) {
+            e.preventDefault();
+        }
+
         const touch = e.touches[0];
         const { left, top } = e.currentTarget.getBoundingClientRect();
         mouseX.set(touch.clientX - left);
@@ -121,29 +128,38 @@ export default function Hero() {
     }
 
     function handleTouchStart(e: React.TouchEvent) {
-        // Only work when locked on mobile to prevent scroll interference
-        if (!isLocked && isMobile) return;
-
         const touch = e.touches[0];
-        const { left, top } = e.currentTarget.getBoundingClientRect();
+        const { left, top, height } = e.currentTarget.getBoundingClientRect();
         const x = touch.clientX - left;
         const y = touch.clientY - top;
+
+        // Check if touch is in the image area (below 35vh where blur overlay ends)
+        const imageAreaStart = height * 0.35;
+        touchStartedOnImage.current = y > imageAreaStart;
+
+        // Only proceed if locked OR touch is on image area
+        if (!isLocked && !touchStartedOnImage.current && isMobile) return;
+
+        // Prevent scrolling when touching image area
+        if (touchStartedOnImage.current || isLocked) {
+            e.preventDefault();
+        }
 
         mouseX.set(x);
         mouseY.set(y);
 
         // Reset last position to current to avoid "jumping" lines from 0,0
         lastPosRef.current = { x, y };
-        isFirstMove.current = false; // Mark as started on mobile touch
+        isFirstMove.current = false;
     }
 
-    // Ninja Cut Sequence
+    function handleTouchEnd() {
+        touchStartedOnImage.current = false;
+    }
+
+    // Ninja Cut Sequence (Desktop + Mobile)
     useEffect(() => {
-        // Skip auto sequence on mobile - mobile uses touch interaction only
-        if (isMobile) {
-            isSequenceFinished.current = true;
-            return;
-        }
+        // Mobile uses same animation but with adjusted positions
 
         // If already played globally, just unlock interaction and skip
         if (hasGlobalHeroSequencePlayed) {
@@ -212,14 +228,10 @@ export default function Hero() {
                 // We set it to the start position so interpolation starts fresh
                 lastPosRef.current = { x: fromX, y };
 
-                // Animate
+                // Animate - faster on mobile for smoother feel
                 await animate(mouseX, toX, {
-                    duration: 0.4,
-                    ease: "easeInOut",
-                    onUpdate: (latest) => {
-                        // Force update lastPos logic inside the loop?
-                        // The loop reads mouseX.get(). It works automatically.
-                    }
+                    duration: isMobile ? 0.25 : 0.4,
+                    ease: "easeInOut"
                 });
             };
 
@@ -323,7 +335,10 @@ export default function Hero() {
                 if (i < len) {
                     const point = currentTrail[i];
                     const percentage = i / len;
-                    const radius = 5 + (percentage * 50);
+                    // Thinner trail on mobile
+                    const baseRadius = isMobile ? 3 : 5;
+                    const maxRadius = isMobile ? 25 : 50;
+                    const radius = baseRadius + (percentage * maxRadius);
 
                     // Optimization: Batch attribute updates? standard setAttribute is fine here.
                     const r = radius.toFixed(1);
@@ -387,6 +402,7 @@ export default function Hero() {
             onMouseMove={handleMouseMove}
             onTouchMove={handleTouchMove}
             onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
             className="relative h-screen w-full bg-gradient-to-b from-[#fdfdfb] to-[#e6e4e3] text-black overflow-hidden font-sans"
             style={{
                 touchAction: isLocked ? 'none' : 'auto',
@@ -492,7 +508,7 @@ export default function Hero() {
                 </svg>
 
                 {/* Mobile Lock Button (Overlaid on Image) - Moved lower for better thumb access */}
-                <div className="absolute top-[90%] right-[10%] z-50 pointer-events-auto opacity-100">
+                <div className="absolute top-[82%] right-[10%] z-50 pointer-events-auto opacity-100">
                     <button
                         onClick={(e) => {
                             e.stopPropagation();

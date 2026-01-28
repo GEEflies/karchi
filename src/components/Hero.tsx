@@ -344,8 +344,10 @@ export default function Hero() {
             ref={sectionRef}
             onMouseMove={handleMouseMove}
             onTouchMove={handleTouchMove}
+            onTouchStart={handleTouchMove}
             className="relative h-screen w-full bg-gradient-to-b from-[#fdfdfb] to-[#e6e4e3] text-black overflow-hidden font-sans"
             style={{
+                touchAction: isLocked ? 'none' : 'auto',
                 isolation: 'isolate',
                 transform: 'translateZ(0)',
                 willChange: 'transform'
@@ -414,7 +416,7 @@ export default function Hero() {
 
                 {/* Mask Definition */}
                 {hasMounted && (
-                    <svg className="absolute w-full h-full pointer-events-none top-0 left-0 opacity-0">
+                    <svg className="absolute w-full h-full pointer-events-none top-0 left-0">
                         <defs>
                             {/* Standard Mask: Reveals top layer (Face) */}
                             <mask id="snake-mask" maskUnits="userSpaceOnUse">
@@ -562,7 +564,7 @@ export default function Hero() {
                     <div className="flex flex-col items-end gap-4 pointer-events-auto w-full md:w-auto">
                         
                         {/* Mobile Lock Button */}
-                        <div className="md:hidden absolute bottom-12 right-6 z-50">
+                        <div className="md:hidden absolute top-[65%] right-6 -translate-y-1/2 z-50">
                             <button
                                 onClick={() => setIsLocked(!isLocked)}
                                 className={`flex items-center justify-center w-12 h-12 rounded-xl border transition-all duration-300 ${

@@ -64,9 +64,11 @@ export default function Hero() {
     // Lock body scroll when locked
     useEffect(() => {
         if (isLocked) {
-            // Prevent layout shift by compensating for scrollbar width
-            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-            document.body.style.paddingRight = `${scrollbarWidth}px`;
+            // Prevent layout shift by compensating for scrollbar width (Desktop only)
+            if (!isMobile) {
+                const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+                document.body.style.paddingRight = `${scrollbarWidth}px`;
+            }
             document.body.style.overflow = 'hidden';
             document.body.style.touchAction = 'none'; // Prevent touch scrolling
         } else {
@@ -374,6 +376,29 @@ export default function Hero() {
                 </svg>
             )}
 
+            {/* Mask Definitions (Moved Global for Mobile+Desktop) */}
+            {hasMounted && (
+                <svg className="absolute w-full h-full pointer-events-none top-0 left-0 z-0">
+                    <defs>
+                        {/* Inverse Mask: HIDES helmet where snake trail draws (white=show, black=hide) */}
+                        <mask id="snake-mask-inverse" maskUnits="userSpaceOnUse">
+                            <rect width="100%" height="100%" fill="white" />
+                            {Array.from({ length: MAX_POINTS }).map((_, index) => (
+                                <circle
+                                    key={index}
+                                    ref={(el) => { maskSnakeRef.current[index] = el; }}
+                                    cx="-100"
+                                    cy="-100"
+                                    r="0"
+                                    fill="black"
+                                    style={{ display: 'none' }}
+                                />
+                            ))}
+                        </mask>
+                    </defs>
+                </svg>
+            )}
+
             {/* MOBILE Images Container */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -441,28 +466,28 @@ export default function Hero() {
                         src="/images/me-fr.png"
                         alt="Hero Face"
                         style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain object-top translate-y-[15vh] scale-[1.6] origin-top"
+                        className="w-full h-full object-contain object-top translate-x-[6%] translate-y-[15vh] scale-[1.6] origin-top"
                     />
                 </div>
 
                 <div
                     className="absolute inset-0 z-10 pointer-events-none"
                     style={{
-                        mask: hasMounted ? "url(#snake-mask)" : "none",
-                        WebkitMask: hasMounted ? "url(#snake-mask)" : "none"
+                        mask: hasMounted ? "url(#snake-mask-inverse)" : "none",
+                        WebkitMask: hasMounted ? "url(#snake-mask-inverse)" : "none"
                     }}
                 >
                     <img
                         loading="eager"
                         src="/images/hero-final-fr.png"
                         alt="Hero Helmet"
-                        style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain object-top translate-y-[15vh] scale-[1.6] origin-top"
+                        style={{ filter: 'contrast(1.05) saturate(1.05)' }}
+                        className="w-full h-full object-contain object-top translate-x-[6.9%] translate-y-[12.3vh] scale-[1.7] origin-top"
                     />
                 </div>
 
                 {/* Mobile Lock Button (Overlaid on Image) - Moved lower for better thumb access */}
-                <div className="absolute top-[60%] right-[10%] z-50 pointer-events-auto opacity-90">
+                <div className="absolute top-[80%] right-[10%] z-50 pointer-events-auto opacity-90">
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
@@ -480,14 +505,11 @@ export default function Hero() {
                             <Lock className="w-5 h-5 opacity-60" />
                         )}
                     </button>
-                    {/* Label */}
-                    {!isLocked && (
-                        <div className="absolute top-full mt-2 right-0 bg-black/80 text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap opacity-100 transition-opacity">
-                            TAP TO LOCK
-                        </div>
-                    )}
                 </div>
             </motion.div>
+
+            {/* Mobile Text Backdrop Blur Overlay - Reverted to Previous */}
+            <div className="md:hidden absolute top-0 left-0 right-0 h-[35vh] bg-gradient-to-b from-white/95 via-white/80 to-transparent backdrop-blur-[3px] z-15 pointer-events-none" />
 
             {/* DESKTOP Images Container */}
             <motion.div
@@ -524,28 +546,6 @@ export default function Hero() {
                     />
                 </div>
 
-                {/* Mask Definitions */}
-                {hasMounted && (
-                    <svg className="absolute w-full h-full pointer-events-none top-0 left-0">
-                        <defs>
-                            {/* Inverse Mask: HIDES helmet where snake trail draws (white=show, black=hide) */}
-                            <mask id="snake-mask-inverse" maskUnits="userSpaceOnUse">
-                                <rect width="100%" height="100%" fill="white" />
-                                {Array.from({ length: MAX_POINTS }).map((_, index) => (
-                                    <circle
-                                        key={index}
-                                        ref={(el) => { maskSnakeRef.current[index] = el; }}
-                                        cx="-100"
-                                        cy="-100"
-                                        r="0"
-                                        fill="black"
-                                        style={{ display: 'none' }}
-                                    />
-                                ))}
-                            </mask>
-                        </defs>
-                    </svg>
-                )}
 
                 {/* Smoke Overlay */}
                 <div

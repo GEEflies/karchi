@@ -571,13 +571,16 @@ export default function Hero() {
                             className="text-[2rem] leading-[1.1] md:text-[clamp(2.5rem,7vw,6rem)] font-black uppercase tracking-tighter md:leading-[1.15] mb-3 md:mb-[4vh]"
                         >
                             {/* Mobile Title Layout */}
-                            <span className="md:hidden block mb-1">TVORÍM STRÁNKY,</span>
+                            <span className="md:hidden flex flex-wrap justify-center gap-[0.4em] mb-1">
+                                <span>TVORÍM</span>
+                                <span>STRÁNKY,</span>
+                            </span>
 
                             {/* Desktop Title Layout */}
                             <span className="hidden md:inline">TVORÍM<br />STRÁNKY,<br /></span>
 
                             <span className="whitespace-nowrap flex md:inline items-baseline justify-center gap-[0.35em] lowercase md:uppercase font-normal md:font-black">KTORÉ
-                                <span className="inline-grid grid-cols-1 grid-rows-1 h-[1.3em] md:h-[1.4em] align-top overflow-hidden md:ml-[0.4em]">
+                                <span className="inline-grid grid-cols-1 grid-rows-1 h-[1.3em] md:h-[1.4em] align-top overflow-hidden pl-[2px] md:pl-0 md:ml-[0.4em]">
                                     <AnimatePresence mode="popLayout" initial={false}>
                                         <motion.span
                                             key={rotatingIndex}

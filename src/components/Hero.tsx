@@ -45,6 +45,9 @@ export default function Hero() {
     // DOM Refs to bypass React Render Cycle
     const backgroundSnakeRef = useRef<(SVGCircleElement | null)[]>([]);
     const maskSnakeRef = useRef<(SVGCircleElement | null)[]>([]);
+    // Mobile-specific mask refs (uses viewBox coordinates 0-100)
+    const mobileMaskRef = useRef<(SVGCircleElement | null)[]>([]);
+    const mobileSvgRef = useRef<SVGSVGElement | null>(null);
 
     const lastPosRef = useRef({ x: 0, y: 0 });
     const isFirstMove = useRef(true);
@@ -336,7 +339,7 @@ export default function Hero() {
                         bgCircle.style.opacity = "0.4"; // Visible
                     }
 
-                    // Update Mask (Face Reveal)
+                    // Update Mask (Face Reveal) - Desktop
                     const maskCircle = maskSnakeRef.current[i];
                     if (maskCircle) {
                         maskCircle.setAttribute("cx", cx);
@@ -345,10 +348,29 @@ export default function Hero() {
                         maskCircle.style.display = "block";
                     }
 
+                    // Update Mobile Mask (uses viewBox 0-100 coordinates)
+                    const mobileCircle = mobileMaskRef.current[i];
+                    if (mobileCircle && mobileSvgRef.current) {
+                        const svgRect = mobileSvgRef.current.getBoundingClientRect();
+                        // Only update if SVG has valid dimensions (visible on mobile)
+                        if (svgRect.width > 0 && svgRect.height > 0) {
+                            // point.x and point.y are already relative to the section element (set in handleTouchMove)
+                            // Since the SVG fills the section, we just convert directly to viewBox coords (0-100)
+                            const vbX = (point.x / svgRect.width) * 100;
+                            const vbY = (point.y / svgRect.height) * 100;
+                            const vbR = (radius / svgRect.width) * 100;
+                            mobileCircle.setAttribute("cx", vbX.toFixed(1));
+                            mobileCircle.setAttribute("cy", vbY.toFixed(1));
+                            mobileCircle.setAttribute("r", vbR.toFixed(1));
+                            mobileCircle.style.display = "block";
+                        }
+                    }
+
                 } else {
                     // Hide unused points
                     if (backgroundSnakeRef.current[i]) backgroundSnakeRef.current[i]!.style.opacity = "0";
                     if (maskSnakeRef.current[i]) maskSnakeRef.current[i]!.style.display = "none";
+                    if (mobileMaskRef.current[i]) mobileMaskRef.current[i]!.style.display = "none";
                 }
             }
 
@@ -416,94 +438,58 @@ export default function Hero() {
                 </svg>
             )}
 
-            {/* MOBILE Images Container */}
+            {/* MOBILE Images Container - Using SVG for Safari mask compatibility */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
                 className="md:hidden absolute inset-x-0 top-0 bottom-0 z-0"
             >
-                {/* 1. Base Image: Helmet (Visible by default - Static Background) 
-                    Switched layers based on user request "reveal the picture behind it" logic like PC
-                    Actually PC logic: Reveal reveals what's UNDER? 
-                    Wait, `mask: url(#snake-mask)` makes element visible ONLY where mask is.
-                    So if `z-10` has mask, it appears ON TOP of `z-0`.
-                    If we want to "reveal the picture behind", we should mask the TOP layer to HIDE it?
-                    Or mask the TOP layer to SHOW it (graffiti style)?
-                    Lando logic: You draw the helmet ON TOP of the face.
-                    So Face is Base (z-0). Helmet is Top (z-10). Mask reveals Helmet.
-                    This matches current code. 
-                    
-                    User says: "make sure that when I actually do the mouse trail on it, it will actually work as on PC. So, it will reveal the picture behind it."
-                    If PC reveals picture behind, it means we are erasing the top layer?
-                    Let's check PC implementation again. 
-                    
-                    In read_file line 400-440:
-                    z-0 is Face. z-10 is Helmet. 
-                    z-10 has `mask: url(#snake-mask)`.
-                    Snake mask starts with `rect fill="black"` (opaque/show? No, mask logic: white=show, black=hide).
-                    Wait, SVG Mask: 
-                    If mask has `rect fill="black"`, it hides everything.
-                    Then circles `fill="white"` reveal content.
-                    So currrently: Helmet (z-10) is HIDDEN. Drawing circles SHOWS Helmet.
-                    This looks like "drawing a helmet on a face".
-                    
-                    If user wants to "reveal the picture behind", maybe they interpret the top layer as "Fog" and we wipe it away? 
-                    But Lando site is "Draw a helmet".
-                    
-                    Let's assume "Reveal the picture behind it" means "Show the second image".
-                    
-                    Changes requested:
-                    1. "move it below. As you can see, free REM below." -> translateY + 3rem? or just more VH.
-                       Current: `translate-y-[5vh]`. Let's create proper spacing.
-                    2. "Make the upper image 12 units to the right." 
-                       "Upper image" usually means the one on top layer (Helmet)? Or top visually?
-                       If they are aligned, they should move together. 
-                       Maybe user implies `translate-x-[12.5%]` needs to be adjusted or enabled on mobile.
-                       `translate-x-0` is currently on mobile.
-                       "12 units" - maybe 12 rem? or 12px? or tailwind `translate-x-12` (3rem)?
-                       Let's try `translate-x-12`.
-                    3. "work as on PC" -> Verify the masking logic is sound.
-                       I suspect the "Inverse Mask" removal might have broken the "Hide underlying face where helmet is" logic?
-                       If I draw a helmet on top of a face, and the face stays visible underneath, it blends.
-                       If the images are similar (Face vs Face+Helmet), it's fine.
-                       The previous code had "Inverse Mask" which is unnecessary if images are perfectly aligned and top one is opaque.
-                       
-                    Let's stick to the layer order: Face (Bottom), Helmet (Top, Masked).
-                    
-                    Positioning update:
-                    Move DOWN (translateY). 
-                    Move RIGHT (translateX).
-                */}
-
-                {/* Mobile: Face at bottom */}
-                <div className="absolute inset-0 z-0 pointer-events-none">
-                    <img
-                        loading="eager"
-                        src="/images/me-fr.png"
-                        alt="Hero Face"
-                        style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain object-top translate-y-[33vh] scale-[1.6] origin-top"
-                    />
-                </div>
-
-                {/* Mobile: Top = Helmet (INVERSE mask) - Visible by default, HIDDEN where you draw */}
-                <div
-                    className="absolute inset-0 z-10 pointer-events-none"
-                    style={{
-                        mask: hasMounted ? "url(#snake-mask-inverse)" : "none",
-                        WebkitMask: hasMounted ? "url(#snake-mask-inverse)" : "none"
-                    }}
+                {/* Mobile SVG Container with both images and mask applied within SVG context */}
+                <svg
+                    ref={mobileSvgRef}
+                    className="absolute inset-0 w-full h-full pointer-events-none"
+                    viewBox="0 0 100 100"
+                    preserveAspectRatio="xMidYMin slice"
+                    style={{ filter: 'contrast(1.05) saturate(1.0)' }}
                 >
-                    <img
-                        loading="eager"
-                        fetchPriority="high"
-                        src="/images/hero-final-fr.png"
-                        alt="Hero Helmet"
-                        style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain object-top translate-y-[33vh] scale-[1.6] origin-top"
+                    {/* Mobile mask definition inside this SVG */}
+                    <defs>
+                        <mask id="mobile-mask-inverse" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+                            <rect x="0" y="0" width="100" height="100" fill="white" />
+                            {hasMounted && Array.from({ length: MAX_POINTS }).map((_, index) => (
+                                <circle
+                                    key={`mobile-mask-${index}`}
+                                    ref={(el) => { mobileMaskRef.current[index] = el; }}
+                                    cx="-100"
+                                    cy="-100"
+                                    r="0"
+                                    fill="black"
+                                    style={{ display: 'none' }}
+                                />
+                            ))}
+                        </mask>
+                    </defs>
+                    {/* Face image - always visible underneath */}
+                    <image
+                        href="/images/me-fr.png"
+                        x="-30%"
+                        y="33%"
+                        width="160%"
+                        height="160%"
+                        preserveAspectRatio="xMidYMin meet"
                     />
-                </div>
+                    {/* Helmet image - masked to hide where trail is drawn */}
+                    <image
+                        href="/images/hero-final-fr.png"
+                        x="-30%"
+                        y="33%"
+                        width="160%"
+                        height="160%"
+                        preserveAspectRatio="xMidYMin meet"
+                        mask={hasMounted ? "url(#mobile-mask-inverse)" : undefined}
+                    />
+                </svg>
 
                 {/* Mobile Lock Button (Overlaid on Image) - Moved lower for better thumb access */}
                 <div className="absolute top-[90%] right-[10%] z-50 pointer-events-auto opacity-100">

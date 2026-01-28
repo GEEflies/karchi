@@ -473,19 +473,19 @@ export default function Hero() {
                     {/* Face image - always visible underneath */}
                     <image
                         href="/images/me-fr.png"
-                        x="-10%"
-                        y="25%"
-                        width="120%"
-                        height="120%"
+                        x="5.5%"
+                        y="27%"
+                        width="88%"
+                        height="88%"
                         preserveAspectRatio="xMidYMin meet"
                     />
                     {/* Helmet image - masked to hide where trail is drawn */}
                     <image
                         href="/images/hero-final-fr.png"
-                        x="-10%"
-                        y="25%"
-                        width="120%"
-                        height="120%"
+                        x="5%"
+                        y="26%"
+                        width="90%"
+                        height="90%"
                         preserveAspectRatio="xMidYMin meet"
                         mask={hasMounted ? "url(#mobile-mask-inverse)" : undefined}
                     />
@@ -513,8 +513,14 @@ export default function Hero() {
                 </div>
             </motion.div>
 
-            {/* Mobile Text Backdrop Blur Overlay - Reverted to Previous */}
-            <div className="md:hidden absolute top-0 left-0 right-0 h-[35vh] bg-gradient-to-b from-white/95 via-white/80 to-transparent backdrop-blur-[3px] z-15 pointer-events-none" />
+            {/* Mobile Text Backdrop Blur Overlay - Smooth transition via mask */}
+            <div
+                className="md:hidden absolute top-0 left-0 right-0 h-[35vh] bg-white/95 backdrop-blur-[3px] z-15 pointer-events-none"
+                style={{
+                    maskImage: 'linear-gradient(to bottom, black 0%, black 50%, transparent 100%)',
+                    WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 50%, transparent 100%)'
+                }}
+            />
 
             {/* DESKTOP Images Container */}
             <motion.div

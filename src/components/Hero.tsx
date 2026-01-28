@@ -473,8 +473,8 @@ export default function Hero() {
                     {/* Face image - always visible underneath */}
                     <image
                         href="/images/me-fr.png"
-                        x="5.5%"
-                        y="27%"
+                        x="6%"
+                        y="22%"
                         width="88%"
                         height="88%"
                         preserveAspectRatio="xMidYMin meet"
@@ -482,8 +482,8 @@ export default function Hero() {
                     {/* Helmet image - masked to hide where trail is drawn */}
                     <image
                         href="/images/hero-final-fr.png"
-                        x="5%"
-                        y="26%"
+                        x="5.5%"
+                        y="21%"
                         width="90%"
                         height="90%"
                         preserveAspectRatio="xMidYMin meet"

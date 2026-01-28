@@ -466,7 +466,7 @@ export default function Hero() {
                         src="/images/me-fr.png"
                         alt="Hero Face"
                         style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain object-top translate-x-[6%] translate-y-[15vh] scale-[1.6] origin-top"
+                        className="w-full h-full object-contain object-top translate-x-[0%] translate-y-[33vh] scale-[1.6] origin-top"
                     />
                 </div>
 
@@ -482,12 +482,12 @@ export default function Hero() {
                         src="/images/hero-final-fr.png"
                         alt="Hero Helmet"
                         style={{ filter: 'contrast(1.05) saturate(1.05)' }}
-                        className="w-full h-full object-contain object-top translate-x-[6.9%] translate-y-[12.3vh] scale-[1.7] origin-top"
+                        className="w-full h-full object-contain object-top translate-x-[0.9%] translate-y-[30.3vh] scale-[1.7] origin-top"
                     />
                 </div>
 
                 {/* Mobile Lock Button (Overlaid on Image) - Moved lower for better thumb access */}
-                <div className="absolute top-[80%] right-[10%] z-50 pointer-events-auto opacity-90">
+                <div className="absolute top-[90%] right-[10%] z-50 pointer-events-auto opacity-100">
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
@@ -585,7 +585,7 @@ export default function Hero() {
                                             animate={{ y: 0, opacity: 1 }}
                                             exit={{ y: "-100%", opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }}
                                             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                                            className="row-start-1 col-start-1 block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 whitespace-nowrap"
+                                            className="row-start-1 col-start-1 block whitespace-nowrap font-serif italic font-normal lowercase text-accent-blue md:not-italic md:font-black md:uppercase md:text-transparent md:bg-clip-text md:bg-gradient-to-r md:from-blue-600 md:to-cyan-500 md:font-sans"
                                         >
                                             {rotatingPhrases[rotatingIndex]}
                                         </motion.span>

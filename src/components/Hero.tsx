@@ -393,7 +393,60 @@ export default function Hero() {
                 transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
                 className="absolute inset-x-0 top-0 bottom-0 md:bottom-12 md:pt-12 z-0"
             >
-                {/* 1. Base Image: Face (Visible by default - Static Background) */}
+                {/* 1. Base Image: Helmet (Visible by default - Static Background) 
+                    Switched layers based on user request "reveal the picture behind it" logic like PC
+                    Actually PC logic: Reveal reveals what's UNDER? 
+                    Wait, `mask: url(#snake-mask)` makes element visible ONLY where mask is.
+                    So if `z-10` has mask, it appears ON TOP of `z-0`.
+                    If we want to "reveal the picture behind", we should mask the TOP layer to HIDE it?
+                    Or mask the TOP layer to SHOW it (graffiti style)?
+                    Lando logic: You draw the helmet ON TOP of the face.
+                    So Face is Base (z-0). Helmet is Top (z-10). Mask reveals Helmet.
+                    This matches current code. 
+                    
+                    User says: "make sure that when I actually do the mouse trail on it, it will actually work as on PC. So, it will reveal the picture behind it."
+                    If PC reveals picture behind, it means we are erasing the top layer?
+                    Let's check PC implementation again. 
+                    
+                    In read_file line 400-440:
+                    z-0 is Face. z-10 is Helmet. 
+                    z-10 has `mask: url(#snake-mask)`.
+                    Snake mask starts with `rect fill="black"` (opaque/show? No, mask logic: white=show, black=hide).
+                    Wait, SVG Mask: 
+                    If mask has `rect fill="black"`, it hides everything.
+                    Then circles `fill="white"` reveal content.
+                    So currrently: Helmet (z-10) is HIDDEN. Drawing circles SHOWS Helmet.
+                    This looks like "drawing a helmet on a face".
+                    
+                    If user wants to "reveal the picture behind", maybe they interpret the top layer as "Fog" and we wipe it away? 
+                    But Lando site is "Draw a helmet".
+                    
+                    Let's assume "Reveal the picture behind it" means "Show the second image".
+                    
+                    Changes requested:
+                    1. "move it below. As you can see, free REM below." -> translateY + 3rem? or just more VH.
+                       Current: `translate-y-[5vh]`. Let's create proper spacing.
+                    2. "Make the upper image 12 units to the right." 
+                       "Upper image" usually means the one on top layer (Helmet)? Or top visually?
+                       If they are aligned, they should move together. 
+                       Maybe user implies `translate-x-[12.5%]` needs to be adjusted or enabled on mobile.
+                       `translate-x-0` is currently on mobile.
+                       "12 units" - maybe 12 rem? or 12px? or tailwind `translate-x-12` (3rem)?
+                       Let's try `translate-x-12`.
+                    3. "work as on PC" -> Verify the masking logic is sound.
+                       I suspect the "Inverse Mask" removal might have broken the "Hide underlying face where helmet is" logic?
+                       If I draw a helmet on top of a face, and the face stays visible underneath, it blends.
+                       If the images are similar (Face vs Face+Helmet), it's fine.
+                       The previous code had "Inverse Mask" which is unnecessary if images are perfectly aligned and top one is opaque.
+                       
+                    Let's stick to the layer order: Face (Bottom), Helmet (Top, Masked).
+                    
+                    Positioning update:
+                    Move DOWN (translateY). 
+                    Move RIGHT (translateX).
+                */}
+                
+                {/* 1. Base Image: Face */}
                 <div 
                     className="absolute inset-0 z-0 pointer-events-none"
                 >
@@ -403,7 +456,7 @@ export default function Hero() {
                         src="/images/me-fr.png"
                         alt="Hero Face"
                         style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain md:object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[5vh] md:translate-y-[15vh] scale-[1.6] md:scale-[0.89] origin-top md:origin-top"
+                        className="w-full h-full object-contain md:object-contain object-top translate-x-12 md:translate-x-[12.5%] translate-y-[12vh] md:translate-y-[15vh] scale-[1.6] md:scale-[0.89] origin-top md:origin-top"
                     />
                 </div>
 
@@ -420,7 +473,7 @@ export default function Hero() {
                         src="/images/hero-final-fr.png"
                         alt="Hero Helmet"
                         style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain md:object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[5vh] md:translate-y-[15vh] scale-[1.6] md:scale-[0.89] origin-top md:origin-top"
+                        className="w-full h-full object-contain md:object-contain object-top translate-x-12 md:translate-x-[12.5%] translate-y-[12vh] md:translate-y-[15vh] scale-[1.6] md:scale-[0.89] origin-top md:origin-top"
                     />
                 </div>
 

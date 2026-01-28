@@ -181,8 +181,8 @@ export default function Hero() {
         hasGlobalHeroSequencePlayed = true;
 
         const runSequence = async () => {
-            // Wait for entrance animations (1.5s)
-            await new Promise(r => setTimeout(r, 1500));
+            // Wait for entrance animations - shorter on mobile to start ninja cuts earlier
+            await new Promise(r => setTimeout(r, isMobile ? 800 : 1500));
 
             isAutoSequence.current = true;
             isSequenceFinished.current = false; // Ensure blocked
@@ -237,9 +237,9 @@ export default function Hero() {
                 // We set it to the start position so interpolation starts fresh
                 lastPosRef.current = { x: fromX, y };
 
-                // Animate - slower on mobile for more enjoyable viewing experience
+                // Animate - slower on mobile for more enjoyable viewing experience with smooth trails
                 await animate(mouseX, toX, {
-                    duration: isMobile ? 0.5 : 0.4,
+                    duration: isMobile ? 0.8 : 0.4,
                     ease: "easeInOut"
                 });
             };
@@ -323,8 +323,8 @@ export default function Hero() {
                 return;
             }
 
-            // Interpolate
-            const spacing = 5;
+            // Interpolate - tighter spacing on mobile during auto sequence for smoother lines
+            const spacing = (isMobile && isAutoSequence.current) ? 3 : 5;
             if (dist > spacing) {
                 const numSteps = Math.ceil(dist / spacing);
                 const stepX = dx / numSteps;
@@ -338,13 +338,14 @@ export default function Hero() {
                 lastPosRef.current = { x: currentX, y: currentY };
             }
 
-            // 2. Decay - Faster decay for smooth "catch up"
+            // 2. Decay - Slower decay during auto sequence for longer trails
             if (trailRef.current.length > 0) {
-                // Decay speed
-                trailRef.current.splice(0, 3);
+                // Slower decay during auto sequence to show full snake lines
+                const decaySpeed = isAutoSequence.current ? 1 : 3;
+                trailRef.current.splice(0, decaySpeed);
 
-                // Cap max length
-                const maxLength = isAutoSequence.current ? 120 : 50;
+                // Cap max length - much longer during auto sequence for thick lines
+                const maxLength = isAutoSequence.current ? (isMobile ? 200 : 120) : 50;
                 if (trailRef.current.length > maxLength) {
                     trailRef.current.splice(0, trailRef.current.length - maxLength);
                 }
@@ -362,9 +363,9 @@ export default function Hero() {
                 if (i < len) {
                     const point = currentTrail[i];
                     const percentage = i / len;
-                    // Thinner trail on mobile
-                    const baseRadius = isMobile ? 3 : 5;
-                    const maxRadius = isMobile ? 25 : 50;
+                    // Thicker trail on mobile, even thicker during auto sequence
+                    const baseRadius = isMobile ? (isAutoSequence.current ? 4 : 3) : 5;
+                    const maxRadius = isMobile ? (isAutoSequence.current ? 35 : 25) : 50;
                     const radius = baseRadius + (percentage * maxRadius);
 
                     // Optimization: Batch attribute updates? standard setAttribute is fine here.

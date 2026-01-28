@@ -39,13 +39,12 @@ export default function Hero() {
     const [isLocked, setIsLocked] = useState(false);
 
     // Snake Trail Logic - Using Refs for DOM manipulation (High Perf)
-    const MAX_POINTS = 150; 
+    const MAX_POINTS = 150;
     const trailRef = useRef<{ x: number, y: number, id: number }[]>([]);
-    
+
     // DOM Refs to bypass React Render Cycle
     const backgroundSnakeRef = useRef<(SVGCircleElement | null)[]>([]);
     const maskSnakeRef = useRef<(SVGCircleElement | null)[]>([]);
-    const inverseMaskSnakeRef = useRef<(SVGCircleElement | null)[]>([]);
 
     const lastPosRef = useRef({ x: 0, y: 0 });
     const isFirstMove = useRef(true);
@@ -54,7 +53,7 @@ export default function Hero() {
 
     // Prevent hydration mismatch
     const [hasMounted, setHasMounted] = useState(false);
-    useEffect(() => { 
+    useEffect(() => {
         setHasMounted(true);
         const checkMobile = () => setIsMobile(window.innerWidth < 640 || isTouchDevice());
         checkMobile();
@@ -102,7 +101,7 @@ export default function Hero() {
         mouseX.set(clientX - left);
         mouseY.set(clientY - top);
     }
-    
+
     function handleTouchMove(e: React.TouchEvent) {
         // Always allow on mobile touch to drive the trail
         const touch = e.touches[0];
@@ -116,10 +115,10 @@ export default function Hero() {
         const { left, top } = e.currentTarget.getBoundingClientRect();
         const x = touch.clientX - left;
         const y = touch.clientY - top;
-        
+
         mouseX.set(x);
         mouseY.set(y);
-        
+
         // Reset last position to current to avoid "jumping" lines from 0,0
         lastPosRef.current = { x, y };
     }
@@ -298,12 +297,12 @@ export default function Hero() {
             const len = currentTrail.length;
 
             for (let i = 0; i < MAX_POINTS; i++) {
-                 // Determine if this index is active
-                 if (i < len) {
+                // Determine if this index is active
+                if (i < len) {
                     const point = currentTrail[i];
                     const percentage = i / len;
                     const radius = 5 + (percentage * 50);
-                    
+
                     // Optimization: Batch attribute updates? standard setAttribute is fine here.
                     const r = radius.toFixed(1);
                     const cx = point.x.toFixed(1);
@@ -327,22 +326,11 @@ export default function Hero() {
                         maskCircle.style.display = "block";
                     }
 
-                    // Update Inverse Mask (Helmet Hide) - Only needed on mobile? 
-                    // Keeping it always updated ensures smooth resize transition
-                    const invMaskCircle = inverseMaskSnakeRef.current[i];
-                    if (invMaskCircle) {
-                        invMaskCircle.setAttribute("cx", cx);
-                        invMaskCircle.setAttribute("cy", cy);
-                        invMaskCircle.setAttribute("r", r);
-                        invMaskCircle.style.display = "block";
-                    }
-
-                 } else {
-                     // Hide unused points
-                     if (backgroundSnakeRef.current[i]) backgroundSnakeRef.current[i]!.style.opacity = "0";
-                     if (maskSnakeRef.current[i]) maskSnakeRef.current[i]!.style.display = "none";
-                     if (inverseMaskSnakeRef.current[i]) inverseMaskSnakeRef.current[i]!.style.display = "none";
-                 }
+                } else {
+                    // Hide unused points
+                    if (backgroundSnakeRef.current[i]) backgroundSnakeRef.current[i]!.style.opacity = "0";
+                    if (maskSnakeRef.current[i]) maskSnakeRef.current[i]!.style.display = "none";
+                }
             }
 
             animationId = requestAnimationFrame(updateTrail);
@@ -386,12 +374,12 @@ export default function Hero() {
                 </svg>
             )}
 
-            {/* Images Container - Optimized spacing for mobile */}
+            {/* MOBILE Images Container */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
-                className="absolute inset-x-0 top-0 bottom-0 md:bottom-12 md:pt-12 z-0"
+                className="md:hidden absolute inset-x-0 top-0 bottom-0 z-0"
             >
                 {/* 1. Base Image: Helmet (Visible by default - Static Background) 
                     Switched layers based on user request "reveal the picture behind it" logic like PC
@@ -445,22 +433,18 @@ export default function Hero() {
                     Move DOWN (translateY). 
                     Move RIGHT (translateX).
                 */}
-                
-                {/* 1. Base Image: Face */}
-                <div 
-                    className="absolute inset-0 z-0 pointer-events-none"
-                >
+
+                {/* Mobile: Base = Face, Reveal = Helmet */}
+                <div className="absolute inset-0 z-0 pointer-events-none">
                     <img
-                        ref={imageRef}
                         loading="eager"
                         src="/images/me-fr.png"
                         alt="Hero Face"
                         style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain md:object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[15vh] md:translate-y-[15vh] scale-[1.6] md:scale-[0.89] origin-top md:origin-top"
+                        className="w-full h-full object-contain object-top translate-y-[15vh] scale-[1.6] origin-top"
                     />
                 </div>
 
-                {/* 2. Reveal Image: Helmet (Hidden by default - Standard Mask) */}
                 <div
                     className="absolute inset-0 z-10 pointer-events-none"
                     style={{
@@ -473,22 +457,21 @@ export default function Hero() {
                         src="/images/hero-final-fr.png"
                         alt="Hero Helmet"
                         style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain md:object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[15vh] md:translate-y-[15vh] scale-[1.6] md:scale-[0.89] origin-top md:origin-top"
+                        className="w-full h-full object-contain object-top translate-y-[15vh] scale-[1.6] origin-top"
                     />
                 </div>
 
                 {/* Mobile Lock Button (Overlaid on Image) - Moved lower for better thumb access */}
-                <div className="md:hidden absolute top-[60%] right-[10%] z-50 pointer-events-auto opacity-90">
+                <div className="absolute top-[60%] right-[10%] z-50 pointer-events-auto opacity-90">
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
                             setIsLocked(!isLocked);
                         }}
-                        className={`flex items-center justify-center w-12 h-12 rounded-xl border transition-all duration-300 ${
-                            isLocked 
-                            ? 'bg-black text-white border-black ring-2 ring-offset-2 ring-black/20' 
+                        className={`flex items-center justify-center w-12 h-12 rounded-xl border transition-all duration-300 ${isLocked
+                            ? 'bg-black text-white border-black ring-2 ring-offset-2 ring-black/20'
                             : 'bg-white/40 backdrop-blur-md border-black/10'
-                        } active:scale-95 shadow-sm`}
+                            } active:scale-95 shadow-sm`}
                         aria-label={isLocked ? "Unlock" : "Lock"}
                     >
                         {isLocked ? (
@@ -499,40 +482,59 @@ export default function Hero() {
                     </button>
                     {/* Label */}
                     {!isLocked && (
-                         <div className="absolute top-full mt-2 right-0 bg-black/80 text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap opacity-100 transition-opacity">
-                             TAP TO LOCK
-                         </div>
+                        <div className="absolute top-full mt-2 right-0 bg-black/80 text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap opacity-100 transition-opacity">
+                            TAP TO LOCK
+                        </div>
                     )}
                 </div>
+            </motion.div>
 
+            {/* DESKTOP Images Container */}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
+                className="hidden md:block absolute inset-0 z-0"
+            >
+                {/* Desktop: Base = Face (NO mask, WITH filter) - Always underneath */}
+                <div className="absolute inset-0 z-0 pointer-events-none">
+                    <img
+                        loading="eager"
+                        src="/images/me-fr.png"
+                        alt="Hero Face"
+                        style={{ filter: 'contrast(1.15) saturate(1.1)' }}
+                        className="w-full h-full object-contain object-top translate-x-[13%] translate-y-[12vh] scale-[0.93] origin-top"
+                    />
+                </div>
 
-                {/* Mask Definition */}
+                {/* Desktop: Top = Helmet (INVERSE mask) - Visible by default, HIDDEN where you draw */}
+                <div
+                    className="absolute inset-0 z-10 pointer-events-none"
+                    style={{
+                        mask: hasMounted ? "url(#snake-mask-inverse)" : "none",
+                        WebkitMask: hasMounted ? "url(#snake-mask-inverse)" : "none"
+                    }}
+                >
+                    <img
+                        ref={imageRef}
+                        loading="eager"
+                        src="/images/hero-final-fr.png"
+                        alt="Hero Helmet"
+                        className="w-full h-full object-contain object-top translate-x-[13.5%] translate-y-[11.2vh] scale-[0.95] origin-top"
+                    />
+                </div>
+
+                {/* Mask Definitions */}
                 {hasMounted && (
                     <svg className="absolute w-full h-full pointer-events-none top-0 left-0">
                         <defs>
-                            {/* Standard Mask: Reveals top layer */}
-                            <mask id="snake-mask" maskUnits="userSpaceOnUse">
-                                <rect width="100%" height="100%" fill="black" />
-                                {Array.from({ length: MAX_POINTS }).map((_, index) => (
-                                    <circle
-                                        key={index}
-                                        ref={(el) => { maskSnakeRef.current[index] = el; }}
-                                        cx="-100"
-                                        cy="-100"
-                                        r="0"
-                                        fill="white"
-                                        style={{ display: 'none' }}
-                                    />
-                                ))}
-                            </mask>
-                            
-                            {/* Inverse Mask: Restored for Desktop Logic */}
+                            {/* Inverse Mask: HIDES helmet where snake trail draws (white=show, black=hide) */}
                             <mask id="snake-mask-inverse" maskUnits="userSpaceOnUse">
                                 <rect width="100%" height="100%" fill="white" />
                                 {Array.from({ length: MAX_POINTS }).map((_, index) => (
                                     <circle
                                         key={index}
-                                        ref={(el) => { inverseMaskSnakeRef.current[index] = el; }}
+                                        ref={(el) => { maskSnakeRef.current[index] = el; }}
                                         cx="-100"
                                         cy="-100"
                                         r="0"
@@ -570,28 +572,28 @@ export default function Hero() {
                         >
                             {/* Mobile Title Layout */}
                             <span className="md:hidden block mb-1">TVORÍM STRÁNKY,</span>
-                            
+
                             {/* Desktop Title Layout */}
                             <span className="hidden md:inline">TVORÍM<br />STRÁNKY,<br /></span>
-                            
+
                             <span className="whitespace-nowrap block md:inline">KTORÉ{' '}
-                            <span className="inline-grid grid-cols-1 grid-rows-1 h-[1.3em] align-top overflow-hidden">
-                                <AnimatePresence mode="popLayout" initial={false}>
-                                    <motion.span
-                                        key={rotatingIndex}
-                                        initial={{ y: "100%", opacity: 0 }}
-                                        animate={{ y: 0, opacity: 1 }}
-                                        exit={{ y: "-100%", opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }}
-                                        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                                        className="row-start-1 col-start-1 block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 whitespace-nowrap"
-                                    >
-                                        {rotatingPhrases[rotatingIndex]}
-                                    </motion.span>
-                                </AnimatePresence>
-                                <span className="row-start-1 col-start-1 opacity-0 pointer-events-none invisible whitespace-nowrap" aria-hidden="true">
-                                    {rotatingPhrases.sort((a, b) => b.length - a.length)[0]}
+                                <span className="inline-grid grid-cols-1 grid-rows-1 h-[1.3em] align-top overflow-hidden">
+                                    <AnimatePresence mode="popLayout" initial={false}>
+                                        <motion.span
+                                            key={rotatingIndex}
+                                            initial={{ y: "100%", opacity: 0 }}
+                                            animate={{ y: 0, opacity: 1 }}
+                                            exit={{ y: "-100%", opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }}
+                                            transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                                            className="row-start-1 col-start-1 block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 whitespace-nowrap"
+                                        >
+                                            {rotatingPhrases[rotatingIndex]}
+                                        </motion.span>
+                                    </AnimatePresence>
+                                    <span className="row-start-1 col-start-1 opacity-0 pointer-events-none invisible whitespace-nowrap" aria-hidden="true">
+                                        {rotatingPhrases.sort((a, b) => b.length - a.length)[0]}
+                                    </span>
                                 </span>
-                            </span>
                             </span>
                         </motion.h1>
 
@@ -654,7 +656,7 @@ export default function Hero() {
                 <div className="flex items-end justify-end w-full">
                     {/* Lock Button (Bottom Right) & Scroll Indicator */}
                     <div className="flex flex-col items-end gap-4 pointer-events-auto w-full md:w-auto">
-                        
+
                         {/* Scroll Indicator */}
                         <motion.div
                             initial={{ opacity: 0 }}

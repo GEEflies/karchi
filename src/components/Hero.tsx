@@ -380,13 +380,9 @@ export default function Hero() {
                 transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
                 className="absolute inset-x-0 top-0 bottom-12 pt-12 z-0"
             >
-                {/* 1. Base Image: Face (Visible by default - Inverse Mask) */}
+                {/* 1. Base Image: Face (Visible by default - Static Background) */}
                 <div 
                     className="absolute inset-0 z-0 pointer-events-none"
-                    style={{
-                        mask: hasMounted ? "url(#snake-mask-inverse)" : "none",
-                        WebkitMask: hasMounted ? "url(#snake-mask-inverse)" : "none"
-                    }}
                 >
                     <img
                         ref={imageRef}
@@ -394,7 +390,7 @@ export default function Hero() {
                         src="/images/me-fr.png"
                         alt="Hero Face"
                         style={{ filter: 'contrast(1.15) saturate(1.1)' }}
-                        className="w-full h-full object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[calc(15vh+6rem)] md:translate-y-[15vh] scale-[0.89] origin-top"
+                        className="w-full h-full object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[10vh] md:translate-y-[15vh] scale-[1.3] md:scale-[0.89] origin-top"
                     />
                 </div>
 
@@ -410,12 +406,13 @@ export default function Hero() {
                         loading="eager"
                         src="/images/hero-final-fr.png"
                         alt="Hero Helmet"
-                        className="w-full h-full object-contain object-top translate-x-0 md:translate-x-[13%] translate-y-[calc(15vh+6rem)] md:translate-y-[15vh] scale-[0.90] origin-top"
+                        style={{ filter: 'contrast(1.15) saturate(1.1)' }}
+                        className="w-full h-full object-contain object-top translate-x-0 md:translate-x-[12.5%] translate-y-[10vh] md:translate-y-[15vh] scale-[1.3] md:scale-[0.89] origin-top"
                     />
                 </div>
 
-                {/* Mobile Lock Button (Overlaid on Image) */}
-                <div className="md:hidden absolute top-[52%] right-[15%] z-50 pointer-events-auto mix-blend-multiply opacity-90">
+                {/* Mobile Lock Button (Overlaid on Image) - Moved lower for better thumb access */}
+                <div className="md:hidden absolute top-[60%] right-[10%] z-50 pointer-events-auto mix-blend-multiply opacity-90">
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
@@ -434,6 +431,12 @@ export default function Hero() {
                             <Lock className="w-5 h-5 opacity-60" />
                         )}
                     </button>
+                    {/* Label */}
+                    {!isLocked && (
+                         <div className="absolute top-full mt-2 right-0 bg-black/80 text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap opacity-100 transition-opacity">
+                             TAP TO LOCK
+                         </div>
+                    )}
                 </div>
 
 
@@ -441,7 +444,7 @@ export default function Hero() {
                 {hasMounted && (
                     <svg className="absolute w-full h-full pointer-events-none top-0 left-0">
                         <defs>
-                            {/* Standard Mask: Reveals top layer (Face) */}
+                            {/* Standard Mask: Reveals top layer (Helmet) */}
                             <mask id="snake-mask" maskUnits="userSpaceOnUse">
                                 <rect width="100%" height="100%" fill="black" />
                                 {Array.from({ length: MAX_POINTS }).map((_, index) => (
@@ -457,21 +460,7 @@ export default function Hero() {
                                 ))}
                             </mask>
                             
-                            {/* Inverse Mask: Hides bottom layer (Helmet) */}
-                            <mask id="snake-mask-inverse" maskUnits="userSpaceOnUse">
-                                <rect width="100%" height="100%" fill="white" />
-                                {Array.from({ length: MAX_POINTS }).map((_, index) => (
-                                    <circle
-                                        key={index}
-                                        ref={(el) => { inverseMaskSnakeRef.current[index] = el; }}
-                                        cx="-100"
-                                        cy="-100"
-                                        r="0"
-                                        fill="black"
-                                        style={{ display: 'none' }}
-                                    />
-                                ))}
-                            </mask>
+                            {/* Inverse Mask Removed for Performance on Mobile */}
                         </defs>
                     </svg>
                 )}

@@ -109,14 +109,17 @@ export default function Services() {
                                         Vybrať Balík <ArrowUpRight size={16} className="md:w-[18px] md:h-[18px]" />
                                     </Link>
 
-                                    <button
-                                        className="w-full py-2 md:py-3 bg-black/20 backdrop-blur-md rounded-full font-bold text-[10px] md:text-sm tracking-wide hover:bg-black/40 active:scale-95 transition-all border border-white/10 flex items-center justify-center gap-2"
+                                    <motion.button
+                                        className="w-full py-2 md:py-3 bg-black/20 backdrop-blur-md rounded-full font-bold text-[10px] md:text-sm tracking-wide border border-white/10 flex items-center justify-center gap-2 overflow-hidden relative group/btn"
+                                        whileHover={{ scale: 1.02, backgroundColor: "rgba(0,0,0,0.3)" }}
+                                        whileTap={{ scale: 0.98 }}
                                         onClick={async () => {
                                             await createCheckoutSession(service.title);
                                         }}
                                     >
-                                        <span className="opacity-90">Ušetri 10% (zaplat vopred)</span>
-                                    </button>
+                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-150%] group-hover/btn:translate-x-[150%] transition-transform duration-700 ease-in-out" />
+                                        <span className="opacity-90 relative z-10">Ušetri 10% (zaplať vopred)</span>
+                                    </motion.button>
                                 </div>
                             </div>
 

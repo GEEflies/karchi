@@ -172,28 +172,26 @@ export default function Services() {
                                     </span>
                                     */}
                                     
-                                    {/* Apple Intelligence Style Glow */}
-                                    <motion.div 
-                                        style={{ maskImage, WebkitMaskImage: maskImage }}
-                                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[70%] opacity-0 group-hover/price:opacity-100 transition-opacity duration-500 pointer-events-none z-[5]"
-                                        animate={{ opacity: isInView ? 1 : 0 }}
-                                        transition={{ duration: 0.5 }}
-                                    >
-                                         <div className="absolute inset-0 bg-gradient-to-t from-indigo-500 via-purple-500 to-transparent blur-2xl opacity-40 mix-blend-screen" />
-                                         <div className="absolute inset-0 bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)] blur-3xl opacity-25 animate-[spin_4s_linear_infinite] mix-blend-screen" />
-                                    </motion.div>
+                                    {/* Apple Intelligence Style Glow - Desktop Only to prevent mobile crashes */}
+                                    <div className="hidden md:block">
+                                        <motion.div 
+                                            style={{ maskImage, WebkitMaskImage: maskImage }}
+                                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[70%] opacity-0 group-hover/price:opacity-100 transition-opacity duration-500 pointer-events-none z-[5]"
+                                            animate={{ opacity: isInView ? 1 : 0 }}
+                                            transition={{ duration: 0.5 }}
+                                        >
+                                             <div className="absolute inset-0 bg-gradient-to-t from-indigo-500 via-purple-500 to-transparent blur-2xl opacity-40 mix-blend-screen" />
+                                             <div className="absolute inset-0 bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)] blur-3xl opacity-25 animate-[spin_4s_linear_infinite] mix-blend-screen" />
+                                        </motion.div>
 
-                                    {/* Overlay Text to be lit up by the glow (blend mode trick) 
-                                        We duplicate the text on top of the glow, but restrict it to the mask as well 
-                                        Currently the glow is BEHIND the gray text.
-                                        To make the text "turn white" or glow itself inside the mask, we can add a white text layer that uses the same mask.
-                                    */}
-                                    <motion.span 
-                                        style={{ maskImage, WebkitMaskImage: maskImage }}
-                                        className="absolute inset-0 z-10 font-serif italic text-3xl lg:text-4xl text-white block whitespace-nowrap pointer-events-none select-none py-2 top-0"
-                                    >
-                                        individuálna cena
-                                    </motion.span>
+                                        {/* Overlay Text to be lit up by the glow (blend mode trick) */}
+                                        <motion.span 
+                                            style={{ maskImage, WebkitMaskImage: maskImage }}
+                                            className="absolute inset-0 z-10 font-serif italic text-3xl lg:text-4xl text-white block whitespace-nowrap pointer-events-none select-none py-2 top-0"
+                                        >
+                                            individuálna cena
+                                        </motion.span>
+                                    </div>
                                 </div>
                             </div>
                          

@@ -164,6 +164,10 @@ function MagneticButton({
         const liquid = liquidRef.current;
         if (!element) return;
 
+        // Verify if device has fine pointer (mouse) - disable for mobile to prevent crashes
+        const isTouch = window.matchMedia("(pointer: coarse)").matches;
+        if (isTouch) return;
+
         // Button Magnetic Animation
         let xTo: ((value: number) => void) | null = null;
         let yTo: ((value: number) => void) | null = null;
@@ -182,9 +186,17 @@ function MagneticButton({
             yLiquid = gsap.quickTo(liquid, "top", { duration: 0.8, ease: "power3.out" });
         }
 
+        let rect = element.getBoundingClientRect();
+
+        const updateRect = () => {
+             rect = element.getBoundingClientRect();
+             if (liquid) gsap.to(liquid, { scale: 2.5, duration: 0.6, ease: "power1.in" });
+        };
+
         const mouseMove = (e: MouseEvent) => {
             const { clientX, clientY } = e;
-            const { height, width, left, top } = element.getBoundingClientRect();
+            // Use cached rect
+            const { height, width, left, top } = rect;
             
             // Magnetic Move
             if (isMagnetic && xTo && yTo) {
@@ -203,10 +215,6 @@ function MagneticButton({
             }
         };
 
-        const mouseEnter = () => {
-             if (liquid) gsap.to(liquid, { scale: 2.5, duration: 0.6, ease: "power1.in" });
-        };
-
         const mouseLeave = () => {
             if (isMagnetic && xTo && yTo) {
                 xTo(0);
@@ -216,12 +224,12 @@ function MagneticButton({
         };
 
         element.addEventListener("mousemove", mouseMove);
-        element.addEventListener("mouseenter", mouseEnter);
+        element.addEventListener("mouseenter", updateRect); // Update rect on enter
         element.addEventListener("mouseleave", mouseLeave);
 
         return () => {
             element.removeEventListener("mousemove", mouseMove);
-            element.removeEventListener("mouseenter", mouseEnter);
+            element.removeEventListener("mouseenter", updateRect);
             element.removeEventListener("mouseleave", mouseLeave);
         };
     }, []);

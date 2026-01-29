@@ -181,8 +181,8 @@ export default function Hero() {
         hasGlobalHeroSequencePlayed = true;
 
         const runSequence = async () => {
-            // Wait for entrance animations - shorter on mobile to start ninja cuts earlier
-            await new Promise(r => setTimeout(r, isMobile ? 800 : 1500));
+            // Wait for entrance animations - quicker on mobile for dynamic feel
+            await new Promise(r => setTimeout(r, isMobile ? 600 : 1500));
 
             isAutoSequence.current = true;
             isSequenceFinished.current = false; // Ensure blocked
@@ -237,9 +237,9 @@ export default function Hero() {
                 // We set it to the start position so interpolation starts fresh
                 lastPosRef.current = { x: fromX, y };
 
-                // Animate - slower on mobile for more enjoyable viewing experience with smooth trails
+                // Animate - quicker on mobile for more dynamic feel
                 await animate(mouseX, toX, {
-                    duration: isMobile ? 0.8 : 0.4,
+                    duration: isMobile ? 0.5 : 0.4,
                     ease: "easeInOut"
                 });
             };
@@ -259,8 +259,8 @@ export default function Hero() {
                 // 2. Second cut (lower face)
                 await swipe(mobileEndX, mobileStartX, h * 0.64);
 
-                // Much longer pause to let the second trail complete smoothly before clearing
-                await new Promise(r => setTimeout(r, 1200));
+                // Pause to let trail complete while maintaining dynamic feel
+                await new Promise(r => setTimeout(r, 700));
             } else {
                 // Desktop positions
                 // 1. Left to Right (Top - Forehead)

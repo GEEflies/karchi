@@ -256,11 +256,15 @@ export default function Hero() {
                 // Only 2 smooth cuts across the face - more spaced out
                 // 1. First cut (upper face)
                 await swipe(mobileStartX, mobileEndX, h * 0.40);
+
+                // Small delay between cuts for smoother transition
+                await new Promise(r => setTimeout(r, 200));
+
                 // 2. Second cut (lower face)
                 await swipe(mobileEndX, mobileStartX, h * 0.64);
 
-                // Pause to let trail complete while maintaining dynamic feel
-                await new Promise(r => setTimeout(r, 700));
+                // Longer pause to ensure trail completes smoothly from right to left
+                await new Promise(r => setTimeout(r, 1500));
             } else {
                 // Desktop positions
                 // 1. Left to Right (Top - Forehead)

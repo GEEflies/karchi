@@ -469,36 +469,34 @@ export default function Hero() {
             {/* Holographic Wireframe Helmet Layer - Mobile Only */}
             {isMobile && hasMounted && (
                 <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
-                    {/* The wireframe helmet image with dark holographic effect */}
+                    {/* The wireframe helmet image with 'Construction Scan' reveal effect */}
                     <motion.img
                         src="/images/helmet_wireframe.png"
                         alt=""
                         className="absolute w-full h-full object-contain object-top"
                         style={{
                             top: '42.5%',
-                            opacity: 0.15,
-                            mixBlendMode: 'multiply', // Changed from 'screen' to properly darken
+                            mixBlendMode: 'multiply',
                             scale: 1.2,
-                            filter: 'invert(1) brightness(0.1) contrast(2)', // Dark grey/black tint
+                            filter: 'invert(1) brightness(0.1) contrast(2)',
+                        }}
+                        initial={{
+                            opacity: 0,
+                            clipPath: 'inset(0 0 100% 0)' // Starts fully clipped (invisible) from bottom
                         }}
                         animate={{
-                            opacity: [0.15, 0.25, 0.15], // Subtle pulsing
-                            rotateY: [0, 360], // Continuous Y-axis rotation for holographic effect
+                            opacity: 0.15,
+                            clipPath: 'inset(0 0 0% 0)' // Reveals downwards to full visibility
                         }}
                         transition={{
-                            opacity: {
-                                duration: 3,
-                                repeat: Infinity,
-                                ease: 'easeInOut',
-                            },
-                            rotateY: {
-                                duration: 20, // Slow rotation
-                                repeat: Infinity,
-                                ease: 'linear',
+                            opacity: { duration: 0.5, delay: 0.2 },
+                            clipPath: {
+                                duration: 1.5,
+                                ease: [0.22, 1, 0.36, 1], // Custom easing for "mechanical" feel
+                                delay: 0.2
                             }
                         }}
                     />
-
                 </div>
             )}
 

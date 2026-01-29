@@ -332,14 +332,14 @@ export default function Hero() {
                 lastPosRef.current = { x: currentX, y: currentY };
             }
 
-            // 2. Decay - Slower decay during auto sequence for longer trails
+            // 2. Decay - Much faster on mobile during auto sequence for tail to catch up quickly
             if (trailRef.current.length > 0) {
-                // Slower decay during auto sequence to show full snake lines
-                const decaySpeed = isAutoSequence.current ? 1 : 3;
+                // Much faster decay on mobile auto sequence for quick tail catch-up
+                const decaySpeed = isAutoSequence.current ? (isMobile ? 5 : 1) : 3;
                 trailRef.current.splice(0, decaySpeed);
 
-                // Cap max length - much longer during auto sequence for thick lines
-                const maxLength = isAutoSequence.current ? (isMobile ? 200 : 120) : 50;
+                // Shorter max length on mobile for tighter, faster trail
+                const maxLength = isAutoSequence.current ? (isMobile ? 80 : 120) : 50;
                 if (trailRef.current.length > maxLength) {
                     trailRef.current.splice(0, trailRef.current.length - maxLength);
                 }
@@ -357,10 +357,17 @@ export default function Hero() {
                 if (i < len) {
                     const point = currentTrail[i];
                     const percentage = i / len;
-                    // Thinner, sleeker trail on mobile during auto sequence
-                    const baseRadius = isMobile ? (isAutoSequence.current ? 2 : 3) : 5;
-                    const maxRadius = isMobile ? (isAutoSequence.current ? 20 : 25) : 50;
-                    const radius = baseRadius + (percentage * maxRadius);
+                    // Consistent width on mobile during auto sequence, tapering on desktop/normal
+                    let radius;
+                    if (isMobile && isAutoSequence.current) {
+                        // Fixed width for mobile auto sequence - no taper
+                        radius = 12;
+                    } else {
+                        // Tapering width for desktop and normal mobile interaction
+                        const baseRadius = isMobile ? 3 : 5;
+                        const maxRadius = isMobile ? 25 : 50;
+                        radius = baseRadius + (percentage * maxRadius);
+                    }
 
                     // Optimization: Batch attribute updates? standard setAttribute is fine here.
                     const r = radius.toFixed(1);

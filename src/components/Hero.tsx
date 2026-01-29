@@ -252,7 +252,7 @@ export default function Hero() {
                 const mobileEndX = w;
 
                 // Single fast cut across the lower face
-                await swipe(mobileEndX, mobileStartX, h * 0.64);
+                await swipe(mobileEndX, mobileStartX, h * 0.62);
 
                 // Pause to allow trail to naturally decay smoothly
                 await new Promise(r => setTimeout(r, 1800));

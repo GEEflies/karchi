@@ -56,6 +56,8 @@ export default function Hero() {
 
     // Prevent hydration mismatch
     const [hasMounted, setHasMounted] = useState(false);
+    // F1-inspired mobile ninja cut overlays state
+    const [showNinjaCutOverlays, setShowNinjaCutOverlays] = useState(true);
     useEffect(() => {
         setHasMounted(true);
         const checkMobile = () => setIsMobile(window.innerWidth < 640 || isTouchDevice());
@@ -441,6 +443,67 @@ export default function Hero() {
                 willChange: 'transform'
             }}
         >
+            {/* F1-Inspired Mobile Ninja Cut Overlays - Only on mobile */}
+            <AnimatePresence>
+                {isMobile && hasMounted && showNinjaCutOverlays && (
+                    <div className="fixed inset-0 z-[100] pointer-events-none">
+                        {/* Top-Left Block */}
+                        <motion.div
+                            initial={{ x: 0, y: 0, opacity: 1 }}
+                            animate={{ x: '-100%', y: '-100%', opacity: 0 }}
+                            transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+                            onAnimationComplete={() => setShowNinjaCutOverlays(false)}
+                            className="absolute inset-0 bg-black"
+                            style={{ clipPath: 'polygon(0 0, 55% 0, 45% 100%, 0 100%)' }}
+                        />
+                        {/* Top-Right Block */}
+                        <motion.div
+                            initial={{ x: 0, y: 0, opacity: 1 }}
+                            animate={{ x: '100%', y: '-100%', opacity: 0 }}
+                            transition={{ duration: 0.6, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                            className="absolute inset-0 bg-black"
+                            style={{ clipPath: 'polygon(55% 0, 100% 0, 100% 100%, 45% 100%)' }}
+                        />
+                        {/* Bottom-Left Block */}
+                        <motion.div
+                            initial={{ x: 0, y: 0, opacity: 1 }}
+                            animate={{ x: '-100%', y: '100%', opacity: 0 }}
+                            transition={{ duration: 0.6, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+                            className="absolute inset-0 bg-[#111]"
+                            style={{ clipPath: 'polygon(0 0, 50% 0, 40% 100%, 0 100%)' }}
+                        />
+                        {/* Bottom-Right Block */}
+                        <motion.div
+                            initial={{ x: 0, y: 0, opacity: 1 }}
+                            animate={{ x: '100%', y: '100%', opacity: 0 }}
+                            transition={{ duration: 0.6, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                            className="absolute inset-0 bg-[#111]"
+                            style={{ clipPath: 'polygon(50% 0, 100% 0, 100% 100%, 40% 100%)' }}
+                        />
+                    </div>
+                )}
+            </AnimatePresence>
+
+            {/* Hologram Scan Effect - Mobile Only */}
+            {isMobile && hasMounted && !showNinjaCutOverlays && (
+                <div className="absolute inset-0 z-[5] pointer-events-none overflow-hidden">
+                    <motion.div
+                        className="absolute left-0 right-0 h-[150px]"
+                        initial={{ top: '-20%' }}
+                        animate={{ top: '120%' }}
+                        transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            ease: 'linear',
+                            repeatDelay: 0
+                        }}
+                        style={{
+                            background: 'linear-gradient(to bottom, transparent 0%, rgba(173, 255, 47, 0.12) 40%, rgba(173, 255, 47, 0.2) 50%, rgba(173, 255, 47, 0.12) 60%, transparent 100%)',
+                        }}
+                    />
+                </div>
+            )}
+
             {/* Background Color Layer */}
             <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#fdfdfb] to-[#e6e4e3]" />
 

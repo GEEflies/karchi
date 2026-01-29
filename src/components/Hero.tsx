@@ -277,6 +277,9 @@ export default function Hero() {
                 await swipe(endX, startX, h * 0.68);
             }
 
+            // Clear the trail to prevent any lingering circles
+            trailRef.current = [];
+
             isAutoSequence.current = false;
             isSequenceFinished.current = true; // Unlock manual interaction
         };

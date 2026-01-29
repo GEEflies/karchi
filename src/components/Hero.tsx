@@ -485,17 +485,22 @@ export default function Hero() {
         >
             {/* Holographic Wireframe Helmet Layer - Mobile Only */}
             {isMobile && hasMounted && (
-                <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
+                <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden flex items-start justify-center">
                     {/* The wireframe helmet image with clip-path scan animation */}
                     <motion.img
                         src="/images/helmet_wireframe.png"
                         alt=""
-                        className="absolute w-full h-full object-contain object-top"
+                        className="absolute"
                         style={{
-                            top: '42.5%',
+                            top: '32%',
+                            width: '500px',
+                            height: '374px',
+                            minWidth: '500px',
+                            minHeight: '374px',
+                            maxWidth: '500px',
+                            maxHeight: '374px',
                             opacity: 0.1,
-                            mixBlendMode: 'screen',
-                            scale: 1.2
+                            mixBlendMode: 'screen'
                         }}
                         animate={{
                             opacity: [0, 0.2, 0.2, 0], // Fade in/out at extremes to soften entry/exit

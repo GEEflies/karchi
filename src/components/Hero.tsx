@@ -259,8 +259,8 @@ export default function Hero() {
                 // 2. Second cut (lower face)
                 await swipe(mobileEndX, mobileStartX, h * 0.64);
 
-                // Longer pause to let the trail complete smoothly before clearing
-                await new Promise(r => setTimeout(r, 500));
+                // Much longer pause to let the second trail complete smoothly before clearing
+                await new Promise(r => setTimeout(r, 1200));
             } else {
                 // Desktop positions
                 // 1. Left to Right (Top - Forehead)

@@ -162,6 +162,7 @@ export default function Hero() {
     }, [hasMounted, isMobile, isLocked, mouseX, mouseY]);
 
     const isSequenceFinished = useRef(false);
+    const lastActivityTime = useRef(Date.now());
 
 
 
@@ -187,11 +188,101 @@ export default function Hero() {
     // Track if touch started on image area (for unlocked touch drawing)
     const touchStartedOnImage = useRef(false);
 
-    // Ninja Cut Sequence (Desktop + Mobile)
-    useEffect(() => {
-        // Mobile uses same animation but with adjusted positions
+    // Ninja Cut Sequence Logic (extracted for reuse)
+    const runNinjaSequence = async () => {
+        if (!hasMounted || !sectionRef.current) return;
+        
+        isAutoSequence.current = true;
+        isSequenceFinished.current = false;
 
-        // If already played globally, just unlock interaction and skip
+        const h = window.innerHeight;
+        let startX = 0;
+        let endX = window.innerWidth;
+
+        // Calculate actual image width inside object-contain
+        if (imageRef.current && sectionRef.current) {
+            const img = imageRef.current;
+
+            // Ensure image is loaded for dimensions
+            if (!img.complete || img.naturalWidth === 0) {
+                await new Promise<void>(resolve => {
+                    if (img.complete && img.naturalWidth > 0) return resolve();
+                    img.onload = () => resolve();
+                    setTimeout(resolve, 1000);
+                });
+            }
+
+            const rect = img.getBoundingClientRect();
+            const secRect = sectionRef.current.getBoundingClientRect();
+
+            if (img.naturalWidth) {
+                const ratio = img.naturalWidth / img.naturalHeight;
+                const boxRatio = rect.width / rect.height;
+
+                let actualW = rect.width;
+                if (ratio < boxRatio) {
+                    actualW = rect.height * ratio;
+                }
+
+                const offsetX = (rect.width - actualW) / 2;
+                startX = (rect.left + offsetX) - secRect.left;
+                endX = startX + actualW;
+                startX += 20;
+                endX -= 20;
+            }
+        }
+
+        // Helper to perform a swipe
+        const swipe = async (fromX: number, toX: number, y: number) => {
+            mouseX.set(fromX);
+            mouseY.set(y);
+            lastPosRef.current = { x: fromX, y };
+            await animate(mouseX, toX, {
+                duration: isMobile ? 0.3 : 0.4,
+                ease: "easeInOut"
+            });
+        };
+
+        // Mobile-specific: 4 rapid diagonal "ninja" slashes
+        if (isMobile) {
+            const w = window.innerWidth;
+
+            const diagonalSwipe = async (fromX: number, fromY: number, toX: number, toY: number, duration = 0.35) => {
+                mouseX.set(fromX);
+                mouseY.set(fromY);
+                lastPosRef.current = { x: fromX, y: fromY };
+                
+                await new Promise(r => setTimeout(r, 16));
+
+                await Promise.all([
+                    animate(mouseX, toX, { duration, ease: [0.25, 0.1, 0.25, 1] }),
+                    animate(mouseY, toY, { duration, ease: [0.25, 0.1, 0.25, 1] })
+                ]);
+            };
+
+            // 4 Ninja Strikes
+            await diagonalSwipe(0, h * 0.2, w, h * 0.5, 0.6);
+            await new Promise(r => setTimeout(r, 120));
+            await diagonalSwipe(w, h * 0.15, 0, h * 0.55, 0.6);
+            await new Promise(r => setTimeout(r, 120));
+            await diagonalSwipe(0, h * 0.45, w, h * 0.7, 0.55);
+            await new Promise(r => setTimeout(r, 120));
+            await diagonalSwipe(w, h * 0.55, 0, h * 0.85, 0.55);
+            await new Promise(r => setTimeout(r, 1500));
+        } else {
+            // Desktop positions
+            await swipe(startX, endX, h * 0.20);
+            await swipe(endX, startX, h * 0.36);
+            await swipe(startX, endX, h * 0.52);
+            await swipe(endX, startX, h * 0.68);
+        }
+
+        isAutoSequence.current = false;
+        isSequenceFinished.current = true;
+    };
+
+    // Initial Ninja Cut Sequence on Load
+    useEffect(() => {
         if (hasGlobalHeroSequencePlayed) {
             isSequenceFinished.current = true;
             return;
@@ -202,123 +293,45 @@ export default function Hero() {
         hasGlobalHeroSequencePlayed = true;
 
         const runSequence = async () => {
-            // Wait for entrance animations - quicker on mobile for dynamic feel
             await new Promise(r => setTimeout(r, isMobile ? 600 : 1500));
-
-            isAutoSequence.current = true;
-            isSequenceFinished.current = false; // Ensure blocked
-
-            const h = window.innerHeight;
-            let startX = 0;
-            let endX = window.innerWidth;
-
-            // Calculate actual image width inside object-contain
-            if (imageRef.current && sectionRef.current) {
-                const img = imageRef.current;
-
-                // Ensure image is loaded for dimensions
-                if (!img.complete || img.naturalWidth === 0) {
-                    await new Promise<void>(resolve => {
-                        if (img.complete && img.naturalWidth > 0) return resolve();
-                        img.onload = () => resolve();
-                        // Timeout fallback
-                        setTimeout(resolve, 1000);
-                    });
-                }
-
-                const rect = img.getBoundingClientRect();
-                const secRect = sectionRef.current.getBoundingClientRect();
-
-                if (img.naturalWidth) {
-                    const ratio = img.naturalWidth / img.naturalHeight;
-                    const boxRatio = rect.width / rect.height;
-
-                    let actualW = rect.width;
-                    if (ratio < boxRatio) {
-                        actualW = rect.height * ratio;
-                    }
-
-                    const offsetX = (rect.width - actualW) / 2;
-                    // Relative to section
-                    startX = (rect.left + offsetX) - secRect.left;
-                    endX = startX + actualW;
-
-                    // Constrain slightly further to ensure we are inside (10px buffer)
-                    startX += 20;
-                    endX -= 20;
-                }
-            }
-
-            // Helper to perform a swipe
-            const swipe = async (fromX: number, toX: number, y: number) => {
-                // Teleport to start
-                mouseX.set(fromX);
-                mouseY.set(y);
-                // Reset lastPos to prevent connection lines from previous cut
-                // We set it to the start position so interpolation starts fresh
-                lastPosRef.current = { x: fromX, y };
-
-                // Animate - faster on mobile for quick dramatic effect
-                await animate(mouseX, toX, {
-                    duration: isMobile ? 0.3 : 0.4,
-                    ease: "easeInOut"
-                });
-            };
-
-            // Mobile-specific: 4 rapid diagonal "ninja" slashes
-            if (isMobile) {
-                const w = window.innerWidth;
-
-                // Helper for diagonal swipe (from point A to point B)
-                const diagonalSwipe = async (fromX: number, fromY: number, toX: number, toY: number, duration = 0.35) => {
-                    // Teleport to start
-                    mouseX.set(fromX);
-                    mouseY.set(fromY);
-                    lastPosRef.current = { x: fromX, y: fromY };
-
-                    // Animate both X and Y simultaneously for diagonal movement
-                    await Promise.all([
-                        animate(mouseX, toX, { duration, ease: "easeOut" }),
-                        animate(mouseY, toY, { duration, ease: "easeOut" })
-                    ]);
-                };
-
-                // 4 Ninja Strikes - diagonal paths across the viewport
-                // Slash 1: Top-Left to Bottom-Right
-                await diagonalSwipe(0, h * 0.2, w, h * 0.5, 0.4);
-                await new Promise(r => setTimeout(r, 80)); // Stagger
-
-                // Slash 2: Top-Right to Bottom-Left  
-                await diagonalSwipe(w, h * 0.15, 0, h * 0.55, 0.4);
-                await new Promise(r => setTimeout(r, 80));
-
-                // Slash 3: Left to Right (lower)
-                await diagonalSwipe(0, h * 0.45, w, h * 0.7, 0.35);
-                await new Promise(r => setTimeout(r, 80));
-
-                // Slash 4: Right to Left (bottom)
-                await diagonalSwipe(w, h * 0.55, 0, h * 0.85, 0.35);
-
-                // Pause to allow trail to naturally decay smoothly
-                await new Promise(r => setTimeout(r, 1500));
-            } else {
-                // Desktop positions
-                // 1. Left to Right (Top - Forehead)
-                await swipe(startX, endX, h * 0.20);
-                // 2. Right to Left (Eyes)
-                await swipe(endX, startX, h * 0.36);
-                // 3. Left to Right (Nose/Mouth)
-                await swipe(startX, endX, h * 0.52);
-                // 4. Right to Left (Chin)
-                await swipe(endX, startX, h * 0.68);
-            }
-
-            isAutoSequence.current = false;
-            isSequenceFinished.current = true; // Unlock manual interaction
+            await runNinjaSequence();
         };
 
         runSequence();
     }, [hasMounted, isInView]);
+
+    // Inactivity Detection - Re-trigger ninja cuts after 4s (Mobile Only)
+    useEffect(() => {
+        if (!isMobile || !hasMounted || !isInView || !hasGlobalHeroSequencePlayed) return;
+
+        const checkInactivity = setInterval(() => {
+            const timeSinceLastActivity = Date.now() - lastActivityTime.current;
+            if (timeSinceLastActivity >= 4000 && !isAutoSequence.current) {
+                lastActivityTime.current = Date.now(); // Reset timer
+                runNinjaSequence();
+            }
+        }, 1000); // Check every second
+
+        return () => clearInterval(checkInactivity);
+    }, [isMobile, hasMounted, isInView]);
+
+    // Update activity time on any interaction
+    useEffect(() => {
+        if (!isMobile || !hasMounted || !sectionRef.current) return;
+
+        const section = sectionRef.current;
+        const updateActivity = () => {
+            lastActivityTime.current = Date.now();
+        };
+
+        section.addEventListener('touchstart', updateActivity, { passive: true });
+        section.addEventListener('touchmove', updateActivity, { passive: true });
+
+        return () => {
+            section.removeEventListener('touchstart', updateActivity);
+            section.removeEventListener('touchmove', updateActivity);
+        };
+    }, [isMobile, hasMounted]);
 
     // Animation loop for the snake trail
     useEffect(() => {
@@ -492,7 +505,7 @@ export default function Hero() {
                         alt=""
                         className="absolute"
                         style={{
-                            top: '33%',
+                            top: '30%',
                             width: '500px',
                             height: '374px',
                             minWidth: '500px',
@@ -611,7 +624,7 @@ export default function Hero() {
                     <image
                         href="/images/me-fr.png"
                         x="0.2%"
-                        y="36%"
+                        y="33%"
                         width="98%"
                         height="98%"
                         preserveAspectRatio="xMidYMin meet"
@@ -620,7 +633,7 @@ export default function Hero() {
                     <image
                         href="/images/hero-final-fr.png"
                         x="0%"
-                        y="35%"
+                        y="32%"
                         width="100%"
                         height="100%"
                         preserveAspectRatio="xMidYMin meet"

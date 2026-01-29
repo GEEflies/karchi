@@ -163,6 +163,7 @@ export default function Hero() {
 
     const isSequenceFinished = useRef(false);
     const lastActivityTime = useRef(Date.now());
+    const cancelAutoSequence = useRef(false);
 
 
 
@@ -192,6 +193,7 @@ export default function Hero() {
     const runNinjaSequence = async () => {
         if (!hasMounted || !sectionRef.current) return;
         
+        cancelAutoSequence.current = false; // Reset cancel flag
         isAutoSequence.current = true;
         isSequenceFinished.current = false;
 
@@ -234,6 +236,7 @@ export default function Hero() {
 
         // Helper to perform a swipe
         const swipe = async (fromX: number, toX: number, y: number) => {
+            if (cancelAutoSequence.current) return; // Check for cancellation
             mouseX.set(fromX);
             mouseY.set(y);
             lastPosRef.current = { x: fromX, y };
@@ -248,11 +251,13 @@ export default function Hero() {
             const w = window.innerWidth;
 
             const diagonalSwipe = async (fromX: number, fromY: number, toX: number, toY: number, duration = 0.35) => {
+                if (cancelAutoSequence.current) return; // Check for cancellation
                 mouseX.set(fromX);
                 mouseY.set(fromY);
                 lastPosRef.current = { x: fromX, y: fromY };
                 
                 await new Promise(r => setTimeout(r, 16));
+                if (cancelAutoSequence.current) return; // Check again after delay
 
                 await Promise.all([
                     animate(mouseX, toX, { duration, ease: [0.25, 0.1, 0.25, 1] }),
@@ -262,12 +267,22 @@ export default function Hero() {
 
             // 4 Ninja Strikes
             await diagonalSwipe(0, h * 0.2, w, h * 0.5, 0.6);
+            if (cancelAutoSequence.current) { isAutoSequence.current = false; return; }
             await new Promise(r => setTimeout(r, 120));
+            if (cancelAutoSequence.current) { isAutoSequence.current = false; return; }
+            
             await diagonalSwipe(w, h * 0.15, 0, h * 0.55, 0.6);
+            if (cancelAutoSequence.current) { isAutoSequence.current = false; return; }
             await new Promise(r => setTimeout(r, 120));
+            if (cancelAutoSequence.current) { isAutoSequence.current = false; return; }
+            
             await diagonalSwipe(0, h * 0.45, w, h * 0.7, 0.55);
+            if (cancelAutoSequence.current) { isAutoSequence.current = false; return; }
             await new Promise(r => setTimeout(r, 120));
+            if (cancelAutoSequence.current) { isAutoSequence.current = false; return; }
+            
             await diagonalSwipe(w, h * 0.55, 0, h * 0.85, 0.55);
+            if (cancelAutoSequence.current) { isAutoSequence.current = false; return; }
             await new Promise(r => setTimeout(r, 1500));
         } else {
             // Desktop positions
@@ -300,13 +315,13 @@ export default function Hero() {
         runSequence();
     }, [hasMounted, isInView]);
 
-    // Inactivity Detection - Re-trigger ninja cuts after 4s (Mobile Only)
+    // Inactivity Detection - Re-trigger ninja cuts after 6s (Mobile Only)
     useEffect(() => {
         if (!isMobile || !hasMounted || !isInView || !hasGlobalHeroSequencePlayed) return;
 
         const checkInactivity = setInterval(() => {
             const timeSinceLastActivity = Date.now() - lastActivityTime.current;
-            if (timeSinceLastActivity >= 4000 && !isAutoSequence.current) {
+            if (timeSinceLastActivity >= 6000 && !isAutoSequence.current) {
                 lastActivityTime.current = Date.now(); // Reset timer
                 runNinjaSequence();
             }
@@ -322,6 +337,10 @@ export default function Hero() {
         const section = sectionRef.current;
         const updateActivity = () => {
             lastActivityTime.current = Date.now();
+            // Cancel auto sequence if user starts touching
+            if (isAutoSequence.current) {
+                cancelAutoSequence.current = true;
+            }
         };
 
         section.addEventListener('touchstart', updateActivity, { passive: true });

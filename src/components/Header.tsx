@@ -64,7 +64,7 @@ export default function Header() {
                             href="/"
                             className={cn(
                                 "text-3xl font-bold tracking-tighter transition-colors duration-300",
-                                isDarkSection ? "text-white" : "text-foreground"
+                                isDarkSection || mobileMenuOpen ? "text-white" : "text-foreground"
                             )}
                         >
                             karchi.

@@ -56,8 +56,7 @@ export default function Hero() {
 
     // Prevent hydration mismatch
     const [hasMounted, setHasMounted] = useState(false);
-    // F1-inspired mobile ninja cut overlays state
-    const [showNinjaCutOverlays, setShowNinjaCutOverlays] = useState(true);
+
     useEffect(() => {
         setHasMounted(true);
         const checkMobile = () => setIsMobile(window.innerWidth < 640 || isTouchDevice());
@@ -246,18 +245,42 @@ export default function Hero() {
                 });
             };
 
-            // Mobile-specific: single fast cut across full width
+            // Mobile-specific: 4 rapid diagonal "ninja" slashes
             if (isMobile) {
                 const w = window.innerWidth;
-                // Full screen width for dramatic effect
-                const mobileStartX = 0;
-                const mobileEndX = w;
 
-                // Single fast cut across the lower face
-                await swipe(mobileEndX, mobileStartX, h * 0.62);
+                // Helper for diagonal swipe (from point A to point B)
+                const diagonalSwipe = async (fromX: number, fromY: number, toX: number, toY: number, duration = 0.35) => {
+                    // Teleport to start
+                    mouseX.set(fromX);
+                    mouseY.set(fromY);
+                    lastPosRef.current = { x: fromX, y: fromY };
+
+                    // Animate both X and Y simultaneously for diagonal movement
+                    await Promise.all([
+                        animate(mouseX, toX, { duration, ease: "easeOut" }),
+                        animate(mouseY, toY, { duration, ease: "easeOut" })
+                    ]);
+                };
+
+                // 4 Ninja Strikes - diagonal paths across the viewport
+                // Slash 1: Top-Left to Bottom-Right
+                await diagonalSwipe(0, h * 0.2, w, h * 0.5, 0.4);
+                await new Promise(r => setTimeout(r, 80)); // Stagger
+
+                // Slash 2: Top-Right to Bottom-Left  
+                await diagonalSwipe(w, h * 0.15, 0, h * 0.55, 0.4);
+                await new Promise(r => setTimeout(r, 80));
+
+                // Slash 3: Left to Right (lower)
+                await diagonalSwipe(0, h * 0.45, w, h * 0.7, 0.35);
+                await new Promise(r => setTimeout(r, 80));
+
+                // Slash 4: Right to Left (bottom)
+                await diagonalSwipe(w, h * 0.55, 0, h * 0.85, 0.35);
 
                 // Pause to allow trail to naturally decay smoothly
-                await new Promise(r => setTimeout(r, 1800));
+                await new Promise(r => setTimeout(r, 1500));
             } else {
                 // Desktop positions
                 // 1. Left to Right (Top - Forehead)
@@ -443,64 +466,33 @@ export default function Hero() {
                 willChange: 'transform'
             }}
         >
-            {/* F1-Inspired Mobile Ninja Cut Overlays - Only on mobile */}
-            <AnimatePresence>
-                {isMobile && hasMounted && showNinjaCutOverlays && (
-                    <div className="fixed inset-0 z-[100] pointer-events-none">
-                        {/* Top-Left Block */}
-                        <motion.div
-                            initial={{ x: 0, y: 0, opacity: 1 }}
-                            animate={{ x: '-100%', y: '-100%', opacity: 0 }}
-                            transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-                            onAnimationComplete={() => setShowNinjaCutOverlays(false)}
-                            className="absolute inset-0 bg-black"
-                            style={{ clipPath: 'polygon(0 0, 55% 0, 45% 100%, 0 100%)' }}
-                        />
-                        {/* Top-Right Block */}
-                        <motion.div
-                            initial={{ x: 0, y: 0, opacity: 1 }}
-                            animate={{ x: '100%', y: '-100%', opacity: 0 }}
-                            transition={{ duration: 0.6, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-                            className="absolute inset-0 bg-black"
-                            style={{ clipPath: 'polygon(55% 0, 100% 0, 100% 100%, 45% 100%)' }}
-                        />
-                        {/* Bottom-Left Block */}
-                        <motion.div
-                            initial={{ x: 0, y: 0, opacity: 1 }}
-                            animate={{ x: '-100%', y: '100%', opacity: 0 }}
-                            transition={{ duration: 0.6, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-                            className="absolute inset-0 bg-[#111]"
-                            style={{ clipPath: 'polygon(0 0, 50% 0, 40% 100%, 0 100%)' }}
-                        />
-                        {/* Bottom-Right Block */}
-                        <motion.div
-                            initial={{ x: 0, y: 0, opacity: 1 }}
-                            animate={{ x: '100%', y: '100%', opacity: 0 }}
-                            transition={{ duration: 0.6, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                            className="absolute inset-0 bg-[#111]"
-                            style={{ clipPath: 'polygon(50% 0, 100% 0, 100% 100%, 40% 100%)' }}
-                        />
-                    </div>
-                )}
-            </AnimatePresence>
+            {/* Holographic Wireframe Helmet Layer - Mobile Only */}
+            {isMobile && hasMounted && (
+                <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
+                    {/* The wireframe helmet image with clip-path scan animation */}
+                    <motion.img
+                        src="/images/helmet_wireframe.png"
+                        alt=""
+                        className="absolute w-full h-full object-cover object-top"
+                        style={{
+                            top: '9%',
 
-            {/* Hologram Scan Effect - Mobile Only */}
-            {isMobile && hasMounted && !showNinjaCutOverlays && (
-                <div className="absolute inset-0 z-[5] pointer-events-none overflow-hidden">
-                    <motion.div
-                        className="absolute left-0 right-0 h-[150px]"
-                        initial={{ top: '-20%' }}
-                        animate={{ top: '120%' }}
+                            opacity: 0.1,
+                            mixBlendMode: 'screen',
+                            scale: 0.53
+                        }}
+                        animate={{
+                            opacity: [0, 0, 0.6, 0.6, 0.6, 0]
+                        }}
                         transition={{
                             duration: 3,
                             repeat: Infinity,
-                            ease: 'linear',
-                            repeatDelay: 0
-                        }}
-                        style={{
-                            background: 'linear-gradient(to bottom, transparent 0%, rgba(173, 255, 47, 0.12) 40%, rgba(173, 255, 47, 0.2) 50%, rgba(173, 255, 47, 0.12) 60%, transparent 100%)',
+                            repeatDelay: 2,
+                            ease: 'easeInOut',
+                            times: [0, 0.1, 0.3, 0.5, 0.7, 1]
                         }}
                     />
+
                 </div>
             )}
 
@@ -582,19 +574,19 @@ export default function Hero() {
                     {/* Face image - always visible underneath */}
                     <image
                         href="/images/me-fr.png"
-                        x="6%"
-                        y="32%"
-                        width="88%"
-                        height="88%"
+                        x="0.2%"
+                        y="36%"
+                        width="98%"
+                        height="98%"
                         preserveAspectRatio="xMidYMin meet"
                     />
                     {/* Helmet image - masked to hide where trail is drawn */}
                     <image
                         href="/images/hero-final-fr.png"
-                        x="5.6%"
-                        y="31%"
-                        width="90%"
-                        height="90%"
+                        x="0%"
+                        y="35%"
+                        width="100%"
+                        height="100%"
                         preserveAspectRatio="xMidYMin meet"
                         mask={hasMounted ? "url(#mobile-mask-inverse)" : undefined}
                     />

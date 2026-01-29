@@ -257,14 +257,14 @@ export default function Hero() {
                 // 1. First cut (upper face)
                 await swipe(mobileStartX, mobileEndX, h * 0.40);
 
-                // Small delay between cuts for smoother transition
-                await new Promise(r => setTimeout(r, 200));
+                // Minimal delay between cuts
+                await new Promise(r => setTimeout(r, 100));
 
                 // 2. Second cut (lower face)
                 await swipe(mobileEndX, mobileStartX, h * 0.64);
 
-                // Much shorter pause since cuts are very tight now
-                await new Promise(r => setTimeout(r, 500));
+                // Minimal pause for fast completion
+                await new Promise(r => setTimeout(r, 300));
             } else {
                 // Desktop positions
                 // 1. Left to Right (Top - Forehead)

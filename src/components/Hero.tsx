@@ -247,9 +247,9 @@ export default function Hero() {
             // Mobile-specific positions: only 2 cuts
             if (isMobile) {
                 const w = window.innerWidth;
-                // Center the cuts around 50% width with narrower range
+                // Center the cuts around 50% width - reduced range to prevent traveling too far
                 const centerX = w * 0.5;
-                const halfWidth = w * 0.35; // 35% on each side
+                const halfWidth = w * 0.25; // 25% on each side (50% total width)
                 const mobileStartX = centerX - halfWidth;
                 const mobileEndX = centerX + halfWidth;
 
@@ -263,8 +263,8 @@ export default function Hero() {
                 // 2. Second cut (lower face)
                 await swipe(mobileEndX, mobileStartX, h * 0.64);
 
-                // Longer pause to ensure trail completes smoothly from right to left
-                await new Promise(r => setTimeout(r, 1500));
+                // Reduced pause since cuts are now shorter
+                await new Promise(r => setTimeout(r, 900));
             } else {
                 // Desktop positions
                 // 1. Left to Right (Top - Forehead)

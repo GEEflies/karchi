@@ -492,7 +492,7 @@ export default function Hero() {
                         alt=""
                         className="absolute"
                         style={{
-                            top: '32%',
+                            top: '33%',
                             width: '500px',
                             height: '374px',
                             minWidth: '500px',

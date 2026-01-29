@@ -119,11 +119,13 @@ export default function SignatureReveal() {
         });
 
         return () => {
-            ScrollTrigger.getAll().forEach((trigger) => {
-                if (trigger.trigger === container) {
-                    trigger.kill();
-                }
-            });
+            // Kill the timeline first
+            tl.kill();
+            // Get the ScrollTrigger instance and kill it with revert
+            const st = tl.scrollTrigger;
+            if (st) {
+                st.kill(true); // true = revert all inline styles
+            }
         };
     }, [paths]);
 

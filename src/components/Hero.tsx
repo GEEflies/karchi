@@ -237,34 +237,25 @@ export default function Hero() {
                 // We set it to the start position so interpolation starts fresh
                 lastPosRef.current = { x: fromX, y };
 
-                // Animate - quicker on mobile for more dynamic feel
+                // Animate - faster on mobile for quick dramatic effect
                 await animate(mouseX, toX, {
-                    duration: isMobile ? 0.5 : 0.4,
+                    duration: isMobile ? 0.3 : 0.4,
                     ease: "easeInOut"
                 });
             };
 
-            // Mobile-specific positions: only 2 cuts
+            // Mobile-specific: single fast cut across full width
             if (isMobile) {
                 const w = window.innerWidth;
-                // Center the cuts around 50% width - very tight range for fast completion
-                const centerX = w * 0.5;
-                const halfWidth = w * 0.10; // 10% on each side (20% total width)
-                const mobileStartX = centerX - halfWidth;
-                const mobileEndX = centerX + halfWidth;
+                // Full screen width for dramatic effect
+                const mobileStartX = 0;
+                const mobileEndX = w;
 
-                // Only 2 smooth cuts across the face - more spaced out
-                // 1. First cut (upper face)
-                await swipe(mobileStartX, mobileEndX, h * 0.40);
-
-                // Minimal delay between cuts
-                await new Promise(r => setTimeout(r, 100));
-
-                // 2. Second cut (lower face)
+                // Single fast cut across the lower face
                 await swipe(mobileEndX, mobileStartX, h * 0.64);
 
-                // Longer pause to allow trail to naturally decay smoothly
-                await new Promise(r => setTimeout(r, 2500));
+                // Pause to allow trail to naturally decay smoothly
+                await new Promise(r => setTimeout(r, 1800));
             } else {
                 // Desktop positions
                 // 1. Left to Right (Top - Forehead)
@@ -366,9 +357,9 @@ export default function Hero() {
                 if (i < len) {
                     const point = currentTrail[i];
                     const percentage = i / len;
-                    // Thinner trail on mobile during auto sequence
-                    const baseRadius = isMobile ? (isAutoSequence.current ? 3 : 3) : 5;
-                    const maxRadius = isMobile ? (isAutoSequence.current ? 28 : 25) : 50;
+                    // Thinner, sleeker trail on mobile during auto sequence
+                    const baseRadius = isMobile ? (isAutoSequence.current ? 2 : 3) : 5;
+                    const maxRadius = isMobile ? (isAutoSequence.current ? 20 : 25) : 50;
                     const radius = baseRadius + (percentage * maxRadius);
 
                     // Optimization: Batch attribute updates? standard setAttribute is fine here.

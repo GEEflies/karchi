@@ -40,7 +40,8 @@ export default function Hero() {
 
     // Snake Trail Logic - Using Refs for DOM manipulation (High Perf)
     // Reduced on mobile for better performance (less DOM manipulation)
-    const MAX_POINTS = isMobile ? 80 : 150;
+    // Reduced on mobile for better performance (less DOM manipulation)
+    const MAX_POINTS = isMobile ? 40 : 150;
     const trailRef = useRef<{ x: number, y: number, id: number }[]>([]);
 
     // DOM Refs to bypass React Render Cycle
@@ -192,7 +193,7 @@ export default function Hero() {
     // Ninja Cut Sequence Logic (extracted for reuse)
     const runNinjaSequence = async () => {
         if (!hasMounted || !sectionRef.current) return;
-        
+
         cancelAutoSequence.current = false; // Reset cancel flag
         isAutoSequence.current = true;
         isSequenceFinished.current = false;
@@ -255,7 +256,7 @@ export default function Hero() {
                 mouseX.set(fromX);
                 mouseY.set(fromY);
                 lastPosRef.current = { x: fromX, y: fromY };
-                
+
                 await new Promise(r => setTimeout(r, 16));
                 if (cancelAutoSequence.current) return; // Check again after delay
 
@@ -270,17 +271,17 @@ export default function Hero() {
             if (cancelAutoSequence.current) { isAutoSequence.current = false; return; }
             await new Promise(r => setTimeout(r, 120));
             if (cancelAutoSequence.current) { isAutoSequence.current = false; return; }
-            
+
             await diagonalSwipe(w, h * 0.15, 0, h * 0.55, 0.6);
             if (cancelAutoSequence.current) { isAutoSequence.current = false; return; }
             await new Promise(r => setTimeout(r, 120));
             if (cancelAutoSequence.current) { isAutoSequence.current = false; return; }
-            
+
             await diagonalSwipe(0, h * 0.45, w, h * 0.7, 0.55);
             if (cancelAutoSequence.current) { isAutoSequence.current = false; return; }
             await new Promise(r => setTimeout(r, 120));
             if (cancelAutoSequence.current) { isAutoSequence.current = false; return; }
-            
+
             await diagonalSwipe(w, h * 0.55, 0, h * 0.85, 0.55);
             if (cancelAutoSequence.current) { isAutoSequence.current = false; return; }
             await new Promise(r => setTimeout(r, 1500));
@@ -429,6 +430,12 @@ export default function Hero() {
 
 
 
+            // Optimization: Get rect ONCE per frame, not per point
+            let svgRect: DOMRect | null = null;
+            if (mobileSvgRef.current) {
+                svgRect = mobileSvgRef.current.getBoundingClientRect();
+            }
+
             for (let i = 0; i < MAX_POINTS; i++) {
                 // Determine if this index is active
                 if (i < len) {
@@ -472,8 +479,7 @@ export default function Hero() {
 
                     // Update Mobile Mask (uses viewBox 0-100 coordinates)
                     const mobileCircle = mobileMaskRef.current[i];
-                    if (mobileCircle && mobileSvgRef.current) {
-                        const svgRect = mobileSvgRef.current.getBoundingClientRect();
+                    if (mobileCircle && svgRect) {
                         // Only update if SVG has valid dimensions (visible on mobile)
                         if (svgRect.width > 0 && svgRect.height > 0) {
                             // point.x and point.y are already relative to the section element (set in handleTouchMove)
@@ -624,18 +630,19 @@ export default function Hero() {
                         <mask id="mobile-mask-inverse" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
                             {/* Apply gooey filter to the mask group for liquid blob effect */}
                             <rect x="0" y="0" width="100" height="100" fill="white" />
-                            <g filter="url(#gooey-filter)">
-                            {hasMounted && Array.from({ length: MAX_POINTS }).map((_, index) => (
-                                <circle
-                                    key={`mobile-mask-${index}`}
-                                    ref={(el) => { mobileMaskRef.current[index] = el; }}
-                                    cx="-100"
-                                    cy="-100"
-                                    r="0"
-                                    fill="black"
-                                    style={{ display: 'none' }}
-                                />
-                            ))}
+                            {/* Only apply filter on desktop/non-mobile or when performance allows */}
+                            <g filter={isMobile ? undefined : "url(#gooey-filter)"}>
+                                {hasMounted && Array.from({ length: MAX_POINTS }).map((_, index) => (
+                                    <circle
+                                        key={`mobile-mask-${index}`}
+                                        ref={(el) => { mobileMaskRef.current[index] = el; }}
+                                        cx="-100"
+                                        cy="-100"
+                                        r="0"
+                                        fill="black"
+                                        style={{ display: 'none' }}
+                                    />
+                                ))}
                             </g>
                         </mask>
                     </defs>

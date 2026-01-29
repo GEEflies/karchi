@@ -469,27 +469,33 @@ export default function Hero() {
             {/* Holographic Wireframe Helmet Layer - Mobile Only */}
             {isMobile && hasMounted && (
                 <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
-                    {/* The wireframe helmet image with clip-path scan animation */}
+                    {/* The wireframe helmet image with dark holographic effect */}
                     <motion.img
                         src="/images/helmet_wireframe.png"
                         alt=""
-                        className="absolute w-full h-full object-cover object-top"
+                        className="absolute w-full h-full object-contain object-top"
                         style={{
-                            top: '9%',
-
-                            opacity: 0.1,
-                            mixBlendMode: 'screen',
-                            scale: 0.53
+                            top: '42.5%',
+                            opacity: 0.15,
+                            mixBlendMode: 'multiply', // Changed from 'screen' to properly darken
+                            scale: 1.2,
+                            filter: 'invert(1) brightness(0.1) contrast(2)', // Dark grey/black tint
                         }}
                         animate={{
-                            opacity: [0, 0, 0.6, 0.6, 0.6, 0]
+                            opacity: [0.15, 0.25, 0.15], // Subtle pulsing
+                            rotateY: [0, 360], // Continuous Y-axis rotation for holographic effect
                         }}
                         transition={{
-                            duration: 3,
-                            repeat: Infinity,
-                            repeatDelay: 2,
-                            ease: 'easeInOut',
-                            times: [0, 0.1, 0.3, 0.5, 0.7, 1]
+                            opacity: {
+                                duration: 3,
+                                repeat: Infinity,
+                                ease: 'easeInOut',
+                            },
+                            rotateY: {
+                                duration: 20, // Slow rotation
+                                repeat: Infinity,
+                                ease: 'linear',
+                            }
                         }}
                     />
 

@@ -263,8 +263,8 @@ export default function Hero() {
                 // 2. Second cut (lower face)
                 await swipe(mobileEndX, mobileStartX, h * 0.64);
 
-                // Minimal pause for fast completion
-                await new Promise(r => setTimeout(r, 300));
+                // Longer pause to allow trail to naturally decay smoothly
+                await new Promise(r => setTimeout(r, 2500));
             } else {
                 // Desktop positions
                 // 1. Left to Right (Top - Forehead)
@@ -272,20 +272,18 @@ export default function Hero() {
                 // 2. Right to Left (Eyes)
                 await swipe(endX, startX, h * 0.36);
                 // 3. Left to Right (Nose/Mouth)
-                await swipe(startX, endX, h * 0.52);
-                // 4. Right to Left (Chin)
-                await swipe(endX, startX, h * 0.68);
-            }
+                // Clear the trail to prevent any lingering circles
+                // trailRef.current = []; // Removed as per instruction
 
-            // Clear the trail to prevent any lingering circles
-            trailRef.current = [];
+                // Longer pause to allow trail to naturally decay smoothly
+                await new Promise(r => setTimeout(r, 2500));
 
-            isAutoSequence.current = false;
-            isSequenceFinished.current = true; // Unlock manual interaction
-        };
+                isAutoSequence.current = false;
+                isSequenceFinished.current = true; // Unlock manual interaction
+            };
 
-        runSequence();
-    }, [hasMounted, isInView]);
+            runSequence();
+        }, [hasMounted, isInView]);
 
     // Animation loop for the snake trail
     useEffect(() => {

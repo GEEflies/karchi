@@ -39,7 +39,8 @@ export default function Hero() {
     const [isLocked, setIsLocked] = useState(false);
 
     // Snake Trail Logic - Using Refs for DOM manipulation (High Perf)
-    const MAX_POINTS = 150;
+    // Reduced on mobile for better performance (less DOM manipulation)
+    const MAX_POINTS = isMobile ? 80 : 150;
     const trailRef = useRef<{ x: number, y: number, id: number }[]>([]);
 
     // DOM Refs to bypass React Render Cycle
@@ -85,7 +86,80 @@ export default function Hero() {
             document.body.style.touchAction = '';
             document.body.style.paddingRight = '';
         };
-    }, [isLocked]);
+    }, [isLocked, isMobile]);
+
+    // Passive touch event listeners for better mobile performance
+    // Using native addEventListener for passive option (React doesn't support this)
+    useEffect(() => {
+        if (!hasMounted || !sectionRef.current) return;
+
+        const section = sectionRef.current;
+
+        const handlePassiveTouchMove = (e: TouchEvent) => {
+            if (!e.touches[0]) return;
+
+            // Mobile: always allow touch trail
+            if (isMobile) {
+                const rect = section.getBoundingClientRect();
+                const touch = e.touches[0];
+                mouseX.set(touch.clientX - rect.left);
+                mouseY.set(touch.clientY - rect.top);
+                return;
+            }
+
+            // Desktop: require lock or image area touch
+            if (!isLocked && !touchStartedOnImage.current) return;
+
+            const rect = section.getBoundingClientRect();
+            const touch = e.touches[0];
+            mouseX.set(touch.clientX - rect.left);
+            mouseY.set(touch.clientY - rect.top);
+        };
+
+        const handlePassiveTouchStart = (e: TouchEvent) => {
+            if (!e.touches[0]) return;
+
+            const touch = e.touches[0];
+            const rect = section.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+
+            // On mobile, always allow touch trail (any movement triggers it)
+            if (isMobile) {
+                mouseX.set(x);
+                mouseY.set(y);
+                lastPosRef.current = { x, y };
+                isFirstMove.current = false;
+                return;
+            }
+
+            // Desktop: Check if touch is in the image area
+            const imageAreaStart = 0;
+            touchStartedOnImage.current = y > imageAreaStart;
+
+            if (!isLocked && !touchStartedOnImage.current) return;
+
+            mouseX.set(x);
+            mouseY.set(y);
+            lastPosRef.current = { x, y };
+            isFirstMove.current = false;
+        };
+
+        const handlePassiveTouchEnd = () => {
+            touchStartedOnImage.current = false;
+        };
+
+        // Add passive event listeners
+        section.addEventListener('touchmove', handlePassiveTouchMove, { passive: true });
+        section.addEventListener('touchstart', handlePassiveTouchStart, { passive: true });
+        section.addEventListener('touchend', handlePassiveTouchEnd, { passive: true });
+
+        return () => {
+            section.removeEventListener('touchmove', handlePassiveTouchMove);
+            section.removeEventListener('touchstart', handlePassiveTouchStart);
+            section.removeEventListener('touchend', handlePassiveTouchEnd);
+        };
+    }, [hasMounted, isMobile, isLocked, mouseX, mouseY]);
 
     const isSequenceFinished = useRef(false);
 
@@ -112,60 +186,6 @@ export default function Hero() {
 
     // Track if touch started on image area (for unlocked touch drawing)
     const touchStartedOnImage = useRef(false);
-
-    function handleTouchMove(e: React.TouchEvent) {
-        // On mobile, always allow touch trail in hero section (no lock required)
-        if (isMobile) {
-            const touch = e.touches[0];
-            const { left, top } = e.currentTarget.getBoundingClientRect();
-            mouseX.set(touch.clientX - left);
-            mouseY.set(touch.clientY - top);
-            return;
-        }
-
-        // Desktop: require lock or image area touch
-        if (!isLocked && !touchStartedOnImage.current) return;
-
-        const touch = e.touches[0];
-        const { left, top } = e.currentTarget.getBoundingClientRect();
-        mouseX.set(touch.clientX - left);
-        mouseY.set(touch.clientY - top);
-    }
-
-    function handleTouchStart(e: React.TouchEvent) {
-        const touch = e.touches[0];
-        const { left, top, height } = e.currentTarget.getBoundingClientRect();
-        const x = touch.clientX - left;
-        const y = touch.clientY - top;
-
-        // On mobile, always allow touch trail (any movement triggers it)
-        if (isMobile) {
-            mouseX.set(x);
-            mouseY.set(y);
-            lastPosRef.current = { x, y };
-            isFirstMove.current = false;
-            return;
-        }
-
-        // Desktop: Check if touch is in the image area
-        const imageAreaStart = height * 0.35;
-        touchStartedOnImage.current = y > imageAreaStart;
-
-        if (!isLocked && !touchStartedOnImage.current) return;
-
-        if (touchStartedOnImage.current || isLocked) {
-            e.preventDefault();
-        }
-
-        mouseX.set(x);
-        mouseY.set(y);
-        lastPosRef.current = { x, y };
-        isFirstMove.current = false;
-    }
-
-    function handleTouchEnd() {
-        touchStartedOnImage.current = false;
-    }
 
     // Ninja Cut Sequence (Desktop + Mobile)
     useEffect(() => {
@@ -388,9 +408,9 @@ export default function Hero() {
                         // Fixed width for mobile auto sequence - no taper
                         radius = 12;
                     } else {
-                        // Tapering width for desktop and normal mobile interaction
+                        // Tapering width - simplified calculation for mobile performance
                         const baseRadius = isMobile ? 3 : 5;
-                        const maxRadius = isMobile ? 25 : 50;
+                        const maxRadius = isMobile ? 20 : 50; // Reduced max on mobile
                         radius = baseRadius + (percentage * maxRadius);
                     }
 
@@ -455,9 +475,6 @@ export default function Hero() {
         <section
             ref={sectionRef}
             onMouseMove={handleMouseMove}
-            onTouchMove={handleTouchMove}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
             className="relative h-screen w-full bg-gradient-to-b from-[#fdfdfb] to-[#e6e4e3] text-black overflow-hidden font-sans"
             style={{
                 touchAction: isLocked ? 'none' : 'auto',
@@ -469,34 +486,35 @@ export default function Hero() {
             {/* Holographic Wireframe Helmet Layer - Mobile Only */}
             {isMobile && hasMounted && (
                 <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
-                    {/* The wireframe helmet image with 'Construction Scan' reveal effect */}
+                    {/* The wireframe helmet image with clip-path scan animation */}
                     <motion.img
                         src="/images/helmet_wireframe.png"
                         alt=""
                         className="absolute w-full h-full object-contain object-top"
                         style={{
                             top: '42.5%',
-                            mixBlendMode: 'multiply',
-                            scale: 1.2,
-                            filter: 'invert(1) brightness(0.1) contrast(2)',
-                        }}
-                        initial={{
-                            opacity: 0,
-                            clipPath: 'inset(0 0 100% 0)' // Starts fully clipped (invisible) from bottom
+                            opacity: 0.1,
+                            mixBlendMode: 'screen',
+                            scale: 1.2
                         }}
                         animate={{
-                            opacity: 0.15,
-                            clipPath: 'inset(0 0 0% 0)' // Reveals downwards to full visibility
+                            opacity: [0, 0.2, 0.2, 0], // Fade in/out at extremes to soften entry/exit
+                            clipPath: [
+                                'inset(0 0 100% 0)', // Start hidden (visible top edge at 0)
+                                'inset(0 0 0% 0)',   // Wipe down to fully reveal (connects to top)
+                                'inset(0 0 0% 0)',   // Hold full visibility
+                                'inset(100% 0 0% 0)' // Wipe down to fully hide (connects to bottom)
+                            ]
                         }}
                         transition={{
-                            opacity: { duration: 0.5, delay: 0.2 },
-                            clipPath: {
-                                duration: 1.5,
-                                ease: [0.22, 1, 0.36, 1], // Custom easing for "mechanical" feel
-                                delay: 0.2
-                            }
+                            duration: 3,
+                            repeat: Infinity,
+                            repeatDelay: 1,
+                            ease: 'easeInOut',
+                            times: [0, 0.4, 0.6, 1] // 40% reveal, 20% hold, 40% hide
                         }}
                     />
+
                 </div>
             )}
 
@@ -522,7 +540,7 @@ export default function Hero() {
 
             {/* Mask Definitions (Moved Global for Mobile+Desktop) */}
             {hasMounted && (
-                <svg className="absolute w-full h-full pointer-events-none top-0 left-0 z-0">
+                <svg className="absolute w-full h-full pointer-events-none top-0 left-0 z-10">
                     <defs>
                         {/* Inverse Mask: HIDES helmet where snake trail draws (white=show, black=hide) */}
                         <mask id="snake-mask-inverse" maskUnits="userSpaceOnUse">

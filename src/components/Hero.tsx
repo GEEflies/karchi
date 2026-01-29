@@ -503,20 +503,20 @@ export default function Hero() {
                             mixBlendMode: 'screen'
                         }}
                         animate={{
-                            opacity: [0, 0.2, 0.2, 0], // Fade in/out at extremes to soften entry/exit
+                            opacity: [0, 0.15, 0.15, 0], // Fade in/out at extremes to soften entry/exit
                             clipPath: [
                                 'inset(0 0 100% 0)', // Start hidden (visible top edge at 0)
                                 'inset(0 0 0% 0)',   // Wipe down to fully reveal (connects to top)
-                                'inset(0 0 0% 0)',   // Hold full visibility
+                                'inset(0 0 0% 0)',   // Hold full visibility briefly
                                 'inset(100% 0 0% 0)' // Wipe down to fully hide (connects to bottom)
                             ]
                         }}
                         transition={{
-                            duration: 3,
+                            duration: 1.8,
                             repeat: Infinity,
-                            repeatDelay: 1,
+                            repeatDelay: 2.5,
                             ease: 'easeInOut',
-                            times: [0, 0.4, 0.6, 1] // 40% reveal, 20% hold, 40% hide
+                            times: [0, 0.45, 0.55, 1] // 45% reveal, 10% hold, 45% hide - much shorter visibility
                         }}
                     />
 
@@ -583,8 +583,16 @@ export default function Hero() {
                 >
                     {/* Mobile mask definition inside this SVG */}
                     <defs>
+                        {/* Gooey filter for liquid blob effect on mobile trails */}
+                        <filter id="gooey-filter" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
+                            <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9" result="goo" />
+                            <feBlend in="SourceGraphic" in2="goo" />
+                        </filter>
                         <mask id="mobile-mask-inverse" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+                            {/* Apply gooey filter to the mask group for liquid blob effect */}
                             <rect x="0" y="0" width="100" height="100" fill="white" />
+                            <g filter="url(#gooey-filter)">
                             {hasMounted && Array.from({ length: MAX_POINTS }).map((_, index) => (
                                 <circle
                                     key={`mobile-mask-${index}`}
@@ -596,6 +604,7 @@ export default function Hero() {
                                     style={{ display: 'none' }}
                                 />
                             ))}
+                            </g>
                         </mask>
                     </defs>
                     {/* Face image - always visible underneath */}

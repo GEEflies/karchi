@@ -650,7 +650,7 @@ export default function Hero() {
                     <image
                         href="/images/me-fr.png"
                         x="0.2%"
-                        y="33%"
+                        y="28%"
                         width="98%"
                         height="98%"
                         preserveAspectRatio="xMidYMin meet"
@@ -659,7 +659,7 @@ export default function Hero() {
                     <image
                         href="/images/hero-final-fr.png"
                         x="0%"
-                        y="32%"
+                        y="27%"
                         width="100%"
                         height="100%"
                         preserveAspectRatio="xMidYMin meet"

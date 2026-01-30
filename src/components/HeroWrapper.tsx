@@ -307,7 +307,7 @@ export default function HeroWrapper() {
                 {isMobile && (
                     <div 
                         ref={mobileSubtitleRef}
-                        className="absolute top-[22%] left-0 right-0 z-30 text-center px-6 opacity-0"
+                        className="absolute top-[18%] left-0 right-0 z-30 text-center px-6 opacity-0"
                     >
                         <p className="text-white/90 text-sm font-bold uppercase tracking-wider leading-relaxed">
                             Webdesigner a developer aplikácií
@@ -360,7 +360,7 @@ export default function HeroWrapper() {
                                     d={pathData.d}
                                     fill="none"
                                     stroke="white"
-                                    strokeWidth={isMobile ? "18" : (pathData.strokeWidth || "2")}
+                                    strokeWidth={isMobile ? "24" : (pathData.strokeWidth || "2")}
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                 />

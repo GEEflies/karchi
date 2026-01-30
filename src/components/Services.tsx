@@ -157,7 +157,7 @@ export default function Services() {
                             </div>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 lg:gap-8 pt-8 lg:pt-0 lg:pl-12 border-t lg:border-t-0 lg:border-l border-white/10 mt-8 lg:mt-0 lg:ml-8">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 lg:gap-8 pt-2 md:pt-8 lg:pt-0 lg:pl-12 border-t lg:border-t-0 lg:border-l border-white/10 mt-2 md:mt-8 lg:mt-0 lg:ml-8">
                             <div className="text-left sm:text-right">
                                 <div
                                     ref={textRef}
@@ -200,7 +200,7 @@ export default function Services() {
 
                             <Link href="/book/karchigod/intro" className="group relative px-8 py-4 bg-white text-black hover:text-white rounded-xl font-bold overflow-hidden transition-all duration-300 active:scale-95 whitespace-nowrap">
                                 <span className="relative z-10 flex items-center gap-2">
-                                    Konzultovať <ArrowUpRight size={18} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                    Dohodnime sa <ArrowUpRight size={18} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                                 </span>
                                 <div className="absolute inset-0 bg-accent-green translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
                             </Link>

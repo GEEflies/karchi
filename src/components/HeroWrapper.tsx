@@ -150,13 +150,13 @@ export default function HeroWrapper() {
             // ADJUSTABLE VALUES:
             // - scale: 0.7 = size of the card (higher = bigger)
             // - clipPath inset: (top% left% bottom% right%)
-            //   - top: 32% = crops more from top (higher = more crop from top, shows less helmet)
+            //   - top: 36% = crops more from top (higher = more crop from top, shows less helmet)
             //   - left/right: 0% = no side crop (higher = narrower)
-            //   - bottom: 8% = crops from bottom (higher = less body showing)
+            //   - bottom: 4% = crops from bottom (higher = less body showing)
             tl.to(heroContainer, {
                 scale: 0.7,
                 borderRadius: "16px",
-                clipPath: "inset(32% 0% 8% 0% round 16px)",
+                clipPath: "inset(36% 0% 4% 0% round 16px)",
                 duration: 0.6,
                 ease: "power1.out",
             }, 0.05);
@@ -300,7 +300,7 @@ export default function HeroWrapper() {
                 {isMobile && (
                     <div 
                         ref={mobileSubtitleRef}
-                        className="absolute top-[28%] left-0 right-0 z-30 text-center px-6 opacity-0"
+                        className="absolute top-[22%] left-0 right-0 z-30 text-center px-6 opacity-0"
                     >
                         <p className="text-white/90 text-sm font-bold uppercase tracking-wider leading-relaxed">
                             Webdesigner a developer aplikácií
@@ -353,7 +353,7 @@ export default function HeroWrapper() {
                                     d={pathData.d}
                                     fill="none"
                                     stroke="white"
-                                    strokeWidth={isMobile ? "12" : (pathData.strokeWidth || "2")}
+                                    strokeWidth={isMobile ? "18" : (pathData.strokeWidth || "2")}
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                 />

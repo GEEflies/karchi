@@ -153,7 +153,12 @@ export default function HeroWrapper() {
             //   - top: 36% = crops more from top (higher = more crop from top, shows less helmet)
             //   - left/right: 0% = no side crop (higher = narrower)
             //   - bottom: 4% = crops from bottom (higher = less body showing)
-            tl.to(heroContainer, {
+            tl.fromTo(heroContainer, {
+                scale: 1,
+                y: "0vh",
+                borderRadius: "0px",
+                clipPath: "inset(0% 0% 0% 0% round 0px)",
+            }, {
                 scale: 0.7,
                 y: "-12vh",
                 borderRadius: "16px",

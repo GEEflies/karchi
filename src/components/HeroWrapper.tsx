@@ -130,13 +130,25 @@ export default function HeroWrapper() {
         }
 
         // 2. Hero Container Shrink (The "Zoom Out" Effect)
-        // Mobile: Smaller scale, square aspect with heavy crop
-        tl.to(heroContainer, {
-            scale: mobile ? 0.45 : 0.6,
-            borderRadius: mobile ? "24px" : "50px",
-            duration: mobile ? 0.6 : 0.5,
-            ease: mobile ? "power1.out" : "power2.out", // Smoother easing on mobile
-        }, 0.05);
+        // Mobile: Smaller scale with square crop via clip-path
+        if (mobile) {
+            // Mobile: Scale down AND crop to square centered on the image
+            tl.to(heroContainer, {
+                scale: 0.5,
+                borderRadius: "24px",
+                clipPath: "inset(20% 7.5% 20% 7.5% round 24px)", // Crop top/bottom to make it square-ish, centered
+                duration: 0.6,
+                ease: "power1.out",
+            }, 0.05);
+        } else {
+            // Desktop: Standard shrink
+            tl.to(heroContainer, {
+                scale: 0.6,
+                borderRadius: "50px",
+                duration: 0.5,
+                ease: "power2.out",
+            }, 0.05);
+        }
 
         // 3. Shadow/depth effect as it shrinks
         tl.to(heroContainer, {
@@ -252,17 +264,13 @@ export default function HeroWrapper() {
                 </div>
 
                 {/* Hero Container (The white card that shrinks) */}
-                {/* Mobile: Square aspect ratio, centered. Desktop: Full screen */}
+                {/* Starts full screen, shrinks to square on scroll (mobile) */}
                 <div
                     ref={heroContainerRef}
-                    className={`hero-container relative z-10 overflow-hidden ${
-                        isMobile 
-                            ? 'w-[85vw] h-[85vw] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2' 
-                            : 'w-full h-full'
-                    }`}
+                    className="hero-container relative z-10 w-full h-full overflow-hidden"
                     style={{
                         transformOrigin: 'center center',
-                        borderRadius: isMobile ? '24px' : '0px',
+                        borderRadius: '0px',
                         willChange: 'transform, border-radius, opacity',
                         backfaceVisibility: 'hidden',
                     }}

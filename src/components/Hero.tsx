@@ -605,7 +605,7 @@ export default function Hero() {
             )}
 
             {/* MOBILE Images Container - Using SVG for Safari mask compatibility */}
-            {/* Square container - focuses on head/face area */}
+            {/* Full screen container - image positioned to show face area */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -613,12 +613,12 @@ export default function Hero() {
                 className="md:hidden absolute inset-0 z-0"
             >
                 {/* Mobile SVG Container with both images and mask applied within SVG context */}
-                {/* xMidYMid slice centers on head and crops top/bottom */}
+                {/* xMidYMin slice - anchors to top, shows face properly */}
                 <svg
                     ref={mobileSvgRef}
                     className="absolute inset-0 w-full h-full pointer-events-none"
                     viewBox="0 0 100 100"
-                    preserveAspectRatio="xMidYMid slice"
+                    preserveAspectRatio="xMidYMin slice"
                     style={{ filter: 'contrast(1.05) saturate(1.0)' }}
                 >
                     {/* Mobile mask definition inside this SVG */}
@@ -648,28 +648,37 @@ export default function Hero() {
                             </g>
                         </mask>
                     </defs>
-                    {/* Face image - centered on face, cropped top/bottom */}
+                    {/* Face image - positioned to show face (y=30% pushes image up so face shows) */}
                     <image
                         href="/images/me-fr.png"
-                        x="-5%"
-                        y="15%"
-                        width="110%"
-                        height="110%"
-                        preserveAspectRatio="xMidYMid slice"
+                        x="0%"
+                        y="30%"
+                        width="100%"
+                        height="100%"
+                        preserveAspectRatio="xMidYMin meet"
                     />
                     {/* Helmet image - masked to hide where trail is drawn */}
                     <image
                         href="/images/hero-final-fr.png"
-                        x="-5%"
-                        y="15%"
-                        width="110%"
-                        height="110%"
-                        preserveAspectRatio="xMidYMid slice"
+                        x="0%"
+                        y="30%"
+                        width="100%"
+                        height="100%"
+                        preserveAspectRatio="xMidYMin meet"
                         mask={hasMounted ? "url(#mobile-mask-inverse)" : undefined}
                     />
                 </svg>
 
             </motion.div>
+
+            {/* Mobile Text Backdrop Blur Overlay - Smooth transition via mask */}
+            <div
+                className="md:hidden absolute top-0 left-0 right-0 h-[35vh] bg-white/95 backdrop-blur-[3px] z-15 pointer-events-none"
+                style={{
+                    maskImage: 'linear-gradient(to bottom, black 0%, black 50%, transparent 100%)',
+                    WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 50%, transparent 100%)'
+                }}
+            />
 
             {/* DESKTOP Images Container */}
             <motion.div
@@ -717,8 +726,8 @@ export default function Hero() {
                 />
             </motion.div>
 
-            {/* Content Overlay Layer - Hidden on mobile since we have a square image card */}
-            <div className="hero-content-overlay hidden md:flex relative z-20 h-full w-full px-6 py-12 md:p-12 flex-col justify-between pointer-events-none">
+            {/* Content Overlay Layer */}
+            <div className="hero-content-overlay relative z-20 h-full w-full px-6 py-12 md:p-12 flex flex-col justify-between pointer-events-none">
                 {/* Top Section: Headline (Left) & Stats (Right) */}
                 <div className="hero-text-content flex flex-col md:flex-row justify-between items-start w-full">
 
@@ -730,8 +739,14 @@ export default function Hero() {
                             transition={{ duration: 0.8, ease: "circOut" }}
                             className="text-[2rem] leading-[1.1] md:text-[clamp(2.5rem,7vw,6rem)] font-black uppercase tracking-tighter md:leading-[1.15] mb-3 md:mb-[4vh]"
                         >
+                            {/* Mobile Title Layout */}
+                            <span className="md:hidden flex flex-wrap justify-center gap-[0.4em] mb-1">
+                                <span>TVORÍM</span>
+                                <span>STRÁNKY,</span>
+                            </span>
+
                             {/* Desktop Title Layout */}
-                            <span className="inline">TVORÍM<br />STRÁNKY,<br /></span>
+                            <span className="hidden md:inline">TVORÍM<br />STRÁNKY,<br /></span>
 
                             <span className="whitespace-nowrap flex md:inline items-baseline justify-center gap-[0.35em] lowercase md:uppercase font-normal md:font-black">KTORÉ
                                 <span className="inline-grid grid-cols-1 grid-rows-1 h-[1.3em] md:h-[1.4em] align-top overflow-hidden pl-[2px] md:pl-0 md:ml-[0.4em]">

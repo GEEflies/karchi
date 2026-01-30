@@ -219,12 +219,19 @@ export default function HeroWrapper() {
                 ease: "power2.out",
             }, 0.3);
 
-            tl.to(validPaths, {
-                strokeDashoffset: 0,
-                duration: 0.5, // Increased from 0.45 for longer drawing time
-                ease: "power2.out",
-                stagger: 0.03, // Increased from 0.02 for more spacing between paths
-            }, 0.35);
+            // Animate each path sequentially (one after another)
+            let currentPosition = 0.35;
+            const pathDuration = 0.15; // Duration for each path
+            
+            validPaths.forEach((path) => {
+                tl.to(path, {
+                    strokeDashoffset: 0,
+                    duration: pathDuration,
+                    ease: "power2.out",
+                }, currentPosition);
+                
+                currentPosition += pathDuration; // Next path starts after previous completes
+            });
 
             tl.to(signatureSvg, {
                 scale: 0.9,

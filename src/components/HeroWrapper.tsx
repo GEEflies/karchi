@@ -25,9 +25,15 @@ export default function HeroWrapper() {
     const pathRefs = useRef<(SVGPathElement | null)[]>([]);
     const [paths, setPaths] = useState<PathData[]>([]);
     const [hasMounted, setHasMounted] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         setHasMounted(true);
+        // Check for mobile
+        const checkMobile = () => setIsMobile(window.innerWidth < 640);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        
         // Load signature SVG paths
         fetch("/images/signature.svg")
             .then((res) => res.text())
@@ -51,6 +57,8 @@ export default function HeroWrapper() {
                 
                 setPaths(pathsData);
             });
+        
+        return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
     // Main GSAP ScrollTrigger Animation
@@ -91,14 +99,18 @@ export default function HeroWrapper() {
             });
         }
 
+        // Detect mobile for responsive animation
+        const mobile = window.innerWidth < 640;
+        
         // Create the main timeline - animations span most of the wrapper height
-        // The wrapper is 250vh tall, animations span 200vh for better scroll feel
+        // Mobile: shorter scroll distance, smoother feel
+        // Desktop: 250vh tall, animations span 200vh
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: wrapper,
                 start: "top top",
-                end: "+=200%", // Animations span 200vh (80% of wrapper)
-                scrub: 1,
+                end: mobile ? "+=120%" : "+=200%", // Mobile: shorter scroll distance for snappier feel
+                scrub: mobile ? 0.3 : 1, // Mobile: much smoother scrub (lower = smoother)
             },
         });
 
@@ -118,11 +130,12 @@ export default function HeroWrapper() {
         }
 
         // 2. Hero Container Shrink (The "Zoom Out" Effect)
+        // Mobile: Smaller scale, square aspect with heavy crop
         tl.to(heroContainer, {
-            scale: 0.6,
-            borderRadius: "50px",
-            duration: 0.5,
-            ease: "power2.out",
+            scale: mobile ? 0.45 : 0.6,
+            borderRadius: mobile ? "24px" : "50px",
+            duration: mobile ? 0.6 : 0.5,
+            ease: mobile ? "power1.out" : "power2.out", // Smoother easing on mobile
         }, 0.05);
 
         // 3. Shadow/depth effect as it shrinks
@@ -188,11 +201,11 @@ export default function HeroWrapper() {
     if (!hasMounted) return null;
 
     return (
-        // Outer wrapper - creates scroll space (250vh)
+        // Outer wrapper - creates scroll space (250vh desktop, 180vh mobile)
         <div 
             ref={wrapperRef} 
             className="hero-wrapper relative w-full"
-            style={{ height: '250vh' }}
+            style={{ height: isMobile ? '180vh' : '250vh' }}
         >
             {/* Sticky container - stays fixed at top during scroll */}
             <div
@@ -215,23 +228,23 @@ export default function HeroWrapper() {
                         }}
                     />
 
-                    {/* Marquee Text Layer */}
+                    {/* Marquee Text Layer - Desktop: centered, Mobile: below the card */}
                     <div 
                         ref={marqueeRef}
                         className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0"
                     >
                         <Marquee 
                             direction="left" 
-                            speed={60}
-                            className="absolute top-1/2 -translate-y-1/2"
+                            speed={isMobile ? 40 : 60}
+                            className={isMobile ? "absolute bottom-[8%]" : "absolute top-1/2 -translate-y-1/2"}
                         >
-                            <span className="text-[18vw] font-black text-white/[0.04] uppercase tracking-tighter whitespace-nowrap px-8">
+                            <span className="text-[18vw] md:text-[18vw] font-black text-white/[0.04] uppercase tracking-tighter whitespace-nowrap px-8">
                                 DESIGN
                             </span>
-                            <span className="text-[18vw] font-black text-white/[0.04] uppercase tracking-tighter whitespace-nowrap px-8">
+                            <span className="text-[18vw] md:text-[18vw] font-black text-white/[0.04] uppercase tracking-tighter whitespace-nowrap px-8">
                                 DEVELOP
                             </span>
-                            <span className="text-[18vw] font-black text-white/[0.04] uppercase tracking-tighter whitespace-nowrap px-8">
+                            <span className="text-[18vw] md:text-[18vw] font-black text-white/[0.04] uppercase tracking-tighter whitespace-nowrap px-8">
                                 DELIVER
                             </span>
                         </Marquee>
@@ -239,12 +252,17 @@ export default function HeroWrapper() {
                 </div>
 
                 {/* Hero Container (The white card that shrinks) */}
+                {/* Mobile: Square aspect ratio, centered. Desktop: Full screen */}
                 <div
                     ref={heroContainerRef}
-                    className="hero-container relative z-10 w-full h-full overflow-hidden"
+                    className={`hero-container relative z-10 overflow-hidden ${
+                        isMobile 
+                            ? 'w-[85vw] h-[85vw] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2' 
+                            : 'w-full h-full'
+                    }`}
                     style={{
                         transformOrigin: 'center center',
-                        borderRadius: '0px',
+                        borderRadius: isMobile ? '24px' : '0px',
                         willChange: 'transform, border-radius, opacity',
                         backfaceVisibility: 'hidden',
                     }}

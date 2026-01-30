@@ -58,11 +58,12 @@ export default function SignatureReveal() {
         if (validPaths.length === 0) return;
 
         // Set up each path for stroke animation
-        validPaths.forEach((path) => {
+        validPaths.forEach((path, index) => {
             const pathLength = path.getTotalLength();
             gsap.set(path, {
                 strokeDasharray: pathLength,
                 strokeDashoffset: pathLength,
+                opacity: index === 0 ? 1 : 0, // Only first path visible initially
             });
         });
 
@@ -89,25 +90,40 @@ export default function SignatureReveal() {
         tl.to(svg, {
             opacity: 1,
             scale: 0.5,
-            duration: 0.1,
+            duration: 0.05,
             ease: "none",
-        })
-        // 2. Draw all paths while zooming in
-        .to(validPaths, {
-            strokeDashoffset: 0,
-            duration: 0.6,
-            ease: "none",
-            stagger: 0.05, // Slight stagger for each path
-        }, "<")
-        .to(svg, {
-            scale: 1.2,
-            duration: 0.6,
-            ease: "none",
-        }, "<")
+        });
+
+        // 2. Draw each path sequentially with smooth transitions
+        validPaths.forEach((path, index) => {
+            // Fade in the path before drawing
+            if (index > 0) {
+                tl.to(path, {
+                    opacity: 1,
+                    duration: 0.02,
+                    ease: "none",
+                });
+            }
+            
+            // Draw the path
+            tl.to(path, {
+                strokeDashoffset: 0,
+                duration: 0.2,
+                ease: "none",
+            }, "<");
+            
+            // Continue zooming during path drawing
+            tl.to(svg, {
+                scale: 0.5 + (index + 1) * (0.7 / validPaths.length),
+                duration: 0.2,
+                ease: "none",
+            }, "<");
+        });
+
         // 3. Final zoom to full size and hold
-        .to(svg, {
+        tl.to(svg, {
             scale: 1.5,
-            duration: 0.2,
+            duration: 0.15,
             ease: "none",
         })
         // 4. Fade out as we exit

@@ -94,7 +94,7 @@ export default function SignatureReveal() {
         
         // Speed multipliers for each path (higher = slower)
         // Path 2 (index 1) is the complex signature that needs to be drawn much slower
-        const pathSpeedMultipliers = [1, 4, 1, 1]; // 4x slower for path 2
+        const pathSpeedMultipliers = [1, 8, 1, 1]; // 8x slower for path 2
         
         // Animation sequence:
         // 1. Fade in and start drawing + zooming
@@ -174,7 +174,7 @@ export default function SignatureReveal() {
     return (
         <section
             ref={containerRef}
-            className="relative h-[200vh] w-full bg-gradient-to-b from-[#e6e4e3] to-black overflow-hidden"
+            className="relative h-[400vh] w-full bg-gradient-to-b from-[#e6e4e3] to-black overflow-hidden"
         >
             <div className="sticky top-0 h-screen w-full flex items-center justify-center -mt-16 sm:mt-0">
                 {paths.length > 0 && (

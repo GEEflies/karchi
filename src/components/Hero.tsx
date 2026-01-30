@@ -513,7 +513,7 @@ export default function Hero() {
         <section
             ref={sectionRef}
             onMouseMove={handleMouseMove}
-            className="relative h-screen w-full bg-gradient-to-b from-[#fdfdfb] to-[#e6e4e3] text-black overflow-hidden font-sans"
+            className="hero-section relative h-screen w-full bg-gradient-to-b from-[#fdfdfb] to-[#e6e4e3] text-black overflow-hidden font-sans"
             style={{
                 touchAction: isLocked ? 'none' : 'auto',
                 isolation: 'isolate',
@@ -745,12 +745,12 @@ export default function Hero() {
             </motion.div>
 
             {/* Content Overlay Layer */}
-            <div className="relative z-20 h-full w-full px-6 py-12 md:p-12 flex flex-col justify-between pointer-events-none">
+            <div className="hero-content-overlay relative z-20 h-full w-full px-6 py-12 md:p-12 flex flex-col justify-between pointer-events-none">
                 {/* Top Section: Headline (Left) & Stats (Right) */}
-                <div className="flex flex-col md:flex-row justify-between items-start w-full">
+                <div className="hero-text-content flex flex-col md:flex-row justify-between items-start w-full">
 
                     {/* Left: Headline */}
-                    <div className="pointer-events-auto pt-16 md:pt-[10vh] w-full md:max-w-[42vw] text-center md:text-left z-30">
+                    <div className="hero-headline pointer-events-auto pt-16 md:pt-[10vh] w-full md:max-w-[42vw] text-center md:text-left z-30">
                         <motion.h1
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -803,7 +803,7 @@ export default function Hero() {
                     </div>
 
                     {/* Right: Stats */}
-                    <div className="hidden md:flex flex-col items-end gap-[4vh] pointer-events-auto pt-[10vh]">
+                    <div className="hero-stats hidden md:flex flex-col items-end gap-[4vh] pointer-events-auto pt-[10vh]">
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -843,7 +843,7 @@ export default function Hero() {
                 </div>
 
                 {/* Bottom Section */}
-                <div className="flex items-end justify-end w-full">
+                <div className="hero-bottom-section flex items-end justify-end w-full">
                     {/* Lock Button (Bottom Right) & Scroll Indicator */}
                     <div className="flex flex-col items-end gap-4 pointer-events-auto w-full md:w-auto">
 

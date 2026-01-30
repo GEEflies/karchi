@@ -98,7 +98,8 @@ export default function Portfolio() {
         <section
             id="portfolio-home-section"
             ref={containerRef}
-            className="py-10 md:py-32 px-4 md:px-8 bg-white text-black overflow-hidden"
+            className="relative py-10 md:py-32 px-4 md:px-8 bg-[#f8f8f8] text-black overflow-hidden shadow-[0_-20px_60px_-15px_rgba(0,0,0,0.1)]"
+            style={{ zIndex: 10, backgroundColor: '#f8f8f8' }}
         >
             <div className="max-w-7xl mx-auto">
                 {/* Header with Reveal Animation */}

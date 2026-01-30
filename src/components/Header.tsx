@@ -21,6 +21,17 @@ export default function Header() {
     useMotionValueEvent(scrollY, "change", (latest) => {
         setScrolled(latest > 20);
 
+        // Check if we're in the hero shrink zone (dark background visible)
+        // The hero wrapper is 250vh tall with sticky content
+        // After ~10% scroll, dark background is visible
+        // Portfolio starts after 250vh
+        const viewportHeight = window.innerHeight;
+        const heroShrinkStart = viewportHeight * 0.1;
+        const heroWrapperEnd = viewportHeight * 2.5; // 250vh
+        
+        // Check if we're in the hero dark zone
+        const isInHeroDarkZone = latest > heroShrinkStart && latest < heroWrapperEnd;
+
         // Check for dark sections by looking at their position relative to the viewport
         const sections = [
             { id: 'about', offset: 50, endOffset: 0 },
@@ -29,15 +40,17 @@ export default function Header() {
             { id: 'footer', offset: 50, endOffset: 0 }
         ];
 
-        let isDark = false;
+        let isDark = isInHeroDarkZone;
 
-        for (const { id, offset, endOffset } of sections) {
-            const element = document.getElementById(id);
-            if (element) {
-                const rect = element.getBoundingClientRect();
-                if (rect.top <= offset && rect.bottom >= endOffset) {
-                    isDark = true;
-                    break;
+        if (!isDark) {
+            for (const { id, offset, endOffset } of sections) {
+                const element = document.getElementById(id);
+                if (element) {
+                    const rect = element.getBoundingClientRect();
+                    if (rect.top <= offset && rect.bottom >= endOffset) {
+                        isDark = true;
+                        break;
+                    }
                 }
             }
         }

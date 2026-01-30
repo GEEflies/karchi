@@ -138,3 +138,35 @@ body {
 .cursor-none * {
   cursor: none !important;
 }
+
+/* Hero Wrapper / Pinned Shrink Effect */
+.hero-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-container {
+  background: linear-gradient(180deg, #fdfdfb 0%, #e6e4e3 100%);
+  transform-origin: center center;
+  will-change: transform, border-radius, box-shadow;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Ensure smooth clipping during scale animation */
+.hero-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* GSAP pin-spacer optimization */
+.pin-spacer {
+  pointer-events: none !important;
+}
+
+.pin-spacer > * {
+  pointer-events: auto !important;
+}

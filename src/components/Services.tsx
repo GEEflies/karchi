@@ -147,9 +147,9 @@ export default function Services() {
                                 Software vyvinutý presne podľa vašich špecifických požiadaviek.
                             </p>
 
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-wrap gap-1.5 md:gap-2">
                                 {["Web App", "API Vývoj", "AI Integrácia", "SaaS"].map((tech) => (
-                                    <div key={tech} className="px-2 md:px-3 py-1 md:py-1.5 rounded-md bg-white/5 border border-white/5 text-[10px] md:text-xs font-medium text-gray-300 flex items-center gap-1.5 md:gap-2">
+                                    <div key={tech} className="px-1.5 md:px-3 py-1 md:py-1.5 rounded-md bg-white/5 border border-white/5 text-[10px] md:text-xs font-medium text-gray-300 flex items-center gap-1.5 md:gap-2">
                                         <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-accent-green shadow-[0_0_6px_rgba(34,197,94,0.8)] md:shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
                                         {tech}
                                     </div>
@@ -164,7 +164,8 @@ export default function Services() {
                                     className="relative inline-block group/price cursor-default py-2"
                                 >
                                     {/* Base Text (Darker) */}
-                                    <span className="relative z-10 font-serif italic text-3xl lg:text-4xl text-gray-500 block whitespace-nowrap transition-colors duration-300">
+                                    {/* Base Text (Darker on Desktop, Shine on Mobile) */}
+                                    <span className="relative z-10 font-serif italic text-3xl lg:text-4xl block whitespace-nowrap transition-colors duration-300 text-transparent bg-clip-text bg-gradient-to-r from-gray-600 via-white to-gray-600 bg-[length:200%_auto] animate-mobile-shine md:animate-none md:text-gray-500 md:bg-none">
                                         individuálna cena
                                     </span>
 
@@ -223,6 +224,13 @@ export default function Services() {
                     .stroke-text-black {
                         -webkit-text-stroke: 2px #0a0a0a;
                     }
+                }
+                @keyframes mobile-shine {
+                    0% { background-position: 200% center; }
+                    100% { background-position: -200% center; }
+                }
+                .animate-mobile-shine {
+                    animation: mobile-shine 3s linear infinite;
                 }
             `}</style>
         </section>

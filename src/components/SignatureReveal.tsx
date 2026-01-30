@@ -64,6 +64,7 @@ export default function SignatureReveal() {
                 strokeDasharray: pathLength,
                 strokeDashoffset: pathLength,
                 opacity: index === 0 ? 1 : 0, // Only first path visible initially
+                force3D: true, // GPU acceleration
             });
         });
 
@@ -71,6 +72,7 @@ export default function SignatureReveal() {
         gsap.set(svg, {
             scale: 0.3,
             opacity: 0,
+            force3D: true, // GPU acceleration
         });
 
         // Create the scroll-triggered timeline
@@ -85,6 +87,11 @@ export default function SignatureReveal() {
             },
         });
 
+        // Calculate total length of all paths for proportional timing
+        const pathLengths = validPaths.map(path => path.getTotalLength());
+        const totalLength = pathLengths.reduce((sum, len) => sum + len, 0);
+        const totalDrawDuration = 0.7; // Total time for all paths to draw
+        
         // Animation sequence:
         // 1. Fade in and start drawing + zooming
         tl.to(svg, {
@@ -92,31 +99,41 @@ export default function SignatureReveal() {
             scale: 0.5,
             duration: 0.05,
             ease: "none",
+            force3D: true, // GPU acceleration
         });
 
-        // 2. Draw each path sequentially with smooth transitions
+        // 2. Draw each path sequentially with duration proportional to its length
+        let currentScale = 0.5;
         validPaths.forEach((path, index) => {
+            // Calculate duration based on path length
+            const pathDuration = (pathLengths[index] / totalLength) * totalDrawDuration;
+            const scaleIncrement = 0.7 / validPaths.length;
+            
             // Fade in the path before drawing
             if (index > 0) {
                 tl.to(path, {
                     opacity: 1,
                     duration: 0.02,
                     ease: "none",
+                    force3D: true,
                 });
             }
             
-            // Draw the path
+            // Draw the path with proportional duration
             tl.to(path, {
                 strokeDashoffset: 0,
-                duration: 0.2,
+                duration: pathDuration,
                 ease: "none",
+                force3D: true,
             }, "<");
             
             // Continue zooming during path drawing
+            currentScale += scaleIncrement;
             tl.to(svg, {
-                scale: 0.5 + (index + 1) * (0.7 / validPaths.length),
-                duration: 0.2,
+                scale: currentScale,
+                duration: pathDuration,
                 ease: "none",
+                force3D: true,
             }, "<");
         });
 
@@ -125,6 +142,7 @@ export default function SignatureReveal() {
             scale: 1.5,
             duration: 0.15,
             ease: "none",
+            force3D: true,
         })
         // 4. Fade out as we exit
         .to(svg, {
@@ -132,6 +150,7 @@ export default function SignatureReveal() {
             scale: 2,
             duration: 0.1,
             ease: "none",
+            force3D: true,
         });
 
         return () => {
@@ -152,13 +171,14 @@ export default function SignatureReveal() {
             ref={containerRef}
             className="relative h-[200vh] w-full bg-gradient-to-b from-[#e6e4e3] to-black overflow-hidden"
         >
-            <div className="sticky top-0 h-screen w-full flex items-center justify-center">
+            <div className="sticky top-0 h-screen w-full flex items-center justify-center -mt-16 sm:mt-0">
                 {paths.length > 0 && (
                     <svg
                         ref={svgRef}
                         viewBox="0 0 2709 1474"
                         className="w-[80vw] h-auto max-w-[1200px] md:w-[60vw]"
                         preserveAspectRatio="xMidYMid meet"
+                        style={{ willChange: 'transform, opacity', transform: 'translate3d(0, 0, 0)' }}
                     >
                         {paths.map((pathData, index) => (
                             <path

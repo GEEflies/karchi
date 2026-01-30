@@ -106,7 +106,7 @@ export default function Portfolio() {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 md:mb-20 gap-2 md:gap-8">
                     <div className="overflow-hidden">
                         <h2 className="reveal-text translate-y-full opacity-0 text-3xl md:text-6xl lg:text-9xl font-black tracking-tighter uppercase leading-[0.95]">
-                            Vybrané <span className="inline md:block text-accent-green">Diela</span>
+                            Vybrané <span className="inline md:block text-accent-green">Projekty</span>
                         </h2>
                     </div>
 
@@ -134,11 +134,22 @@ export default function Portfolio() {
                         // Mobile: All items full width for clean look
                         const mobileSpan = 'col-span-1';
 
+                        // Custom Mobile Order: SlohGPT after Faithwall
+                        const mobileOrderMap: Record<string, string> = {
+                            'slovak-luxury-living': 'order-1',
+                            'notewall': 'order-2',
+                            'faithwall': 'order-3',
+                            'slohgpt': 'order-4',
+                            'billik': 'order-5',
+                            'realfoto': 'order-6'
+                        };
+                        const mobileOrder = mobileOrderMap[project.slug] || 'order-none';
+
                         return (
                             <Link
                                 key={project.id}
                                 href={`/projects/${project.slug}`}
-                                className={`project-card group relative overflow-hidden rounded-2xl md:rounded-3xl bg-gray-100 ${colSpan} ${mobileSpan} shadow-sm hover:shadow-xl active:scale-[0.98] transition-all duration-300 md:duration-500`}
+                                className={`project-card group relative overflow-hidden rounded-2xl md:rounded-3xl bg-gray-100 ${colSpan} ${mobileSpan} ${mobileOrder} md:order-none shadow-sm hover:shadow-xl active:scale-[0.98] transition-all duration-300 md:duration-500`}
                                 onMouseEnter={() => setCursorType('portfolio')}
                                 onMouseLeave={() => setCursorType('default')}
                             >

@@ -92,6 +92,7 @@ export default function HeroWrapper() {
                 gsap.set(path, {
                     strokeDasharray: pathLength,
                     strokeDashoffset: pathLength,
+                    opacity: 0, // Start hidden
                 });
             });
         }
@@ -230,6 +231,13 @@ export default function HeroWrapper() {
             const pathDuration = 0.15; // Duration for each path
 
             validPaths.forEach((path) => {
+                // Reveal path just as it starts drawing
+                tl.to(path, {
+                    opacity: 1,
+                    duration: 0.01,
+                    ease: "none",
+                }, currentPosition);
+
                 tl.to(path, {
                     strokeDashoffset: 0,
                     duration: pathDuration,

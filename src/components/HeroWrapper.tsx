@@ -34,7 +34,7 @@ export default function HeroWrapper() {
         const checkMobile = () => setIsMobile(window.innerWidth < 640);
         checkMobile();
         window.addEventListener('resize', checkMobile);
-        
+
         // Load signature SVG paths
         fetch("/images/signature.svg")
             .then((res) => res.text())
@@ -43,7 +43,7 @@ export default function HeroWrapper() {
                 const svgDoc = parser.parseFromString(svgText, "image/svg+xml");
                 const pathElements = svgDoc.querySelectorAll("path");
                 const pathsData: PathData[] = [];
-                
+
                 pathElements.forEach((path) => {
                     const d = path.getAttribute("d");
                     if (d) {
@@ -55,10 +55,10 @@ export default function HeroWrapper() {
                         });
                     }
                 });
-                
+
                 setPaths(pathsData);
             });
-        
+
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
@@ -106,7 +106,7 @@ export default function HeroWrapper() {
 
         // Detect mobile for responsive animation
         const mobile = window.innerWidth < 640;
-        
+
         // Create the main timeline - animations span most of the wrapper height
         // Mobile: shorter scroll distance, smoother feel
         // Desktop: 250vh tall, animations span 200vh
@@ -120,10 +120,10 @@ export default function HeroWrapper() {
         });
 
         // Animation Sequence:
-        
+
         // 1. Text Fade Out FAST (First 20% of scroll progress)
         const textElements = [heroContentOverlay, heroTextContent, heroHeadline, heroStats, heroBottomSection].filter(Boolean);
-        
+
         if (textElements.length > 0) {
             tl.to(textElements, {
                 opacity: 0,
@@ -155,8 +155,9 @@ export default function HeroWrapper() {
             //   - bottom: 4% = crops from bottom (higher = less body showing)
             tl.to(heroContainer, {
                 scale: 0.7,
+                y: "-12vh",
                 borderRadius: "16px",
-                clipPath: "inset(36% 0% 4% 0% round 16px)",
+                clipPath: "inset(36% 0% 15% 0% round 16px)",
                 duration: 0.6,
                 ease: "power1.out",
             }, 0.05);
@@ -222,14 +223,14 @@ export default function HeroWrapper() {
             // Animate each path sequentially (one after another)
             let currentPosition = 0.35;
             const pathDuration = 0.15; // Duration for each path
-            
+
             validPaths.forEach((path) => {
                 tl.to(path, {
                     strokeDashoffset: 0,
                     duration: pathDuration,
                     ease: "power2.out",
                 }, currentPosition);
-                
+
                 currentPosition += pathDuration; // Next path starts after previous completes
             });
 
@@ -254,8 +255,8 @@ export default function HeroWrapper() {
 
     return (
         // Outer wrapper - creates scroll space (250vh desktop, 180vh mobile)
-        <div 
-            ref={wrapperRef} 
+        <div
+            ref={wrapperRef}
             className="hero-wrapper relative w-full"
             style={{ height: isMobile ? '180vh' : '250vh' }}
         >
@@ -266,14 +267,14 @@ export default function HeroWrapper() {
                 style={{ zIndex: 0 }}
             >
                 {/* Dark Background Underlay (revealed as hero shrinks) */}
-                <div 
+                <div
                     className="absolute inset-0 z-0 overflow-hidden"
                     style={{
                         background: 'linear-gradient(180deg, #0a0a0a 0%, #000000 100%)',
                     }}
                 >
                     {/* Subtle grain texture */}
-                    <div 
+                    <div
                         className="absolute inset-0 opacity-[0.02]"
                         style={{
                             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
@@ -281,12 +282,12 @@ export default function HeroWrapper() {
                     />
 
                     {/* Marquee Text Layer - Desktop: centered, Mobile: below the card */}
-                    <div 
+                    <div
                         ref={marqueeRef}
                         className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0"
                     >
-                        <Marquee 
-                            direction="left" 
+                        <Marquee
+                            direction="left"
                             speed={isMobile ? 40 : 60}
                             className={isMobile ? "absolute bottom-[8%]" : "absolute top-1/2 -translate-y-1/2"}
                         >
@@ -305,7 +306,7 @@ export default function HeroWrapper() {
 
                 {/* Mobile Subtitle - appears above hero card when zoomed out */}
                 {isMobile && (
-                    <div 
+                    <div
                         ref={mobileSubtitleRef}
                         className="absolute top-[18%] left-0 right-0 z-30 text-center px-6 opacity-0"
                     >
@@ -336,7 +337,7 @@ export default function HeroWrapper() {
                         className="absolute inset-0 z-40 pointer-events-none bg-black opacity-0"
                         style={{ willChange: 'opacity' }}
                     />
-                    
+
                     <Hero />
                 </div>
 
@@ -348,7 +349,7 @@ export default function HeroWrapper() {
                             viewBox="0 0 2709 1474"
                             className="w-[95vw] h-auto max-w-[900px] md:w-[50vw]"
                             preserveAspectRatio="xMidYMid meet"
-                            style={{ 
+                            style={{
                                 opacity: 0,
                                 willChange: 'transform, opacity',
                             }}
@@ -360,7 +361,7 @@ export default function HeroWrapper() {
                                     d={pathData.d}
                                     fill="none"
                                     stroke="white"
-                                    strokeWidth={isMobile ? "24" : (pathData.strokeWidth || "2")}
+                                    strokeWidth={isMobile ? "45" : (pathData.strokeWidth || "2")}
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                 />

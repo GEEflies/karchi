@@ -667,6 +667,26 @@ export default function Hero() {
                     />
                 </svg>
 
+                {/* Mobile Lock Button (Overlaid on Image) - fades out on scroll */}
+                <div className="hero-lock-button absolute top-[75%] right-[10%] z-50 pointer-events-auto opacity-100">
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsLocked(!isLocked);
+                        }}
+                        className={`flex items-center justify-center w-12 h-12 rounded-xl border transition-all duration-300 ${isLocked
+                            ? 'bg-black text-white border-black ring-2 ring-offset-2 ring-black/20'
+                            : 'bg-blue-600 text-white border-blue-600 shadow-[0_4px_12px_rgba(37,99,235,0.3)]'
+                            } active:scale-95`}
+                        aria-label={isLocked ? "Unlock" : "Lock"}
+                    >
+                        {isLocked ? (
+                            <Unlock className="w-5 h-5" />
+                        ) : (
+                            <Lock className="w-5 h-5" />
+                        )}
+                    </button>
+                </div>
             </motion.div>
 
             {/* Mobile Text Backdrop Blur Overlay - Smooth transition via mask */}

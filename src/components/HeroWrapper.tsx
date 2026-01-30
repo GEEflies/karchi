@@ -22,6 +22,7 @@ export default function HeroWrapper() {
     const darkOverlayRef = useRef<HTMLDivElement>(null);
     const signatureSvgRef = useRef<SVGSVGElement>(null);
     const marqueeRef = useRef<HTMLDivElement>(null);
+    const mobileSubtitleRef = useRef<HTMLDivElement>(null);
     const pathRefs = useRef<(SVGPathElement | null)[]>([]);
     const [paths, setPaths] = useState<PathData[]>([]);
     const [hasMounted, setHasMounted] = useState(false);
@@ -71,7 +72,11 @@ export default function HeroWrapper() {
         const darkOverlay = darkOverlayRef.current;
         const signatureSvg = signatureSvgRef.current;
         const marquee = marqueeRef.current;
+        const mobileSubtitle = mobileSubtitleRef.current;
         const validPaths = pathRefs.current.filter((p): p is SVGPathElement => p !== null);
+
+        // Target elements within the Hero component
+        const heroLockButton = heroContainer.querySelector('.hero-lock-button');
 
         // Target text elements within the Hero component
         const heroTextContent = heroContainer.querySelector('.hero-text-content');
@@ -129,14 +134,24 @@ export default function HeroWrapper() {
             }, 0);
         }
 
+        // 1.5 Lock button fades out on mobile
+        if (mobile && heroLockButton) {
+            tl.to(heroLockButton, {
+                opacity: 0,
+                duration: 0.15,
+                ease: "power2.in",
+            }, 0);
+        }
+
         // 2. Hero Container Shrink (The "Zoom Out" Effect)
         // Mobile: Smaller scale with square crop via clip-path
         if (mobile) {
             // Mobile: Scale down AND crop to square centered on the image
+            // scale 0.6 = less zoomed out, inset(28% 5% 12% 5%) = more top crop, tighter square
             tl.to(heroContainer, {
-                scale: 0.5,
-                borderRadius: "24px",
-                clipPath: "inset(20% 7.5% 20% 7.5% round 24px)", // Crop top/bottom to make it square-ish, centered
+                scale: 0.6,
+                borderRadius: "20px",
+                clipPath: "inset(28% 5% 12% 5% round 20px)", // More top crop (28%), less bottom (12%), tighter sides (5%)
                 duration: 0.6,
                 ease: "power1.out",
             }, 0.05);
@@ -175,6 +190,19 @@ export default function HeroWrapper() {
                 duration: 0.35,
                 ease: "power2.out",
             }, 0.25);
+        }
+
+        // 5.5 Mobile subtitle fades in above hero card
+        if (mobile && mobileSubtitle) {
+            tl.fromTo(mobileSubtitle, {
+                opacity: 0,
+                y: 20,
+            }, {
+                opacity: 1,
+                y: 0,
+                duration: 0.3,
+                ease: "power2.out",
+            }, 0.35);
         }
 
         // 6. Signature Fade In and Draw (starts at 30% progress, extends to 85%)
@@ -263,6 +291,21 @@ export default function HeroWrapper() {
                     </div>
                 </div>
 
+                {/* Mobile Subtitle - appears above hero card when zoomed out */}
+                {isMobile && (
+                    <div 
+                        ref={mobileSubtitleRef}
+                        className="absolute top-[12%] left-0 right-0 z-30 text-center px-6 opacity-0"
+                    >
+                        <p className="text-white/90 text-xs font-bold uppercase tracking-wider leading-relaxed">
+                            Freelance webdesigner a developer aplikácií
+                        </p>
+                        <p className="text-white/50 text-[10px] uppercase tracking-widest mt-1">
+                            Sídliaci v Nitre, dostupný celosvetovo.
+                        </p>
+                    </div>
+                )}
+
                 {/* Hero Container (The white card that shrinks) */}
                 {/* Starts full screen, shrinks to square on scroll (mobile) */}
                 <div
@@ -291,7 +334,7 @@ export default function HeroWrapper() {
                         <svg
                             ref={signatureSvgRef}
                             viewBox="0 0 2709 1474"
-                            className="w-[70vw] h-auto max-w-[900px] md:w-[50vw]"
+                            className="w-[85vw] h-auto max-w-[900px] md:w-[50vw]"
                             preserveAspectRatio="xMidYMid meet"
                             style={{ 
                                 opacity: 0,
@@ -305,7 +348,7 @@ export default function HeroWrapper() {
                                     d={pathData.d}
                                     fill="none"
                                     stroke="white"
-                                    strokeWidth={pathData.strokeWidth || "2"}
+                                    strokeWidth={isMobile ? "8" : (pathData.strokeWidth || "2")}
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                 />

@@ -70,8 +70,7 @@ export default function Services() {
                     className="mb-8 md:mb-24"
                 >
                     <h2 className="text-3xl md:text-7xl lg:text-9xl font-black tracking-tighter text-foreground mb-2 md:mb-8 uppercase">
-                        Služby
-                        <span className="block md:inline md:ml-6 text-accent-pink stroke-text-black text-transparent">
+                        Služby <span className="inline md:block md:inline md:ml-6 text-accent-pink stroke-text-black text-transparent">
                             & Cenník
                         </span>
                     </h2>
@@ -218,7 +217,12 @@ export default function Services() {
 
             <style jsx>{`
                 .stroke-text-black {
-                    -webkit-text-stroke: 2px #0a0a0a;
+                    -webkit-text-stroke: 1px #0a0a0a;
+                }
+                @media (min-width: 768px) {
+                    .stroke-text-black {
+                        -webkit-text-stroke: 2px #0a0a0a;
+                    }
                 }
             `}</style>
         </section>

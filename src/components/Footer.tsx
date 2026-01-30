@@ -26,18 +26,18 @@ export default function Footer() {
                 <div className="lg:col-span-7 flex flex-col justify-center text-left">
                     <h2 className="flex flex-col gap-0 md:gap-2 font-black tracking-tighter text-white">
                         <div className="flex flex-wrap items-baseline gap-1.5 md:gap-3 lg:gap-6">
-                            <span className="text-2xl md:text-5xl lg:text-7xl xl:text-8xl uppercase leading-[0.9]">
+                            <span className="text-3xl md:text-5xl lg:text-7xl xl:text-8xl uppercase leading-[0.9]">
                                 Máte
                             </span>
-                            <span className="font-serif italic font-normal text-2xl md:text-5xl lg:text-7xl xl:text-8xl text-accent-blue leading-[0.9]">
+                            <span className="font-serif italic font-normal text-3xl md:text-5xl lg:text-7xl xl:text-8xl text-accent-blue leading-[0.9]">
                                 niečo
                             </span>
                         </div>
                         <div className="flex flex-wrap items-baseline gap-1.5 md:gap-3 lg:gap-6">
-                            <span className="font-serif italic font-normal text-2xl md:text-5xl lg:text-7xl xl:text-8xl text-accent-blue leading-[0.9]">
+                            <span className="font-serif italic font-normal text-3xl md:text-5xl lg:text-7xl xl:text-8xl text-accent-blue leading-[0.9]">
                                 na
                             </span>
-                            <span className="text-2xl md:text-5xl lg:text-7xl xl:text-8xl leading-[0.9]">
+                            <span className="text-3xl md:text-5xl lg:text-7xl xl:text-8xl leading-[0.9]">
                                 mysli?
                             </span>
                         </div>

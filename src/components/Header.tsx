@@ -192,23 +192,24 @@ export default function Header() {
                                             </Link>
                                         </motion.div>
                                     ))}
-                                </div>
-
-                                <motion.div
-                                    initial={{ opacity: 0, x: 20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.25 }}
-                                    className="mt-auto mb-8"
-                                >
-                                    <Link
-                                        href="/book/karchigod/intro"
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className="relative w-full py-4 rounded-full font-bold text-center block overflow-hidden group bg-white text-black text-lg tracking-wide hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                    
+                                    {/* Spolupráca button right after nav items */}
+                                    <motion.div
+                                        initial={{ opacity: 0, x: 20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.25 }}
+                                        className="mt-4"
                                     >
-                                        <span className="relative z-10">Spolupráca</span>
-                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/10 to-transparent translate-x-[-150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out" />
-                                    </Link>
-                                </motion.div>
+                                        <Link
+                                            href="/book/karchigod/intro"
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className="relative w-full py-4 rounded-full font-bold text-center block overflow-hidden group bg-white text-black text-lg tracking-wide hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                        >
+                                            <span className="relative z-10">Spolupráca</span>
+                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/10 to-transparent translate-x-[-150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out" />
+                                        </Link>
+                                    </motion.div>
+                                </div>
                             </div>
                         </motion.div>
                     </motion.div>

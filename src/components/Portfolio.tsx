@@ -106,8 +106,7 @@ export default function Portfolio() {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 md:mb-20 gap-2 md:gap-8">
                     <div className="overflow-hidden">
                         <h2 className="reveal-text translate-y-full opacity-0 text-3xl md:text-6xl lg:text-9xl font-black tracking-tighter uppercase leading-[0.95]">
-                            Vybrané
-                            <span className="block text-accent-green">Diela</span>
+                            Vybrané <span className="inline md:block text-accent-green">Diela</span>
                         </h2>
                     </div>
 

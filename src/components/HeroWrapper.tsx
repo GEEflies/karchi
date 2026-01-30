@@ -147,11 +147,16 @@ export default function HeroWrapper() {
         // Mobile: Smaller scale with square crop via clip-path
         if (mobile) {
             // Mobile: Scale down AND crop to square centered on the image
-            // scale 0.6 = less zoomed out, inset(28% 5% 12% 5%) = more top crop, tighter square
+            // ADJUSTABLE VALUES:
+            // - scale: 0.7 = size of the card (higher = bigger)
+            // - clipPath inset: (top% left% bottom% right%)
+            //   - top: 32% = crops more from top (higher = more crop from top, shows less helmet)
+            //   - left/right: 0% = no side crop (higher = narrower)
+            //   - bottom: 8% = crops from bottom (higher = less body showing)
             tl.to(heroContainer, {
-                scale: 0.6,
-                borderRadius: "20px",
-                clipPath: "inset(28% 5% 12% 5% round 20px)", // More top crop (28%), less bottom (12%), tighter sides (5%)
+                scale: 0.7,
+                borderRadius: "16px",
+                clipPath: "inset(32% 0% 8% 0% round 16px)",
                 duration: 0.6,
                 ease: "power1.out",
             }, 0.05);
@@ -295,10 +300,10 @@ export default function HeroWrapper() {
                 {isMobile && (
                     <div 
                         ref={mobileSubtitleRef}
-                        className="absolute top-[12%] left-0 right-0 z-30 text-center px-6 opacity-0"
+                        className="absolute top-[28%] left-0 right-0 z-30 text-center px-6 opacity-0"
                     >
-                        <p className="text-white/90 text-xs font-bold uppercase tracking-wider leading-relaxed">
-                            Freelance webdesigner a developer aplikácií
+                        <p className="text-white/90 text-sm font-bold uppercase tracking-wider leading-relaxed">
+                            Webdesigner a developer aplikácií
                         </p>
                         <p className="text-white/50 text-[10px] uppercase tracking-widest mt-1">
                             Sídliaci v Nitre, dostupný celosvetovo.
@@ -334,7 +339,7 @@ export default function HeroWrapper() {
                         <svg
                             ref={signatureSvgRef}
                             viewBox="0 0 2709 1474"
-                            className="w-[85vw] h-auto max-w-[900px] md:w-[50vw]"
+                            className="w-[95vw] h-auto max-w-[900px] md:w-[50vw]"
                             preserveAspectRatio="xMidYMid meet"
                             style={{ 
                                 opacity: 0,
@@ -348,7 +353,7 @@ export default function HeroWrapper() {
                                     d={pathData.d}
                                     fill="none"
                                     stroke="white"
-                                    strokeWidth={isMobile ? "8" : (pathData.strokeWidth || "2")}
+                                    strokeWidth={isMobile ? "12" : (pathData.strokeWidth || "2")}
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                 />

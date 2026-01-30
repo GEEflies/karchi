@@ -92,6 +92,10 @@ export default function SignatureReveal() {
         const totalLength = pathLengths.reduce((sum, len) => sum + len, 0);
         const totalDrawDuration = 0.7; // Total time for all paths to draw
         
+        // Speed multipliers for each path (higher = slower)
+        // Path 2 (index 1) is the complex signature that needs to be drawn much slower
+        const pathSpeedMultipliers = [1, 4, 1, 1]; // 4x slower for path 2
+        
         // Animation sequence:
         // 1. Fade in and start drawing + zooming
         tl.to(svg, {
@@ -105,8 +109,9 @@ export default function SignatureReveal() {
         // 2. Draw each path sequentially with duration proportional to its length
         let currentScale = 0.5;
         validPaths.forEach((path, index) => {
-            // Calculate duration based on path length
-            const pathDuration = (pathLengths[index] / totalLength) * totalDrawDuration;
+            // Calculate duration based on path length, with multiplier for specific paths
+            const multiplier = pathSpeedMultipliers[index] || 1;
+            const pathDuration = ((pathLengths[index] / totalLength) * totalDrawDuration) * multiplier;
             const scaleIncrement = 0.7 / validPaths.length;
             
             // Fade in the path before drawing

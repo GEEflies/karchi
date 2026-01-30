@@ -49,20 +49,22 @@ export default function Portfolio() {
 
             gsap.fromTo(cards,
                 {
-                    y: isMobile ? 30 : 50,
+                    y: isMobile ? 60 : 50,
+                    x: (i) => isMobile ? (i % 2 === 0 ? -60 : 60) : 0, // Zigzag effect on mobile
                     opacity: 0,
-                    scale: isMobile ? 0.98 : 0.95
+                    scale: isMobile ? 0.9 : 0.95
                 },
                 {
                     y: 0,
+                    x: 0,
                     opacity: 1,
                     scale: 1,
-                    duration: isMobile ? 0.5 : 0.8,
-                    stagger: staggerDelay,
-                    ease: "power2.out",
+                    duration: isMobile ? 0.7 : 0.8,
+                    stagger: isMobile ? 0.15 : staggerDelay,
+                    ease: "power3.out", // Smoother easing
                     scrollTrigger: {
                         trigger: containerRef.current,
-                        start: isMobile ? "top 85%" : "top 75%",
+                        start: isMobile ? "top 80%" : "top 75%",
                     }
                 }
             );

@@ -605,15 +605,13 @@ export default function Hero() {
             )}
 
             {/* MOBILE Images Container - Using SVG for Safari mask compatibility */}
-            {/* Full screen container - image positioned to show face area */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
-                className="md:hidden absolute inset-0 z-0"
+                className="md:hidden absolute inset-x-0 top-0 bottom-0 z-0"
             >
                 {/* Mobile SVG Container with both images and mask applied within SVG context */}
-                {/* xMidYMin slice - anchors to top, shows face properly */}
                 <svg
                     ref={mobileSvgRef}
                     className="absolute inset-0 w-full h-full pointer-events-none"
@@ -648,20 +646,20 @@ export default function Hero() {
                             </g>
                         </mask>
                     </defs>
-                    {/* Face image - positioned to show face (y=30% pushes image up so face shows) */}
+                    {/* Face image - always visible underneath */}
                     <image
                         href="/images/me-fr.png"
-                        x="0%"
-                        y="30%"
-                        width="100%"
-                        height="100%"
+                        x="0.2%"
+                        y="33%"
+                        width="98%"
+                        height="98%"
                         preserveAspectRatio="xMidYMin meet"
                     />
                     {/* Helmet image - masked to hide where trail is drawn */}
                     <image
                         href="/images/hero-final-fr.png"
                         x="0%"
-                        y="30%"
+                        y="32%"
                         width="100%"
                         height="100%"
                         preserveAspectRatio="xMidYMin meet"
@@ -773,7 +771,7 @@ export default function Hero() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.5, duration: 0.8 }}
-                            className="flex flex-col gap-1 md:gap-[1vh]"
+                            className="hidden md:flex flex-col gap-1 md:gap-[1vh]"
                         >
                             <p className="text-[11px] md:text-[1.5vw] font-bold uppercase tracking-wide leading-tight">
                                 Freelance webdesigner a developer aplikácií

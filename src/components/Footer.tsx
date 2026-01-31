@@ -32,6 +32,7 @@ export default function Footer() {
                             <span className="font-serif italic font-normal text-4xl md:text-5xl lg:text-7xl xl:text-8xl text-accent-blue leading-[0.9]">
                                 niečo
                             </span>
+                            <div className="hidden lg:block basis-full h-0"></div>
                             <span className="font-serif italic font-normal text-4xl md:text-5xl lg:text-7xl xl:text-8xl text-accent-blue leading-[0.9]">
                                 na
                             </span>
